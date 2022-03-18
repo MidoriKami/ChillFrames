@@ -22,7 +22,7 @@ namespace ChillFrames
 
             if (ImGui.Button($"Save", ImGuiHelpers.ScaledVector2(100, 25)))
             {
-                Service.PluginInterface.UiBuilder.AddNotification("Configuration Saved", "Daily Duty", NotificationType.Success);
+                Service.PluginInterface.UiBuilder.AddNotification("Configuration Saved", "Chill Frames", NotificationType.Success);
                 Service.Configuration.Save();
             }
 
@@ -30,7 +30,7 @@ namespace ChillFrames
 
             if (ImGui.Button($"Save & Close", ImGuiHelpers.ScaledVector2(100, 25)))
             {
-                Service.PluginInterface.UiBuilder.AddNotification("Configuration Saved", "Daily Duty", NotificationType.Success);
+                Service.PluginInterface.UiBuilder.AddNotification("Configuration Saved", "Chill Frames", NotificationType.Success);
                 Service.Configuration.Save();
                 targetWindow.IsOpen = false;
             }

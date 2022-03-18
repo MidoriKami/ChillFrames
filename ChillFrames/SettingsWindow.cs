@@ -15,14 +15,12 @@ namespace ChillFrames
     {
         private readonly SaveAndCloseButtons saveAndCloseButtons;
 
-        public const ImGuiWindowFlags DefaultFlags = ImGuiWindowFlags.NoFocusOnAppearing |
-                                                     ImGuiWindowFlags.NoScrollbar |
-                                                     ImGuiWindowFlags.NoCollapse |
-                                                     ImGuiWindowFlags.NoResize;
+        private const ImGuiWindowFlags DefaultFlags = ImGuiWindowFlags.NoFocusOnAppearing |
+                                                      ImGuiWindowFlags.NoScrollbar |
+                                                      ImGuiWindowFlags.NoCollapse |
+                                                      ImGuiWindowFlags.NoResize;
 
         private int newFramerateLimit = Service.Configuration.FrameRateLimit;
-        private int TargetFramerate => Service.Configuration.FrameRateLimit;
-        private float TargetFrametime => 1000.0f / TargetFramerate;
 
         public SettingsWindow() : base("ChillFrames Settings", DefaultFlags)
         {
@@ -69,7 +67,6 @@ namespace ChillFrames
                 if (ImGui.Button("Apply", new Vector2(75, 23)))
                 {
                     Service.Configuration.FrameRateLimit = Math.Max(newFramerateLimit, 10);
-                    Service.Configuration.Save();
                 }
             }
 

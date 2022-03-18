@@ -15,10 +15,10 @@ namespace ChillFrames
     internal unsafe class FrameLimiter : IDisposable
     {
 
-        private delegate void SwapChain_Present(IntPtr address);
+        private delegate void SwapChainPresent(IntPtr address);
 
         [Signature("E8 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 4B 70", DetourName = nameof(LimitFramerate))]
-        private readonly Hook<SwapChain_Present>? swapchainMethod = null!;
+        private readonly Hook<SwapChainPresent>? swapchainMethod = null!;
 
         private readonly Stopwatch timer = new();
 

@@ -21,8 +21,7 @@ namespace ChillFrames
         [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; }
         [PluginService] public static CommandManager Commands { get; private set; }
         [PluginService] public static Condition Condition { get; private set; }
-        [PluginService] public static ChatGui Chat { get; private set; }
-        public static WindowSystem WindowSystem { get; } = new WindowSystem("DailyDuty");
+        public static WindowSystem WindowSystem { get; } = new WindowSystem("ChillFrames");
         public static Configuration Configuration { get; set; }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
