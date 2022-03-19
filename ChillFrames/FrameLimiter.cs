@@ -44,7 +44,7 @@ namespace ChillFrames
 
             if (Service.Configuration.EnableLimiter == true)
             {
-                if (!InCombat() && !BoundByDuty())
+                if (ShouldLimitFramerate())
                 {
                     var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
 
@@ -58,16 +58,33 @@ namespace ChillFrames
             timer.Restart();
         }
 
+        private bool ShouldLimitFramerate()
+        {
+            var boundByDuty = BoundByDuty();
+            var inCombat = InCombat();
+            var inCutscene = InCutscene();
+
+            return !boundByDuty && !inCombat && !inCutscene;
+        }
+
+        private bool InCutscene()
+        {
+            return Service.Configuration.DisableDuringCutscene &&
+                   Service.Condition[ConditionFlag.OccupiedInCutSceneEvent] == true;
+        }
+
         private bool BoundByDuty()
         {
-            return Service.Condition[ConditionFlag.BoundByDuty] ||
+            return Service.Configuration.DisableDuringDuty &&
+                   (Service.Condition[ConditionFlag.BoundByDuty] ||
                    Service.Condition[ConditionFlag.BoundByDuty56] ||
-                   Service.Condition[ConditionFlag.BoundByDuty95];
+                   Service.Condition[ConditionFlag.BoundByDuty95]);
         }
 
         private bool InCombat()
         {
-            return Service.Condition[ConditionFlag.InCombat];
+            return Service.Configuration.DisableDuringCombat &&
+                   Service.Condition[ConditionFlag.InCombat];
         }
     }
 }

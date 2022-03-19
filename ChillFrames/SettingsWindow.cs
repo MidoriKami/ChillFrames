@@ -30,8 +30,8 @@ namespace ChillFrames
 
             SizeConstraints = new WindowSizeConstraints()
             {
-                MinimumSize = new(300,225),
-                MaximumSize = new(300,225)
+                MinimumSize = new(300,300),
+                MaximumSize = new(300,300)
             };
         }
         public void Dispose()
@@ -48,31 +48,42 @@ namespace ChillFrames
 
             ImGui.Spacing();
 
-            if (ImGui.Checkbox("Enable", ref Service.Configuration.EnableLimiter))
-            {
-                Service.Configuration.Save();
-            }
+            ImGui.Checkbox("Enable", ref Service.Configuration.EnableLimiter);
 
             if (Service.Configuration.EnableLimiter)
             {
-                ImGui.SetNextItemWidth(50 * ImGuiHelpers.GlobalScale);
-                ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0);
+                DrawSettings();
 
-                var frametimeExact = 1000 / newFramerateLimit + 1;
-                var approximateFramerate = 1000 / frametimeExact;
-                
-                ImGui.Text("Approximated Framerate: " + approximateFramerate);
-                ImGuiComponents.HelpMarker("Framerate limit will be approximated not exact");
-
-                if (ImGui.Button("Apply", new Vector2(75, 23)))
-                {
-                    Service.Configuration.FrameRateLimit = Math.Max(newFramerateLimit, 10);
-                }
+                DrawFramerateEdit();
             }
 
             saveAndCloseButtons.Draw();
 
             ImGui.PopID();
+        }
+
+        private void DrawFramerateEdit()
+        {
+            ImGui.SetNextItemWidth(50 * ImGuiHelpers.GlobalScale);
+            ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0);
+
+            var frametimeExact = 1000 / newFramerateLimit + 1;
+            var approximateFramerate = 1000 / frametimeExact;
+
+            ImGui.Text("Approximated Framerate: " + approximateFramerate);
+            ImGuiComponents.HelpMarker("Framerate limit will be approximated not exact");
+
+            if (ImGui.Button("Apply", new Vector2(75, 23)))
+            {
+                Service.Configuration.FrameRateLimit = Math.Max(newFramerateLimit, 10);
+            }
+        }
+
+        private static void DrawSettings()
+        {
+            ImGui.Checkbox("Disable during combat", ref Service.Configuration.DisableDuringCombat);
+            ImGui.Checkbox("Disable during duty", ref Service.Configuration.DisableDuringDuty);
+            ImGui.Checkbox("Disable during cutscene", ref Service.Configuration.DisableDuringCutscene);
         }
     }
 }
