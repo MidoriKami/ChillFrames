@@ -32,6 +32,9 @@ Currently Chill Frames has the following configuration options, if any of these 
 
 ![image](https://user-images.githubusercontent.com/9083275/159103546-7c3bc8f6-192f-4853-9f10-f0b7583b72f7.png)
 
+## Testimonials
+
+![image](https://user-images.githubusercontent.com/9083275/159103862-54542bbb-6dd4-49ef-a7fb-358e9e116ca9.png)
 
 
 
