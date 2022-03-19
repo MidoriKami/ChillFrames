@@ -52,9 +52,13 @@ namespace ChillFrames
 
             if (Service.Configuration.EnableLimiter)
             {
+                ImGui.Indent(15 * ImGuiHelpers.GlobalScale);
+
                 DrawSettings();
 
                 DrawFramerateEdit();
+
+                ImGui.Indent(-15 * ImGuiHelpers.GlobalScale);
             }
 
             saveAndCloseButtons.Draw();
