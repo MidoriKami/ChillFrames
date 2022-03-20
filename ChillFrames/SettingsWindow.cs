@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
+using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
@@ -13,8 +15,6 @@ namespace ChillFrames
 {
     internal class SettingsWindow : Window, IDisposable
     {
-        private readonly SaveAndCloseButtons saveAndCloseButtons;
-
         private const ImGuiWindowFlags DefaultFlags = ImGuiWindowFlags.NoFocusOnAppearing |
                                                       ImGuiWindowFlags.NoScrollbar |
                                                       ImGuiWindowFlags.NoCollapse |
@@ -22,16 +22,16 @@ namespace ChillFrames
 
         private int newFramerateLimit = Service.Configuration.FrameRateLimit;
 
+        private readonly Stopwatch timer = new();
+
         public SettingsWindow() : base("ChillFrames Settings", DefaultFlags)
         {
             Service.WindowSystem.AddWindow(this);
 
-            saveAndCloseButtons = new(this);
-
             SizeConstraints = new WindowSizeConstraints()
             {
-                MinimumSize = new(300,300),
-                MaximumSize = new(300,300)
+                MinimumSize = new(300,250),
+                MaximumSize = new(300,250)
             };
         }
         public void Dispose()
@@ -49,6 +49,8 @@ namespace ChillFrames
             ImGui.Spacing();
 
             ImGui.Checkbox("Enable", ref Service.Configuration.EnableLimiter);
+            
+            ImGui.Spacing();
 
             if (Service.Configuration.EnableLimiter)
             {
@@ -56,31 +58,44 @@ namespace ChillFrames
 
                 DrawSettings();
 
+                ImGui.Spacing();
+
                 DrawFramerateEdit();
 
                 ImGui.Indent(-15 * ImGuiHelpers.GlobalScale);
             }
 
-            saveAndCloseButtons.Draw();
-
             ImGui.PopID();
+        }
+
+        public override void OnClose()
+        {
+            Service.PluginInterface.UiBuilder.AddNotification("Configuration Saved", "Chill Frames", NotificationType.Success);
+            Service.Configuration.Save();
         }
 
         private void DrawFramerateEdit()
         {
             ImGui.SetNextItemWidth(50 * ImGuiHelpers.GlobalScale);
-            ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0);
 
-            var frametimeExact = 1000 / newFramerateLimit + 1;
+            if (ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0))
+            {
+                timer.Restart();
+            }
+
+            if (timer.IsRunning && timer.Elapsed.Seconds >= 1)
+            {
+                timer.Stop();
+                Service.Configuration.FrameRateLimit = Math.Max(newFramerateLimit, 10);
+            }
+            
+            ImGuiComponents.HelpMarker("The framerate value to limit the game to\n" + "Minimum: 10");
+            
+            var frametimeExact = 1000 / Service.Configuration.FrameRateLimit + 1;
             var approximateFramerate = 1000 / frametimeExact;
 
             ImGui.Text("Approximated Framerate: " + approximateFramerate);
             ImGuiComponents.HelpMarker("Framerate limit will be approximated not exact");
-
-            if (ImGui.Button("Apply", new Vector2(75, 23)))
-            {
-                Service.Configuration.FrameRateLimit = Math.Max(newFramerateLimit, 10);
-            }
         }
 
         private static void DrawSettings()
