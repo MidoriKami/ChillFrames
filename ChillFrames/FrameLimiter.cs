@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.Gui;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 

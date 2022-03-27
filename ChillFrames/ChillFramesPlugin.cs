@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Dalamud.Game;
-using Dalamud.Game.Command;
+﻿using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 

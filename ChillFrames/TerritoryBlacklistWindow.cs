@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;
@@ -15,28 +13,25 @@ namespace ChillFrames
     {
         private int modifyBlacklistValue = 0;
 
-        private readonly List<ContentFinderCondition> ContentFinderConditionList;
-        private readonly HashSet<string> ContentTypeList;
-        private HashSet<string> InstanceNames;
-        private string SelectedContentTypeString = "";
-        private string SelectedInstanceName = "";
+        private readonly List<ContentFinderCondition> contentFinderConditionList;
+        private readonly HashSet<string> contentTypeList;
+        private HashSet<string> instanceNames = new();
+        private string selectedContentTypeString = "";
+        private string selectedInstanceName = "";
+
         public TerritoryBlacklistWindow() : base("Chill Frames Territory Blacklist", ImGuiWindowFlags.AlwaysAutoResize)
         {
             Service.WindowSystem.AddWindow(this);
 
-            ContentFinderConditionList = Service.DataManager.GetExcelSheet<ContentFinderCondition>()!.ToList();
+            contentFinderConditionList = Service.DataManager.GetExcelSheet<ContentFinderCondition>()!.ToList();
 
-            ContentTypeList = ContentFinderConditionList
+            contentTypeList = contentFinderConditionList
                 !.Where(c => c.ContentType.Value?.Name != null)
                 .Select(c => c.ContentType.Value!.Name.ToString())
                 .ToHashSet();
 
-            //SizeConstraints = new WindowSizeConstraints()
-            //{
-            //    MinimumSize = new(300, 250),
-            //    MaximumSize = new(300, 250)
-            //};
         }
+
         public void Dispose()
         {
             Service.WindowSystem.RemoveWindow(this);
@@ -136,6 +131,7 @@ namespace ChillFrames
 
             ImGui.Spacing();
         }
+
         private void PrintAddRemoveManualWithNameTerritoryWhitelist()
         {
 
@@ -144,18 +140,18 @@ namespace ChillFrames
             ImGui.Spacing();
 
             ImGui.SetNextItemWidth(230.0f * ImGuiHelpers.GlobalScale);
-            if (ImGui.BeginCombo("##ContentTypeSelection", SelectedContentTypeString))
+            if (ImGui.BeginCombo("##ContentTypeSelection", selectedContentTypeString))
             {
-                foreach (var name in ContentTypeList)
+                foreach (var name in contentTypeList)
                 {
-                    bool isSelected = name == SelectedContentTypeString;
+                    bool isSelected = name == selectedContentTypeString;
                     if (ImGui.Selectable(name, isSelected))
                     {
-                        SelectedContentTypeString = name;
-                        InstanceNames = ContentFinderConditionList
+                        selectedContentTypeString = name;
+                        instanceNames = contentFinderConditionList
                             .Where(c => c.ContentType.Value != null)
                             .Where(c => c.Name != null)
-                            .Where(c =>  c.ContentType.Value!.Name == SelectedContentTypeString)
+                            .Where(c =>  c.ContentType.Value!.Name == selectedContentTypeString)
                             .Select(c => c.Name.ToString())
                             .ToHashSet();
                     }
@@ -170,18 +166,18 @@ namespace ChillFrames
             }
             ImGui.Spacing();
 
-            if (SelectedContentTypeString != "")
+            if (selectedContentTypeString != "")
             {
                 ImGui.SetNextItemWidth(230.0f * ImGuiHelpers.GlobalScale);
-                if (ImGui.BeginCombo("##TerritorySelectByName", SelectedInstanceName))
+                if (ImGui.BeginCombo("##TerritorySelectByName", selectedInstanceName))
                 {
 
-                    foreach (var instanceName in InstanceNames)
+                    foreach (var instanceName in instanceNames)
                     {
-                        bool isSelected = instanceName == SelectedInstanceName;
+                        bool isSelected = instanceName == selectedInstanceName;
                         if (ImGui.Selectable(instanceName, isSelected))
                         {
-                            SelectedInstanceName = instanceName;
+                            selectedInstanceName = instanceName;
                         }
 
                         if (isSelected)
@@ -200,9 +196,9 @@ namespace ChillFrames
                 {
                     var whitelist = Service.Configuration.TerritoryBlacklist;
 
-                    var instanceId = ContentFinderConditionList
+                    var instanceId = contentFinderConditionList
                         .Where(c => c.Name != null)
-                        .First(c => c.Name.ToString() == SelectedInstanceName)
+                        .First(c => c.Name.ToString() == selectedInstanceName)
                         .TerritoryType.Value!.RowId;
 
                     if (!whitelist.Contains(instanceId))
@@ -217,9 +213,9 @@ namespace ChillFrames
                 {
                     var whitelist = Service.Configuration.TerritoryBlacklist;
 
-                    var instanceId = ContentFinderConditionList
+                    var instanceId = contentFinderConditionList
                         .Where(c => c.Name != null)
-                        .First(c => c.Name.ToString() == SelectedInstanceName)
+                        .First(c => c.Name.ToString() == selectedInstanceName)
                         .TerritoryType.Value!.RowId;
 
                     if (whitelist.Contains(instanceId))
@@ -242,6 +238,7 @@ namespace ChillFrames
                 blacklist.Remove(territory);
             }
         }
+
         private static void AddToBlacklist(uint territory)
         {
             var blacklist = Service.Configuration.TerritoryBlacklist;
