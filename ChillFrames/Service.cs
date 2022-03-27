@@ -21,6 +21,9 @@ namespace ChillFrames
         [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; }
         [PluginService] public static CommandManager Commands { get; private set; }
         [PluginService] public static Condition Condition { get; private set; }
+        [PluginService] public static ClientState ClientState { get; private set; }
+        [PluginService] public static DataManager DataManager { get; private set; }
+
         public static WindowSystem WindowSystem { get; } = new WindowSystem("ChillFrames");
         public static Configuration Configuration { get; set; }
 

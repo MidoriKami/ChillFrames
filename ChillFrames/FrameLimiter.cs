@@ -14,7 +14,6 @@ namespace ChillFrames
 {
     internal unsafe class FrameLimiter : IDisposable
     {
-
         private delegate void SwapChainPresent(IntPtr address);
 
         [Signature("E8 ?? ?? ?? ?? C6 83 ?? ?? ?? ?? ?? 48 8B 4B 70", DetourName = nameof(LimitFramerate))]
@@ -63,8 +62,9 @@ namespace ChillFrames
             var boundByDuty = BoundByDuty();
             var inCombat = InCombat();
             var inCutscene = InCutscene();
+            var inBlacklistedArea = InBlacklistedZone();
 
-            return !boundByDuty && !inCombat && !inCutscene;
+            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea;
         }
 
         private bool InCutscene()
@@ -85,6 +85,12 @@ namespace ChillFrames
         {
             return Service.Configuration.DisableDuringCombat &&
                    Service.Condition[ConditionFlag.InCombat];
+        }
+
+        private bool InBlacklistedZone()
+        {
+            return Service.Configuration.DisableInBlacklistedTerritories &&
+                   Service.Configuration.TerritoryBlacklist.Contains(Service.ClientState.TerritoryType);
         }
     }
 }

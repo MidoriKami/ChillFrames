@@ -18,21 +18,17 @@ namespace ChillFrames
         private const ImGuiWindowFlags DefaultFlags = ImGuiWindowFlags.NoFocusOnAppearing |
                                                       ImGuiWindowFlags.NoScrollbar |
                                                       ImGuiWindowFlags.NoCollapse |
-                                                      ImGuiWindowFlags.NoResize;
+                                                      ImGuiWindowFlags.AlwaysAutoResize;
 
         private int newFramerateLimit = Service.Configuration.FrameRateLimit;
+
+        private readonly TerritoryBlacklistWindow blacklist = new();
 
         private readonly Stopwatch timer = new();
 
         public SettingsWindow() : base("ChillFrames Settings", DefaultFlags)
         {
             Service.WindowSystem.AddWindow(this);
-
-            SizeConstraints = new WindowSizeConstraints()
-            {
-                MinimumSize = new(300,250),
-                MaximumSize = new(300,250)
-            };
         }
         public void Dispose()
         {
@@ -59,6 +55,18 @@ namespace ChillFrames
                 DrawSettings();
 
                 ImGui.Spacing();
+
+                if (Service.Configuration.DisableInBlacklistedTerritories)
+                {
+                    ImGui.Indent(15 * ImGuiHelpers.GlobalScale);
+
+                    if (ImGui.Button("Open Configuration"))
+                    {
+                        blacklist.IsOpen = true;
+                    }
+
+                    ImGui.Indent(-15 * ImGuiHelpers.GlobalScale);
+                }
 
                 DrawFramerateEdit();
 
@@ -103,6 +111,7 @@ namespace ChillFrames
             ImGui.Checkbox("Disable during combat", ref Service.Configuration.DisableDuringCombat);
             ImGui.Checkbox("Disable during duty", ref Service.Configuration.DisableDuringDuty);
             ImGui.Checkbox("Disable during cutscene", ref Service.Configuration.DisableDuringCutscene);
+            ImGui.Checkbox("Disable in specific zones", ref Service.Configuration.DisableInBlacklistedTerritories);
         }
     }
 }
