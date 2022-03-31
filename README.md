@@ -29,8 +29,9 @@ Currently Chill Frames has the following configuration options, if any of these 
 | Disable during combat   | The framerate will not be limited anytime you are in combat      |
 | Disable during duty     | The framerate will not be limited anytime you are bound by duty  |
 | Disable during cutscene | The framerate will not be limited during any cinematic cutscenes |
+| Disable in Specific Zones | The framerate will not be limited in any of the listed zones |
 
-![image](https://user-images.githubusercontent.com/9083275/159197634-6bbc8670-81c9-4f3b-bba7-946d4da9651e.png)
+![image](https://user-images.githubusercontent.com/9083275/161125470-1fd6d0db-fd2b-4f7b-b5a1-8159560d0d0a.png)
 
 ## Testimonials
 
