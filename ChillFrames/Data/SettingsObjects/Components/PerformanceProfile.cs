@@ -22,8 +22,6 @@ namespace ChillFrames.Data.SettingsObjects.Components
             Self.Execute();
             Party.Execute();
             Other.Execute();
-
-            Chat.Debug("Applying New Profile");
         }
     }
 }
