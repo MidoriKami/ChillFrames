@@ -4,21 +4,22 @@
     <Authors></Authors>
     <Company></Company>
     <Version>1.0</Version>
-	<AssemblyVersion>1.0.0.0</AssemblyVersion>
+	<AssemblyVersion>1.1.0.0</AssemblyVersion>
     <Description></Description>
     <Copyright></Copyright>
     <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
-    <Platforms>x64</Platforms>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>$(AppData)\XIVLauncher\devPlugins\ChillFrames\</OutputPath>
+	  <TargetFramework>net5.0-windows</TargetFramework>
+	  <Platforms>x64</Platforms>
+	  <Nullable>enable</Nullable>
+	  <LangVersion>latest</LangVersion>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <OutputPath>$(AppData)\XIVLauncher\devPlugins\ChillFrames\</OutputPath>
+	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,19 +27,19 @@
     <None Remove="README.md" />
 	<None Remove="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
-
+	
 	<PropertyGroup>
-    <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-  </PropertyGroup>
+		<DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Content Include="..\images\icon.png" Link="images\icon.png" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
-
 	<ItemGroup>
-    <PackageReference Include="DalamudPackager" Version="2.1.5" />
-  </ItemGroup>
+		<PackageReference Include="DalamudPackager" Version="2.1.5" />
+		<PackageReference Include="XivCommon" Version="4.0.0" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Reference Include="FFXIVClientStructs">

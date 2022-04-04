@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChillFrames.Data.SettingsObjects;
 using Dalamud.Configuration;
 using Dalamud.Plugin;
 
-namespace ChillFrames
+namespace ChillFrames.Data
 {
     [Serializable]
     public class Configuration : IPluginConfiguration
     {
         public int Version { get; set; } = 1;
-        public List<uint> TerritoryBlacklist = new();
 
-        public bool DisableInBlacklistedTerritories = false;
-        public bool DisableDuringCutscene = true;
-        public bool DisableDuringCombat = true;
-        public bool DisableDuringDuty = true;
-        public bool EnableLimiter = true;
-        public int FrameRateLimit = 60;
+        public GeneralSettings General = new();
+        public BlacklistSettings Blacklist = new();
+        public SystemSettings System = new();
+        public PerformanceSettings Performance = new();
 
         [NonSerialized]
         private DalamudPluginInterface? pluginInterface;

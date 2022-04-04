@@ -23,12 +23,11 @@ namespace ChillFrames.Tabs
         private int modeSelect;
         private int modifyBlacklistValue;
 
-        private readonly List<ContentFinderCondition> contentFinderConditionList;
-        private readonly HashSet<string> contentTypeList;
-
-        private HashSet<string> instanceNames = new();
+        private readonly HashSet<SearchResult> AllTerritories = new();
+        private readonly HashSet<string> CategoryList = new();
+        private HashSet<SearchResult> instanceNames = new();
         private string selectedContentTypeString = "";
-        private string selectedInstanceName = "";
+        private SearchResult selectedResult = new();
 
         public string TabName => "Blacklist";
         public bool Enabled => Service.Configuration.Blacklist.Enabled;
@@ -37,12 +36,25 @@ namespace ChillFrames.Tabs
         {
             modeSelect = (int)Settings.Mode;
 
-            contentFinderConditionList = Service.DataManager.GetExcelSheet<ContentFinderCondition>()!.ToList();
+            foreach (var row in Service.DataManager.GetExcelSheet<TerritoryType>()!)
+            {
+                if (row.PlaceName?.Value?.Name != null && row.PlaceName.Value.Name != string.Empty)
+                {
+                    var searchResult = new SearchResult()
+                    {
+                        TerritoryID = row.RowId,
+                        TerritoryName = row.PlaceName.Value.Name,
+                        TerritoryIntendedUse = TerritoryIntendedUseHelper.GetUseDescription(row.TerritoryIntendedUse)
+                    };
 
-            contentTypeList = contentFinderConditionList
-                !.Where(c => c.ContentType.Value?.Name != null)
-                .Select(c => c.ContentType.Value!.Name.ToString())
-                .ToHashSet();
+                    if (!AllTerritories.Any(p => p.TerritoryName == searchResult.TerritoryName))
+                    {
+                        AllTerritories.Add(searchResult);
+                    }
+
+                    CategoryList.Add(searchResult.TerritoryIntendedUse);
+                }
+            }
         }
         
         public void Dispose()
@@ -190,23 +202,21 @@ namespace ChillFrames.Tabs
             ImGui.PushID("NameLookup");
 
             ImGui.Separator();
-            ImGui.Text("Add or Remove by DutyFinder Name");
+            ImGui.Text("Add or Remove by Name");
             ImGui.Spacing();
 
-            ImGui.SetNextItemWidth(230.0f * ImGuiHelpers.GlobalScale);
+            ImGui.SetNextItemWidth(300.0f * ImGuiHelpers.GlobalScale);
             if (ImGui.BeginCombo("##ContentTypeSelection", selectedContentTypeString))
             {
-                foreach (var name in contentTypeList)
+                foreach (var searchResult in CategoryList.OrderBy(s => s))
                 {
-                    bool isSelected = name == selectedContentTypeString;
-                    if (ImGui.Selectable(name, isSelected))
+                    bool isSelected = searchResult == selectedContentTypeString;
+                    if (ImGui.Selectable(searchResult, isSelected))
                     {
-                        selectedContentTypeString = name;
-                        instanceNames = contentFinderConditionList
-                            .Where(c => c.ContentType.Value != null)
-                            .Where(c => c.Name != null)
-                            .Where(c => c.ContentType.Value!.Name == selectedContentTypeString)
-                            .Select(c => c.Name.ToString())
+                        selectedContentTypeString = searchResult;
+
+                        instanceNames = AllTerritories
+                            .Where(r => r.TerritoryIntendedUse == selectedContentTypeString)
                             .ToHashSet();
                     }
 
@@ -222,16 +232,15 @@ namespace ChillFrames.Tabs
 
             if (selectedContentTypeString != "")
             {
-                ImGui.SetNextItemWidth(230.0f * ImGuiHelpers.GlobalScale);
-                if (ImGui.BeginCombo("##TerritorySelectByName", selectedInstanceName))
+                ImGui.SetNextItemWidth(300.0f * ImGuiHelpers.GlobalScale);
+                if (ImGui.BeginCombo("##TerritorySelectByName", selectedResult.TerritoryName))
                 {
-
-                    foreach (var instanceName in instanceNames)
+                    foreach (var instanceName in instanceNames.OrderBy(o => o.TerritoryName))
                     {
-                        bool isSelected = instanceName == selectedInstanceName;
-                        if (ImGui.Selectable(instanceName, isSelected))
+                        bool isSelected = instanceName == selectedResult;
+                        if (ImGui.Selectable(instanceName.TerritoryName, isSelected))
                         {
-                            selectedInstanceName = instanceName;
+                            selectedResult = instanceName;
                         }
 
                         if (isSelected)
@@ -246,26 +255,16 @@ namespace ChillFrames.Tabs
                 ImGui.Spacing();
 
 
-                if (ImGui.Button("Add", ImGuiHelpers.ScaledVector2(111, 25)))
+                if (ImGui.Button("Add", ImGuiHelpers.ScaledVector2(150, 25)))
                 {
-                    var instanceId = contentFinderConditionList
-                        .Where(c => c.Name != null)
-                        .First(c => c.Name.ToString() == selectedInstanceName)
-                        .TerritoryType.Value!.RowId;
-
-                    Add(instanceId);
+                    Add(selectedResult.TerritoryID);
                 }
 
                 ImGui.SameLine();
 
-                if (ImGui.Button("Remove", ImGuiHelpers.ScaledVector2(111, 25)))
+                if (ImGui.Button("Remove", ImGuiHelpers.ScaledVector2(150, 25)))
                 {
-                    var instanceId = contentFinderConditionList
-                        .Where(c => c.Name != null)
-                        .First(c => c.Name.ToString() == selectedInstanceName)
-                        .TerritoryType.Value!.RowId;
-
-                    Remove(instanceId);
+                    Remove(selectedResult.TerritoryID);
                 }
             }
 

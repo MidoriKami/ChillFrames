@@ -1,6 +1,11 @@
-﻿using Dalamud.Game.Command;
+﻿using ChillFrames.Data;
+using ChillFrames.System;
+using ChillFrames.Windows;
+using Dalamud.Game;
+using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using XivCommon;
 
 namespace ChillFrames
 {
@@ -10,8 +15,10 @@ namespace ChillFrames
         private const string SettingsCommand = "/pchillframes";
         private const string ShorthandCommand = "/pcf";
 
-        private readonly SettingsWindow settingsWindow;
+        public static SettingsWindow SettingsWindow = null!;
+        private readonly CommandSystem commandSystem;
         private readonly FrameLimiter frameLimiter;
+        private readonly PerformanceTweaker performanceTweaker;
 
         public ChillFramesPlugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
@@ -34,26 +41,34 @@ namespace ChillFrames
                 HelpMessage = "shorthand command to open configuration window"
             });
 
+
             // Create Systems
-            settingsWindow = new();
-            frameLimiter = new();
+            SettingsWindow = new SettingsWindow();
+            commandSystem = new CommandSystem();
+            frameLimiter = new FrameLimiter();
+            performanceTweaker = new PerformanceTweaker();
+
+            Service.XivCommon = new XivCommonBase();
 
             // Register draw callbacks
             Service.PluginInterface.UiBuilder.Draw += Service.WindowSystem.Draw;
             Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
         }
 
-        private void OnCommand(string command, string arguments) => settingsWindow.IsOpen = !settingsWindow.IsOpen;
+        private void OnCommand(string command, string arguments) => commandSystem.DispatchCommands(command, arguments);
 
-        private void DrawConfigUI() => settingsWindow.IsOpen = !settingsWindow.IsOpen;
+        private void DrawConfigUI() => SettingsWindow.IsOpen = !SettingsWindow.IsOpen;
 
         public void Dispose()
         {
             Service.PluginInterface.UiBuilder.Draw -= Service.WindowSystem.Draw;
             Service.PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUI;
 
-            settingsWindow.Dispose();
+            Service.XivCommon.Dispose();
+
+            SettingsWindow.Dispose();
             frameLimiter.Dispose();
+            performanceTweaker.Dispose();
 
             Service.Commands.RemoveHandler(SettingsCommand);
             Service.Commands.RemoveHandler(ShorthandCommand);
