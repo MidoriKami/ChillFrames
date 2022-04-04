@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChillFrames.Data.Enums.BattleEffect;
+using ChillFrames.Utilities;
 using XivCommon;
 
 namespace ChillFrames.Data.SettingsObjects.Components

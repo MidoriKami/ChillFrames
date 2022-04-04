@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChillFrames.Data.Enums;
 using ChillFrames.Data.SettingsObjects;
+using ChillFrames.Utilities;
 using Dalamud.Game;
 using XivCommon;
 

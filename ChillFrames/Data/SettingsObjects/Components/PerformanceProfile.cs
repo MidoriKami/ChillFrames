@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChillFrames.Data.Enums;
 using ChillFrames.Data.Enums.BattleEffect;
 using ChillFrames.System;
+using ChillFrames.Utilities;
 using XivCommon;
 
 namespace ChillFrames.Data.SettingsObjects.Components
@@ -21,6 +22,8 @@ namespace ChillFrames.Data.SettingsObjects.Components
             Self.Execute();
             Party.Execute();
             Other.Execute();
+
+            Chat.Debug("Applying New Profile");
         }
     }
 }

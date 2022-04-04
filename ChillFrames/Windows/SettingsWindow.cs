@@ -18,7 +18,8 @@ namespace ChillFrames.Windows
         {
             new GeneralConfigurationTab(),
             new BlacklistTab(),
-            new PerformanceProfiles()
+            new PerformanceProfiles(),
+            new DebugTab()
         };
 
         public SettingsWindow() : base("ChillFrames Settings")
