@@ -1,11 +1,13 @@
 ﻿using ChillFrames.Data;
 using ChillFrames.System;
+using ChillFrames.Utilities;
 using ChillFrames.Windows;
 using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using XivCommon;
+// ReSharper disable FieldCanBeMadeReadOnly.Local
 
 namespace ChillFrames
 {
@@ -16,9 +18,9 @@ namespace ChillFrames
         private const string ShorthandCommand = "/pcf";
 
         public static SettingsWindow SettingsWindow = null!;
-        private readonly CommandSystem commandSystem;
-        private readonly FrameLimiter frameLimiter;
-        private readonly PerformanceTweaker performanceTweaker;
+        private CommandSystem commandSystem;
+        private FrameLimiter frameLimiter;
+        private PerformanceTweaker performanceTweaker;
 
         public ChillFramesPlugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
@@ -41,14 +43,14 @@ namespace ChillFrames
                 HelpMessage = "shorthand command to open configuration window"
             });
 
+            // Initialize XivCommon
+            Service.XivCommon = new XivCommonBase();
 
             // Create Systems
             SettingsWindow = new SettingsWindow();
             commandSystem = new CommandSystem();
             frameLimiter = new FrameLimiter();
             performanceTweaker = new PerformanceTweaker();
-
-            Service.XivCommon = new XivCommonBase();
 
             // Register draw callbacks
             Service.PluginInterface.UiBuilder.Draw += Service.WindowSystem.Draw;
@@ -57,7 +59,7 @@ namespace ChillFrames
 
         private void OnCommand(string command, string arguments) => commandSystem.DispatchCommands(command, arguments);
 
-        private void DrawConfigUI() => SettingsWindow.IsOpen = !SettingsWindow.IsOpen;
+        private void DrawConfigUI() => SettingsWindow.Toggle();
 
         public void Dispose()
         {

@@ -11,6 +11,8 @@ namespace ChillFrames.Data
     {
         public int Version { get; set; } = 1;
 
+        public bool devMode = false;
+
         public GeneralSettings General = new();
         public BlacklistSettings Blacklist = new();
         public SystemSettings System = new();

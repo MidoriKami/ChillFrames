@@ -18,7 +18,8 @@ namespace ChillFrames.Windows
         {
             new GeneralConfigurationTab(),
             new BlacklistTab(),
-            new PerformanceProfiles()
+            new PerformanceProfiles(),
+            new DebugTab()
         };
 
         public SettingsWindow() : base("ChillFrames Settings")
@@ -27,9 +28,6 @@ namespace ChillFrames.Windows
 
             Flags |= ImGuiWindowFlags.NoScrollbar;
             Flags |= ImGuiWindowFlags.NoScrollWithMouse;
-
-            // todo: remove this
-            IsOpen = true;
         }
 
         public void Dispose()
