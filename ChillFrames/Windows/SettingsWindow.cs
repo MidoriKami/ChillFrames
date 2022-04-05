@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using ChillFrames.Data.SettingsObjects;
 using ChillFrames.Interfaces;
+using ChillFrames.System;
 using ChillFrames.Tabs;
+using ChillFrames.Utilities;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
@@ -46,9 +48,23 @@ namespace ChillFrames.Windows
         {
             if (!IsOpen) return;
 
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGuiHelpers.ScaledVector2(10, 8));
 
             Utilities.Draw.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiter, "Enables the Framerate Limiter\n" + "When the configured conditions are true");
+
+            ImGui.Indent(28.0f * ImGuiHelpers.GlobalScale);
+
+            if (Condition.EnableFramerateLimit() && Settings.EnableLimiter)
+            {
+                ImGui.TextColored(Colors.Green, "Limiter Active");
+            }
+            else
+            {
+                ImGui.TextColored(Colors.Red, "Limiter Inactive");
+            }
+
+            ImGui.Indent(-25.0f * ImGuiHelpers.GlobalScale);
+
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGuiHelpers.ScaledVector2(10, 8));
 
             ImGui.Spacing();
 
