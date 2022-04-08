@@ -14,5 +14,6 @@ namespace ChillFrames.Data.SettingsObjects
         public bool DisableDuringCutscene = true;
         public bool DisableDuringCombat = true;
         public bool DisableDuringDuty = true;
+        public bool DisableDuringGpose = true;
     }
 }

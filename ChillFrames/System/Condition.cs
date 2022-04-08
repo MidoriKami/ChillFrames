@@ -21,13 +21,16 @@ namespace ChillFrames.System
             var inCombat = InCombat() && Settings.DisableDuringCombat;
             var inCutscene = InCutscene() && Settings.DisableDuringCutscene;
             var inBlacklistedArea = InBlacklistedZone() && Blacklist.Enabled;
+            var inGpose = InGpose() && Settings.DisableDuringGpose;
 
-            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea;
+            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inGpose;
         }
 
         private static bool InCutscene()
         {
-            return Service.Condition[ConditionFlag.OccupiedInCutSceneEvent];
+            return Service.Condition[ConditionFlag.OccupiedInCutSceneEvent] ||
+                   Service.Condition[ConditionFlag.WatchingCutscene] ||
+                   Service.Condition[ConditionFlag.WatchingCutscene78];
         }
 
         private static bool BoundByDuty()
@@ -40,6 +43,13 @@ namespace ChillFrames.System
         private static bool InCombat()
         {
             return Service.Condition[ConditionFlag.InCombat];
+        }
+
+        private static bool InGpose()
+        {
+            var localPlayer = Service.ClientState.LocalPlayer;
+
+            return localPlayer != null && localPlayer.OnlineStatus.Id == 18;
         }
 
         private static bool InBlacklistedZone()

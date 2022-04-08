@@ -39,6 +39,7 @@ namespace ChillFrames.Tabs
             ImGui.Checkbox("Disable during duty", ref Settings.DisableDuringDuty);
             ImGui.Checkbox("Disable during cutscene", ref Settings.DisableDuringCutscene);
             ImGui.Checkbox("Disable in specific zones", ref Blacklist.Enabled);
+            ImGui.Checkbox("Disable during gpose", ref Settings.DisableDuringGpose);
 
             ImGui.Checkbox("Enable Performance Profiles", ref Performance.Enabled);
 
