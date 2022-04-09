@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection;
 using ChillFrames.Data.SettingsObjects;
 using ChillFrames.Interfaces;
 using ChillFrames.System;
@@ -71,6 +72,8 @@ namespace ChillFrames.Windows
             DrawTabs();
 
             ImGui.PopStyleVar();
+
+            DrawVersionNumber();
         }
 
         private void DrawTabs()
@@ -103,6 +106,22 @@ namespace ChillFrames.Windows
         public override void OnClose()
         {
             Service.Configuration.Save();
+        }
+
+        private void DrawVersionNumber()
+        {
+            var assemblyInformation = Assembly.GetExecutingAssembly().FullName!.Split(',');
+
+            var versionString = assemblyInformation[1].Replace('=', ' ');
+
+            var stringSize = ImGui.CalcTextSize(versionString);
+
+            var x = ImGui.GetWindowWidth() / 2 - (stringSize.X / 2) * ImGuiHelpers.GlobalScale;
+            var y = ImGui.GetWindowHeight() - 30 * ImGuiHelpers.GlobalScale;
+            
+            ImGui.SetCursorPos(new Vector2(x, y));
+
+            ImGui.TextColored(Colors.Grey, versionString);
         }
     }
 }
