@@ -22,8 +22,9 @@ namespace ChillFrames.System
             var inCutscene = InCutscene() && Settings.DisableDuringCutscene;
             var inBlacklistedArea = InBlacklistedZone() && Blacklist.Enabled;
             var inGpose = InGpose() && Settings.DisableDuringGpose;
+            var inQuestEvent = InQuestEvent() && Settings.DisableDuringQuestEvent;
 
-            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inGpose;
+            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inGpose && !inQuestEvent;
         }
 
         private static bool InCutscene()
@@ -62,6 +63,11 @@ namespace ChillFrames.System
                 BlacklistMode.Inclusion => !inTaggedZone,
                 _ => throw new ArgumentOutOfRangeException()
             };
+        }
+
+        private static bool InQuestEvent()
+        {
+            return Service.Condition[ConditionFlag.OccupiedInQuestEvent];
         }
     }
 }
