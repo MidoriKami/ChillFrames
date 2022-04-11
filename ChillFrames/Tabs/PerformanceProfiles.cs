@@ -23,7 +23,7 @@ namespace ChillFrames.Tabs
         public void Draw()
         {
             ImGui.PushID("InactiveProfile");
-            ImGui.Text("Framerate Limiter Off");
+            ImGui.Text("Framerate Limiter Inactive");
             ImGuiComponents.HelpMarker("This profile will be used when the frame limiter is NOT ACTIVE\n" +
                                        "In other words, when your frame rate is NOT being limited,\n" +
                                        "these settings will be used.");
@@ -32,7 +32,7 @@ namespace ChillFrames.Tabs
             ImGui.PopID();
 
             ImGui.PushID("ActiveProfile");
-            ImGui.Text("Framerate Limiter On");
+            ImGui.Text("Framerate Limiter Active");
             ImGuiComponents.HelpMarker("This profile will be used when the frame limiter is ACTIVE\n" +
                                        "In other words, when your frame rate is being limited,\n" +
                                        "these settings will be used.");
