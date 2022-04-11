@@ -32,7 +32,7 @@ namespace ChillFrames.Tabs
             ImGui.PopID();
 
             ImGui.PushID("ActiveProfile");
-            ImGui.Text("Frame Limiter On");
+            ImGui.Text("Framerate Limiter On");
             ImGuiComponents.HelpMarker("This profile will be used when the frame limiter is ACTIVE\n" +
                                        "In other words, when your frame rate is being limited,\n" +
                                        "these settings will be used.");
