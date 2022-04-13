@@ -230,7 +230,7 @@ namespace ChillFrames.Tabs
             }
             ImGui.Spacing();
 
-            if (selectedContentTypeString != "")
+            if (selectedContentTypeString != string.Empty)
             {
                 ImGui.SetNextItemWidth(300.0f * ImGuiHelpers.GlobalScale);
                 if (ImGui.BeginCombo("##TerritorySelectByName", selectedResult.TerritoryName))
@@ -254,17 +254,19 @@ namespace ChillFrames.Tabs
 
                 ImGui.Spacing();
 
-
-                if (ImGui.Button("Add", ImGuiHelpers.ScaledVector2(150, 25)))
+                if (selectedResult.TerritoryName != string.Empty)
                 {
-                    Add(selectedResult.TerritoryID);
-                }
+                    if (ImGui.Button("Add", ImGuiHelpers.ScaledVector2(150, 25)))
+                    {
+                        Add(selectedResult.TerritoryID);
+                    }
 
-                ImGui.SameLine();
+                    ImGui.SameLine();
 
-                if (ImGui.Button("Remove", ImGuiHelpers.ScaledVector2(150, 25)))
-                {
-                    Remove(selectedResult.TerritoryID);
+                    if (ImGui.Button("Remove", ImGuiHelpers.ScaledVector2(150, 25)))
+                    {
+                        Remove(selectedResult.TerritoryID);
+                    }
                 }
             }
 
