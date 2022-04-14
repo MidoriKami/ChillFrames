@@ -12,6 +12,5 @@
   "InternalName": "ChillFrames",
   "AssemblyVersion": "0.0.0.1",
   "RepoUrl": "https://github.com/MidoriKami/ChillFrames",
-  "ApplicableVersion": "any",
-  "DalamudApiLevel": 5
+  "ApplicableVersion": "any"
 }
