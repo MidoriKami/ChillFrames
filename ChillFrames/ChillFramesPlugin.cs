@@ -50,7 +50,7 @@ namespace ChillFrames
             SettingsWindow = new SettingsWindow();
             commandSystem = new CommandSystem();
             frameLimiter = new FrameLimiter();
-            performanceTweaker = new PerformanceTweaker();
+            //performanceTweaker = new PerformanceTweaker();
 
             // Register draw callbacks
             Service.PluginInterface.UiBuilder.Draw += Service.WindowSystem.Draw;
@@ -70,7 +70,7 @@ namespace ChillFrames
 
             SettingsWindow.Dispose();
             frameLimiter.Dispose();
-            performanceTweaker.Dispose();
+            //performanceTweaker.Dispose();
 
             Service.Commands.RemoveHandler(SettingsCommand);
             Service.Commands.RemoveHandler(ShorthandCommand);

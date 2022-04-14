@@ -41,7 +41,7 @@ namespace ChillFrames.Tabs
             ImGui.Checkbox("Disable in specific zones", ref Blacklist.Enabled);
             ImGui.Checkbox("Disable during Quest Events", ref Settings.DisableDuringQuestEvent);
 
-            ImGui.Checkbox("Enable Performance Profiles", ref Performance.Enabled);
+            //ImGui.Checkbox("Enable Performance Profiles", ref Performance.Enabled);
 
             ImGui.Spacing();
             ImGui.Spacing();
