@@ -22,8 +22,9 @@ namespace ChillFrames.System
             var inCutscene = InCutscene() && Settings.DisableDuringCutscene;
             var inBlacklistedArea = InBlacklistedZone() && Blacklist.Enabled;
             var inQuestEvent = InQuestEvent() && Settings.DisableDuringQuestEvent;
+            var isBetweenAreas = IsBetweenAreas();
 
-            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent;
+            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas;
         }
 
         private static bool InCutscene()
@@ -60,6 +61,12 @@ namespace ChillFrames.System
         private static bool InQuestEvent()
         {
             return Service.Condition[ConditionFlag.OccupiedInQuestEvent];
+        }
+
+        private static bool IsBetweenAreas()
+        {
+            return Service.Condition[ConditionFlag.BetweenAreas] ||
+                   Service.Condition[ConditionFlag.BetweenAreas51];
         }
     }
 }
