@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.Threading;
 using ChillFrames.Data.SettingsObjects;
+using ChillFrames.Enums;
 using Dalamud.Hooking;
+using Dalamud.Logging;
 using Dalamud.Utility.Signatures;
 
 namespace ChillFrames.System
@@ -12,20 +14,29 @@ namespace ChillFrames.System
         private delegate void SwapChainPresent(IntPtr address);
 
         [Signature("E8 ?? ?? ?? ?? C6 43 61 00 EB 3D", DetourName = nameof(Swapchain_Present))]
-        private readonly Hook<SwapChainPresent>? swapchainMethod = null!;
+        private readonly Hook<SwapChainPresent>? swapchainMethod = null;
 
         private readonly Stopwatch timer = new();
+        private readonly Stopwatch steppingStopwatch = new();
         public GeneralSettings Settings => Service.Configuration.General;
 
         private int TargetFramerate => Settings.FrameRateLimit;
         private int TargetFrametime => 1000 / TargetFramerate;
+
+        private LimiterState state;
+        private bool enabledLastFrame;
+        private float delayRatio = 1.0f;
+
+        public static float DisableIncrement = Service.Configuration.DisableIncrement;
+        public static float EnableIncrement = Service.Configuration.EnableIncrement;
 
         public FrameLimiter()
         {
             SignatureHelper.Initialise(this);
 
             timer.Start();
-            swapchainMethod.Enable();
+            steppingStopwatch.Start();
+            swapchainMethod?.Enable();
         }
 
         public void Dispose()
@@ -37,9 +48,15 @@ namespace ChillFrames.System
         {
             swapchainMethod!.Original(address);
 
-            if (Condition.EnableFramerateLimit() && Settings.EnableLimiter)
+            UpdateState();
+
+            UpdateRate();
+
+            if (Condition.EnableFramerateLimit() && Settings.EnableLimiter || state != LimiterState.SteadyState)
             {
                 var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
+
+                delayTime = (int)(delayRatio * delayTime);
 
                 if (delayTime > 0)
                 {
@@ -48,6 +65,56 @@ namespace ChillFrames.System
             }
 
             timer.Restart();
+        }
+
+        private void UpdateState()
+        {
+            var shouldLimit = Condition.EnableFramerateLimit();
+
+            if (enabledLastFrame != shouldLimit)
+            {
+                state = enabledLastFrame switch
+                {
+                    true => LimiterState.Disabled,
+                    false => LimiterState.Enabled,
+                };
+            }
+
+            enabledLastFrame = shouldLimit;
+        }
+
+        private void UpdateRate()
+        {
+            const int stepDelay = 40;
+
+            if (steppingStopwatch.ElapsedMilliseconds > stepDelay)
+            {
+                switch (state)
+                {
+                    case LimiterState.Enabled when delayRatio < 1.0f:
+                        delayRatio += EnableIncrement;
+                        break;
+
+                    case LimiterState.Enabled when delayRatio >= 1.0f:
+                        state = LimiterState.SteadyState;
+                        delayRatio = 1.0f;
+                        break;
+
+                    case LimiterState.Disabled when delayRatio > 0.0f:
+                        delayRatio -= DisableIncrement;
+                        break;
+
+                    case LimiterState.Disabled when delayRatio <= 0.0f:
+                        delayRatio = 0.0f;
+                        state = LimiterState.SteadyState;
+                        break;
+
+                    case LimiterState.SteadyState:
+                        break;
+                }
+
+                steppingStopwatch.Restart();
+            }
         }
     }
 }
