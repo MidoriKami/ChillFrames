@@ -1,7 +1,5 @@
 ﻿using System;
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace ChillFrames.Utilities
 {

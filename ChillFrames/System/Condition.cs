@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChillFrames.Data.Enums;
 using ChillFrames.Data.SettingsObjects;
-using ChillFrames.Data.SettingsObjects.Components;
 using Dalamud.Game.ClientState.Conditions;
 
 namespace ChillFrames.System

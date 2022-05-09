@@ -8,7 +8,6 @@ using Dalamud.Game.Gui;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using XivCommon;
 
 namespace ChillFrames
 {
@@ -24,6 +23,5 @@ namespace ChillFrames
 
         public static WindowSystem WindowSystem { get; } = new("ChillFrames");
         public static Configuration Configuration { get; set; } = null!;
-        public static XivCommonBase XivCommon { get; set; } = null!;
     }
 }

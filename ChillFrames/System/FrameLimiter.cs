@@ -4,7 +4,6 @@ using System.Threading;
 using ChillFrames.Data.SettingsObjects;
 using ChillFrames.Enums;
 using Dalamud.Hooking;
-using Dalamud.Logging;
 using Dalamud.Utility.Signatures;
 
 namespace ChillFrames.System

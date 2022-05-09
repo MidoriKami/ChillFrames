@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using ImGuiNET;
@@ -70,41 +69,6 @@ namespace ChillFrames.Utilities
             {
                 ImGui.TextColored(new Vector4(185, 0, 0, 0.8f), falseString);
             }
-        }
-
-        public static void DrawWordWrappedString(string message)
-        {
-            var words = message.Split(' ');
-
-            var windowWidth = ImGui.GetContentRegionAvail().X;
-            var cumulativeSize = 0.0f;
-            var padding = 2.0f;
-
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(2.0f, 0.0f));
-
-            foreach (var word in words)
-            {
-                var wordWidth = ImGui.CalcTextSize(word).X;
-
-                if (cumulativeSize == 0)
-                {
-                    ImGui.Text(word);
-                    cumulativeSize += wordWidth + padding;
-                }
-                else if ((cumulativeSize + wordWidth) < windowWidth)
-                {
-                    ImGui.SameLine();
-                    ImGui.Text(word);
-                    cumulativeSize += wordWidth + padding;
-                }
-                else if ((cumulativeSize + wordWidth) >= windowWidth)
-                {
-                    ImGui.Text(word);
-                    cumulativeSize = wordWidth + padding;
-                }
-            }
-
-            ImGui.PopStyleVar();
         }
     }
 }

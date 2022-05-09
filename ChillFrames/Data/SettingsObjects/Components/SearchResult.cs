@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ChillFrames.Data.SettingsObjects.Components
+﻿namespace ChillFrames.Data.SettingsObjects.Components
 {
     internal class SearchResult
     {

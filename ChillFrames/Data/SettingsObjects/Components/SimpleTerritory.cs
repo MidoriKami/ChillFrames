@@ -1,8 +1,5 @@
 ﻿using System;
-using ChillFrames.Utilities;
 using Lumina.Excel.GeneratedSheets;
-using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
 
 namespace ChillFrames.Data.SettingsObjects.Components
 {
@@ -23,7 +20,6 @@ namespace ChillFrames.Data.SettingsObjects.Components
         {
             return "[ " + TerritoryID + " :: " + Name + " ]";
         }
-
 
         public bool Equals(SimpleTerritory? other)
         {
