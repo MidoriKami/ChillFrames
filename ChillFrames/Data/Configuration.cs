@@ -18,7 +18,6 @@ namespace ChillFrames.Data
         public GeneralSettings General = new();
         public BlacklistSettings Blacklist = new();
         public SystemSettings System = new();
-        public PerformanceSettings Performance = new();
 
         [NonSerialized]
         private DalamudPluginInterface? pluginInterface;

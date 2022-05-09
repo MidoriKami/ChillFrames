@@ -20,7 +20,6 @@ namespace ChillFrames
         public static SettingsWindow SettingsWindow = null!;
         private CommandSystem commandSystem;
         private FrameLimiter frameLimiter;
-        private PerformanceTweaker performanceTweaker;
 
         public ChillFramesPlugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)

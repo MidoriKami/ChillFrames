@@ -18,8 +18,6 @@ namespace ChillFrames.Tabs
         private GeneralSettings Settings => Service.Configuration.General;
         private BlacklistSettings Blacklist => Service.Configuration.Blacklist;
 
-        private PerformanceSettings Performance => Service.Configuration.Performance;
-
         public string TabName => "Conditions";
         public bool Enabled => true;
 
