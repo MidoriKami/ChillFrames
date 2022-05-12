@@ -16,9 +16,6 @@ namespace ChillFrames.Tabs
         public string TabName => "Conditions";
         public bool Enabled => true;
 
-
-        private readonly Stopwatch timer = new();
-
         private int newFramerateLimit;
 
         public GeneralConfigurationTab()
@@ -34,25 +31,16 @@ namespace ChillFrames.Tabs
             ImGui.Checkbox("Disable in specific zones", ref Blacklist.Enabled);
             ImGui.Checkbox("Disable during Quest Events", ref Settings.DisableDuringQuestEvent);
 
-            //ImGui.Checkbox("Enable Performance Profiles", ref Performance.Enabled);
-
-            ImGui.Spacing();
-            ImGui.Spacing();
-            ImGui.Spacing();
+            ImGuiHelpers.ScaledDummy(20.0f);
 
             ImGui.SetNextItemWidth(50 * ImGuiHelpers.GlobalScale);
 
-            if (ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0))
+            ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0);
+            if (ImGui.IsItemDeactivatedAfterEdit())
             {
-                timer.Restart();
-            }
-
-            if (timer.IsRunning && timer.Elapsed.Seconds >= 1)
-            {
-                timer.Stop();
                 Settings.FrameRateLimit = Math.Max(newFramerateLimit, 10);
             }
-
+            
             ImGuiComponents.HelpMarker("The framerate value to limit the game to\n" + "Minimum: 10");
 
             var frametimeExact = 1000 / Settings.FrameRateLimit + 1;

@@ -15,19 +15,24 @@ namespace ChillFrames.Windows
 {
     public class SettingsWindow : Window, IDisposable
     {
-        private GeneralSettings Settings => Service.Configuration.General;
+        private static GeneralSettings Settings => Service.Configuration.General;
 
         private readonly List<ITabItem> tabs = new()
         {
             new GeneralConfigurationTab(),
             new BlacklistTab(),
-            //new PerformanceProfiles(),
             new DebugTab()
         };
 
         public SettingsWindow() : base("ChillFrames Settings")
         {
             Service.WindowSystem.AddWindow(this);
+
+            SizeConstraints = new WindowSizeConstraints
+            {
+                MinimumSize = new Vector2(350, 400),
+                MaximumSize = new Vector2(9999,9999)
+            };
 
             Flags |= ImGuiWindowFlags.NoScrollbar;
             Flags |= ImGuiWindowFlags.NoScrollWithMouse;
@@ -52,7 +57,7 @@ namespace ChillFrames.Windows
 
             Utilities.Draw.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiter, "Enables the Framerate Limiter\n" + "When the configured conditions are true");
 
-            ImGui.Indent(28.0f * ImGuiHelpers.GlobalScale);
+            ImGui.Indent(25.0f * ImGuiHelpers.GlobalScale);
 
             if (Condition.EnableFramerateLimit() && Settings.EnableLimiter)
             {
