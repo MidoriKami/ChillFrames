@@ -9,5 +9,6 @@
         public bool DisableDuringCombat = true;
         public bool DisableDuringDuty = true;
         public bool DisableDuringQuestEvent = true;
+        public bool DisableDuringCrafting = true;
     }
 }

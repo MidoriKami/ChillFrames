@@ -30,6 +30,7 @@ namespace ChillFrames.Tabs
             ImGui.Checkbox("Disable during cutscene", ref Settings.DisableDuringCutscene);
             ImGui.Checkbox("Disable in specific zones", ref Blacklist.Enabled);
             ImGui.Checkbox("Disable during Quest Events", ref Settings.DisableDuringQuestEvent);
+            ImGui.Checkbox("Disable during Crafting", ref Settings.DisableDuringCrafting);
 
             ImGuiHelpers.ScaledDummy(20.0f);
 
