@@ -4,7 +4,7 @@
     <Authors></Authors>
     <Company></Company>
     <Version>1.0</Version>
-	<AssemblyVersion>1.4.1.0</AssemblyVersion>
+	<AssemblyVersion>1.4.1.1</AssemblyVersion>
     <Description></Description>
     <Copyright></Copyright>
     <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
@@ -20,6 +20,7 @@
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <OutputPath>$(AppData)\XIVLauncher\devPlugins\ChillFrames\</OutputPath>
 	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	  <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <ItemGroup>
