@@ -12,7 +12,7 @@ namespace ChillFrames.System
     {
         private delegate void SwapChainPresent(IntPtr address);
 
-        [Signature("E8 ?? ?? ?? ?? C6 43 61 00 EB 3D", DetourName = nameof(Swapchain_Present))]
+        [Signature("E8 ?? ?? ?? ?? C6 47 79 00", DetourName = nameof(Swapchain_Present))]
         private readonly Hook<SwapChainPresent>? swapchainMethod = null;
 
         private readonly Stopwatch timer = new();
