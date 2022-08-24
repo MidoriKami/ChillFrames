@@ -31,6 +31,7 @@ namespace ChillFrames.Tabs
             ImGui.Checkbox("Disable in specific zones", ref Blacklist.Enabled);
             ImGui.Checkbox("Disable during Quest Events", ref Settings.DisableDuringQuestEvent);
             ImGui.Checkbox("Disable during Crafting", ref Settings.DisableDuringCrafting);
+            ImGui.Checkbox("Disable in Island Sanctuary", ref Settings.DisableIslandSanctuary);
 
             ImGuiHelpers.ScaledDummy(20.0f);
 

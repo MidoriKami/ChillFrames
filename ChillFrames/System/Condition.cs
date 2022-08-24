@@ -20,8 +20,9 @@ namespace ChillFrames.System
             var inQuestEvent = InQuestEvent() && Settings.DisableDuringQuestEvent;
             var isCrafting = IsCrafting() && Settings.DisableDuringCrafting;
             var isBetweenAreas = IsBetweenAreas();
+            var isIslandSanctuary = IsIslandSanctuary() && Settings.DisableIslandSanctuary;
 
-            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas && !isCrafting;
+            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas && !isCrafting && !isIslandSanctuary;
         }
 
         private static bool InCutscene()
@@ -70,6 +71,13 @@ namespace ChillFrames.System
         {
             return Service.Condition[ConditionFlag.Crafting] ||
                    Service.Condition[ConditionFlag.Crafting40];
+        }
+
+        private static bool IsIslandSanctuary()
+        {
+            var currentArea = Service.ClientState.TerritoryType;
+
+            return currentArea == 1055;
         }
     }
 }
