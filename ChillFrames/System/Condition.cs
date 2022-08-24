@@ -22,6 +22,9 @@ namespace ChillFrames.System
             var isBetweenAreas = IsBetweenAreas();
             var isIslandSanctuary = IsIslandSanctuary() && Settings.DisableIslandSanctuary;
 
+            // Override Bound By Duty Flag while in Sanctuary
+            if (IsIslandSanctuary()) boundByDuty = false;
+
             return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas && !isCrafting && !isIslandSanctuary;
         }
 
