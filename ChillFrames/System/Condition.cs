@@ -20,12 +20,14 @@ namespace ChillFrames.System
             var inQuestEvent = InQuestEvent() && Settings.DisableDuringQuestEvent;
             var isCrafting = IsCrafting() && Settings.DisableDuringCrafting;
             var isBetweenAreas = IsBetweenAreas();
-            var isIslandSanctuary = IsIslandSanctuary() && Settings.DisableIslandSanctuary;
 
-            // Override Bound By Duty Flag while in Sanctuary
-            if (IsIslandSanctuary()) boundByDuty = false;
+            if (IsIslandSanctuary() && Settings.DisableIslandSanctuary)
+            {
+                // Omit boundByDuty and inCutscene
+                return !inCombat && !inCutscene && !inBlacklistedArea && !isBetweenAreas && !isCrafting;
+            }
 
-            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas && !isCrafting && !isIslandSanctuary;
+            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas && !isCrafting;
         }
 
         private static bool InCutscene()
