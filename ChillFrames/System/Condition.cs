@@ -60,6 +60,8 @@ namespace ChillFrames.System
 
         private static bool InQuestEvent()
         {
+            if (IsIslandSanctuary() && IslandDoingSomethingMode()) return false;
+
             return Service.Condition[ConditionFlag.OccupiedInQuestEvent];
         }
 
@@ -80,6 +82,11 @@ namespace ChillFrames.System
             var currentArea = Service.ClientState.TerritoryType;
 
             return currentArea == 1055;
+        }
+
+        private static bool IslandDoingSomethingMode()
+        {
+            return Service.GameGui.GetAddonByName("MJIPadGuide", 1) != IntPtr.Zero;
         }
     }
 }
