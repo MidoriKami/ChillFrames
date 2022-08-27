@@ -11,23 +11,18 @@ namespace ChillFrames.System
         private static GeneralSettings Settings => Service.Configuration.General;
         private static BlacklistSettings Blacklist => Service.Configuration.Blacklist;
 
-        public static bool EnableFramerateLimit()
+        public static bool DisableFramerateLimit()
         {
-            var boundByDuty = BoundByDuty() && Settings.DisableDuringDuty;
-            var inCombat = InCombat() && Settings.DisableDuringCombat;
-            var inCutscene = InCutscene() && Settings.DisableDuringCutscene;
-            var inBlacklistedArea = InBlacklistedZone() && Blacklist.Enabled;
-            var inQuestEvent = InQuestEvent() && Settings.DisableDuringQuestEvent;
-            var isCrafting = IsCrafting() && Settings.DisableDuringCrafting;
-            var isBetweenAreas = IsBetweenAreas();
+            if (BoundByDuty() && Settings.DisableDuringDuty) return true;
+            if (InCombat() && Settings.DisableDuringCombat) return true;
+            if (InCutscene() && Settings.DisableDuringCutscene) return true;
+            if (InBlacklistedZone() && Blacklist.Enabled) return true;
+            if (InQuestEvent() && Settings.DisableDuringQuestEvent) return true;
+            if (IsCrafting() && Settings.DisableDuringCrafting) return true;
+            if (IsIslandSanctuary() && Settings.DisableIslandSanctuary) return true;
+            if (IsBetweenAreas()) return true;
 
-            if (IsIslandSanctuary() && Settings.DisableIslandSanctuary)
-            {
-                // Omit boundByDuty and inCutscene
-                return !inCombat && !inCutscene && !inBlacklistedArea && !isBetweenAreas && !isCrafting;
-            }
-
-            return !boundByDuty && !inCombat && !inCutscene && !inBlacklistedArea && !inQuestEvent && !isBetweenAreas && !isCrafting;
+            return false;
         }
 
         private static bool InCutscene()
@@ -39,6 +34,8 @@ namespace ChillFrames.System
 
         private static bool BoundByDuty()
         {
+            if (IsIslandSanctuary()) return false;
+
             return Service.Condition[ConditionFlag.BoundByDuty] ||
                    Service.Condition[ConditionFlag.BoundByDuty56] ||
                    Service.Condition[ConditionFlag.BoundByDuty95];

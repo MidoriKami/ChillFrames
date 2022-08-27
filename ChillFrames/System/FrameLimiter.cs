@@ -51,7 +51,7 @@ namespace ChillFrames.System
 
             UpdateRate();
 
-            if (Settings.EnableLimiter && (Condition.EnableFramerateLimit() || state != LimiterState.SteadyState))
+            if (Settings.EnableLimiter && (!Condition.DisableFramerateLimit() || state != LimiterState.SteadyState))
             {
                 var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
 
@@ -68,7 +68,7 @@ namespace ChillFrames.System
 
         private void UpdateState()
         {
-            var shouldLimit = Condition.EnableFramerateLimit();
+            var shouldLimit = !Condition.DisableFramerateLimit();
 
             if (enabledLastFrame != shouldLimit)
             {

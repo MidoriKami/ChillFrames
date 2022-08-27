@@ -59,7 +59,7 @@ namespace ChillFrames.Windows
 
             ImGui.Indent(25.0f * ImGuiHelpers.GlobalScale);
 
-            if (Condition.EnableFramerateLimit() && Settings.EnableLimiter)
+            if (!Condition.DisableFramerateLimit() && Settings.EnableLimiter)
             {
                 ImGui.TextColored(Colors.Green, "Limiter Active");
             }
