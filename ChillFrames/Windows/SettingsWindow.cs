@@ -91,7 +91,7 @@ namespace ChillFrames.Windows
 
                     if (ImGui.BeginTabItem(tab.TabName))
                     {
-                        if (ImGui.BeginChild("ChillFramesSettings", new Vector2(0, 0), true)) 
+                        if (ImGui.BeginChild("ChillFramesSettings", ImGuiHelpers.ScaledVector2(0, -23), true)) 
                         {
                             ImGui.PushID(tab.TabName);
 
