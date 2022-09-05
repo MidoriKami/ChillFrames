@@ -13,10 +13,14 @@ namespace ChillFrames.System
 
         public static bool DisableFramerateLimit()
         {
+            if (Blacklist.Enabled && InFilteredZone())
+            {
+                return ShouldDisableInFilteredZone();
+            }
+            
             if (BoundByDuty() && Settings.DisableDuringDuty) return true;
             if (InCombat() && Settings.DisableDuringCombat) return true;
             if (InCutscene() && Settings.DisableDuringCutscene) return true;
-            if (InBlacklistedZone() && Blacklist.Enabled) return true;
             if (InQuestEvent() && Settings.DisableDuringQuestEvent) return true;
             if (IsCrafting() && Settings.DisableDuringCrafting) return true;
             if (IsIslandSanctuary() && Settings.DisableIslandSanctuary) return true;
@@ -46,7 +50,12 @@ namespace ChillFrames.System
             return Service.Condition[ConditionFlag.InCombat];
         }
 
-        private static bool InBlacklistedZone()
+        private static bool InFilteredZone()
+        {
+            return Blacklist.Territories.Any(territory => territory.TerritoryID == Service.ClientState.TerritoryType);
+        }
+
+        private static bool ShouldDisableInFilteredZone()
         {
             var inTaggedZone = Blacklist.Territories.Any(territory => territory.TerritoryID == Service.ClientState.TerritoryType);
 
@@ -57,7 +66,7 @@ namespace ChillFrames.System
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-
+        
         private static bool InQuestEvent()
         {
             if (IsIslandSanctuary() && IslandDoingSomethingMode()) return false;
