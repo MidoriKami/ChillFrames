@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using ChillFrames.Data.SettingsObjects;
 using ChillFrames.Interfaces;
 using Dalamud.Interface;
