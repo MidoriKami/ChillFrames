@@ -22,6 +22,20 @@ internal static class Chat
         Service.Chat.Print(stringBuilder.BuiltString);
     }
 
+    public static void Error(string tag, string message)
+    {
+        var stringBuilder = new SeStringBuilder();
+        stringBuilder.AddUiForeground(45);
+        stringBuilder.AddText($"[ChillFrames] ");
+        stringBuilder.AddUiForegroundOff();
+        stringBuilder.AddUiForeground(62);
+        stringBuilder.AddText($"[{tag}] ");
+        stringBuilder.AddUiForegroundOff();
+        stringBuilder.AddText(message);
+
+        Service.Chat.PrintError(stringBuilder.BuiltString);
+    }
+
     public static void Debug(string data)
     {
         Print("Debug", data);
