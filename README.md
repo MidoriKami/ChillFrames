@@ -22,23 +22,14 @@ This means if you have the games settings to reduce the framerate when afk, that
 
 ## Configuration Window
 
-Currently Chill Frames has the following configuration options, if any of these conditions are met, then the framerate will no longer be limited until the condition is no longer met.
+The various options allow you to turn off the frame limiter (that is, to have maximum fps) under specific conditions.
 
-| Condition               | Description                                                      |
-|-------------------------|------------------------------------------------------------------|
-| Disable during combat   | The framerate will not be limited anytime you are in combat      |
-| Disable during duty     | The framerate will not be limited anytime you are bound by duty  |
-| Disable during cutscene | The framerate will not be limited during any cinematic cutscenes |
-| Disable in Specific Zones | Allows running the framerate limiter only in certain zones, or in all except certain zones |
+For example, if you want maximum fps while crafting you would check `Disable during Crafting`
 
-![image](https://user-images.githubusercontent.com/9083275/170404657-5158311f-0e7f-4f06-95b3-15d6b72b6ecb.png)
+General Configuration             |  Blacklist Configuration
+:-------------------------:|:-------------------------:
+![image](https://user-images.githubusercontent.com/9083275/194431350-4c214031-4ccf-4972-8c40-189524e85eb3.png)  |  ![image](https://user-images.githubusercontent.com/9083275/194431382-185756ef-1795-405e-9dd8-1b05ac7e44cb.png)
 
 ## Testimonials
 
 ![image](https://user-images.githubusercontent.com/9083275/159103862-54542bbb-6dd4-49ef-a7fb-358e9e116ca9.png)
-
-
-
-
-
-
