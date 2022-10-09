@@ -1,9 +1,8 @@
-﻿namespace ChillFrames.Data.SettingsObjects.Components
+﻿namespace ChillFrames.Data.SettingsObjects.Components;
+
+internal class SearchResult
 {
-    internal class SearchResult
-    {
-        public uint TerritoryID { get; set; }
-        public string TerritoryName { get; set; } = string.Empty;
-        public string TerritoryIntendedUse { get; set; } = string.Empty;
-    }
+    public uint TerritoryID { get; set; }
+    public string TerritoryName { get; set; } = string.Empty;
+    public string TerritoryIntendedUse { get; set; } = string.Empty;
 }

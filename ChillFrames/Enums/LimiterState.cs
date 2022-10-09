@@ -1,9 +1,8 @@
-﻿namespace ChillFrames.Enums
+﻿namespace ChillFrames.Enums;
+
+internal enum LimiterState
 {
-    internal enum LimiterState
-    {
-        Enabled,
-        Disabled,
-        SteadyState
-    }
+    Enabled,
+    Disabled,
+    SteadyState
 }

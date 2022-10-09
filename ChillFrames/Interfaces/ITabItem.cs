@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace ChillFrames.Interfaces
+namespace ChillFrames.Interfaces;
+
+internal interface ITabItem : IDisposable
 {
-    internal interface ITabItem : IDisposable
-    {
-        string TabName { get; }
+    string TabName { get; }
 
-        bool Enabled { get; }
+    bool Enabled { get; }
 
-        void Draw();
+    void Draw();
 
-    }
 }

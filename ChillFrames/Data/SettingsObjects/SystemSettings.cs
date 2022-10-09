@@ -1,7 +1,6 @@
-﻿namespace ChillFrames.Data.SettingsObjects
+﻿namespace ChillFrames.Data.SettingsObjects;
+
+public class SystemSettings
 {
-    public class SystemSettings
-    {
-        public bool EnableDebugOutput = false;
-    }
+    public bool EnableDebugOutput = false;
 }

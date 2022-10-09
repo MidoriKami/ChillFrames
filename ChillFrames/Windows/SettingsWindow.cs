@@ -11,122 +11,121 @@ using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace ChillFrames.Windows
-{
-    public class SettingsWindow : Window, IDisposable
-    {
-        private static GeneralSettings Settings => Service.Configuration.General;
+namespace ChillFrames.Windows;
 
-        private readonly List<ITabItem> tabs = new()
+public class SettingsWindow : Window, IDisposable
+{
+    private static GeneralSettings Settings => Service.Configuration.General;
+
+    private readonly List<ITabItem> tabs = new()
+    {
+        new GeneralConfigurationTab(),
+        new BlacklistTab(),
+        new DebugTab()
+    };
+
+    public SettingsWindow() : base("ChillFrames Settings")
+    {
+        Service.WindowSystem.AddWindow(this);
+
+        SizeConstraints = new WindowSizeConstraints
         {
-            new GeneralConfigurationTab(),
-            new BlacklistTab(),
-            new DebugTab()
+            MinimumSize = new Vector2(350, 400),
+            MaximumSize = new Vector2(9999,9999)
         };
 
-        public SettingsWindow() : base("ChillFrames Settings")
+        Flags |= ImGuiWindowFlags.NoScrollbar;
+        Flags |= ImGuiWindowFlags.NoScrollWithMouse;
+    }
+
+    public void Dispose()
+    {
+        Service.Configuration.Save();
+
+        foreach (var tab in tabs)
         {
-            Service.WindowSystem.AddWindow(this);
-
-            SizeConstraints = new WindowSizeConstraints
-            {
-                MinimumSize = new Vector2(350, 400),
-                MaximumSize = new Vector2(9999,9999)
-            };
-
-            Flags |= ImGuiWindowFlags.NoScrollbar;
-            Flags |= ImGuiWindowFlags.NoScrollWithMouse;
+            tab.Dispose();
         }
 
-        public void Dispose()
-        {
-            Service.Configuration.Save();
+        Service.WindowSystem.RemoveWindow(this);
+    }
 
+    public override void Draw()
+    {
+        if (!IsOpen) return;
+
+
+        Utilities.Draw.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiter, "Enables the Framerate Limiter\n" + "When the configured conditions are true");
+
+        ImGui.Indent(25.0f * ImGuiHelpers.GlobalScale);
+
+        if (!Condition.DisableFramerateLimit() && Settings.EnableLimiter)
+        {
+            ImGui.TextColored(Colors.Green, "Limiter Active");
+        }
+        else
+        {
+            ImGui.TextColored(Colors.Red, "Limiter Inactive");
+        }
+
+        ImGui.Indent(-25.0f * ImGuiHelpers.GlobalScale);
+
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGuiHelpers.ScaledVector2(10, 8));
+
+        ImGui.Spacing();
+
+        DrawTabs();
+
+        ImGui.PopStyleVar();
+
+        DrawVersionNumber();
+    }
+
+    private void DrawTabs()
+    {
+        if (ImGui.BeginTabBar("ChillFramesTabBar", ImGuiTabBarFlags.NoTooltip))
+        {
             foreach (var tab in tabs)
             {
-                tab.Dispose();
-            }
+                if(tab.Enabled == false) continue;
 
-            Service.WindowSystem.RemoveWindow(this);
-        }
-
-        public override void Draw()
-        {
-            if (!IsOpen) return;
-
-
-            Utilities.Draw.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiter, "Enables the Framerate Limiter\n" + "When the configured conditions are true");
-
-            ImGui.Indent(25.0f * ImGuiHelpers.GlobalScale);
-
-            if (!Condition.DisableFramerateLimit() && Settings.EnableLimiter)
-            {
-                ImGui.TextColored(Colors.Green, "Limiter Active");
-            }
-            else
-            {
-                ImGui.TextColored(Colors.Red, "Limiter Inactive");
-            }
-
-            ImGui.Indent(-25.0f * ImGuiHelpers.GlobalScale);
-
-            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, ImGuiHelpers.ScaledVector2(10, 8));
-
-            ImGui.Spacing();
-
-            DrawTabs();
-
-            ImGui.PopStyleVar();
-
-            DrawVersionNumber();
-        }
-
-        private void DrawTabs()
-        {
-            if (ImGui.BeginTabBar("ChillFramesTabBar", ImGuiTabBarFlags.NoTooltip))
-            {
-                foreach (var tab in tabs)
+                if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    if(tab.Enabled == false) continue;
-
-                    if (ImGui.BeginTabItem(tab.TabName))
+                    if (ImGui.BeginChild("ChillFramesSettings", ImGuiHelpers.ScaledVector2(0, -23), true)) 
                     {
-                        if (ImGui.BeginChild("ChillFramesSettings", ImGuiHelpers.ScaledVector2(0, -23), true)) 
-                        {
-                            ImGui.PushID(tab.TabName);
+                        ImGui.PushID(tab.TabName);
 
-                            tab.Draw();
+                        tab.Draw();
 
-                            ImGui.PopID();
+                        ImGui.PopID();
 
-                            ImGui.EndChild();
-                        }
-
-                        ImGui.EndTabItem();
+                        ImGui.EndChild();
                     }
+
+                    ImGui.EndTabItem();
                 }
             }
         }
+    }
 
-        public override void OnClose()
-        {
-            Service.Configuration.Save();
-        }
+    public override void OnClose()
+    {
+        Service.Configuration.Save();
+    }
 
-        private void DrawVersionNumber()
-        {
-            var assemblyInformation = Assembly.GetExecutingAssembly().FullName!.Split(',');
+    private void DrawVersionNumber()
+    {
+        var assemblyInformation = Assembly.GetExecutingAssembly().FullName!.Split(',');
 
-            var versionString = assemblyInformation[1].Replace('=', ' ');
+        var versionString = assemblyInformation[1].Replace('=', ' ');
 
-            var stringSize = ImGui.CalcTextSize(versionString);
+        var stringSize = ImGui.CalcTextSize(versionString);
 
-            var x = ImGui.GetWindowWidth() / 2 - (stringSize.X / 2) * ImGuiHelpers.GlobalScale;
-            var y = ImGui.GetWindowHeight() - 30 * ImGuiHelpers.GlobalScale;
+        var x = ImGui.GetWindowWidth() / 2 - (stringSize.X / 2) * ImGuiHelpers.GlobalScale;
+        var y = ImGui.GetWindowHeight() - 30 * ImGuiHelpers.GlobalScale;
             
-            ImGui.SetCursorPos(new Vector2(x, y));
+        ImGui.SetCursorPos(new Vector2(x, y));
 
-            ImGui.TextColored(Colors.Grey, versionString);
-        }
+        ImGui.TextColored(Colors.Grey, versionString);
     }
 }

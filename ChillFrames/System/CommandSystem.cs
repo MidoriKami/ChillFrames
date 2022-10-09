@@ -2,27 +2,26 @@
 using ChillFrames.Commands;
 using ChillFrames.Interfaces;
 
-namespace ChillFrames.System
-{
-    internal class CommandSystem
-    {
-        private readonly List<ICommand> commandProcessors = new()
-        {
-            new GeneralCommands()
-        };
+namespace ChillFrames.System;
 
-        public void DispatchCommands(string command, string arguments)
+internal class CommandSystem
+{
+    private readonly List<ICommand> commandProcessors = new()
+    {
+        new GeneralCommands()
+    };
+
+    public void DispatchCommands(string command, string arguments)
+    {
+        if (arguments == string.Empty)
         {
-            if (arguments == string.Empty)
+            ChillFramesPlugin.SettingsWindow.Toggle();
+        }
+        else
+        {
+            foreach (var commandProcessor in commandProcessors)
             {
-                ChillFramesPlugin.SettingsWindow.Toggle();
-            }
-            else
-            {
-                foreach (var commandProcessor in commandProcessors)
-                {
-                    commandProcessor.ProcessCommand(command, arguments);
-                }
+                commandProcessor.ProcessCommand(command, arguments);
             }
         }
     }

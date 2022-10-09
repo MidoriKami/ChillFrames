@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
 using ChillFrames.Utilities;
 
-namespace ChillFrames.Interfaces
+namespace ChillFrames.Interfaces;
+
+internal interface ICommand
 {
-    internal interface ICommand
+    protected List<string> ModuleCommands { get; }
+
+    protected void Execute(string primaryCommand, string? secondaryCommand);
+
+    public void ProcessCommand(string command, string arguments)
     {
-        protected List<string> ModuleCommands { get; }
+        var primaryCommand = CommandHelper.GetPrimaryCommand(arguments)?.ToLower();
+        var secondaryCommand = CommandHelper.GetSecondaryCommand(arguments)?.ToLower();
 
-        protected void Execute(string primaryCommand, string? secondaryCommand);
-
-        public void ProcessCommand(string command, string arguments)
+        if (primaryCommand != null)
         {
-            var primaryCommand = CommandHelper.GetPrimaryCommand(arguments)?.ToLower();
-            var secondaryCommand = CommandHelper.GetSecondaryCommand(arguments)?.ToLower();
-
-            if (primaryCommand != null)
+            if (ModuleCommands.Contains(primaryCommand))
             {
-                if (ModuleCommands.Contains(primaryCommand))
-                {
-                    Execute(primaryCommand, secondaryCommand);
-                }
+                Execute(primaryCommand, secondaryCommand);
             }
         }
     }

@@ -1,29 +1,28 @@
-﻿namespace ChillFrames.Utilities
+﻿namespace ChillFrames.Utilities;
+
+internal static class CommandHelper
 {
-    internal static class CommandHelper
+    public static string? GetSecondaryCommand(string arguments)
     {
-        public static string? GetSecondaryCommand(string arguments)
+        var stringArray = arguments.Split(' ');
+
+        if (stringArray.Length == 1)
         {
-            var stringArray = arguments.Split(' ');
-
-            if (stringArray.Length == 1)
-            {
-                return null;
-            }
-
-            return stringArray[1];
+            return null;
         }
 
-        public static string? GetPrimaryCommand(string arguments)
+        return stringArray[1];
+    }
+
+    public static string? GetPrimaryCommand(string arguments)
+    {
+        var stringArray = arguments.Split(' ');
+
+        if (stringArray[0] == string.Empty)
         {
-            var stringArray = arguments.Split(' ');
-
-            if (stringArray[0] == string.Empty)
-            {
-                return null;
-            }
-
-            return stringArray[0];
+            return null;
         }
+
+        return stringArray[0];
     }
 }
