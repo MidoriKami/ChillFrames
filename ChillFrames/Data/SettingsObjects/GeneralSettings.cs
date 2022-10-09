@@ -11,4 +11,5 @@ public class GeneralSettings
     public bool DisableDuringQuestEvent = true;
     public bool DisableDuringCrafting = true;
     public bool DisableIslandSanctuary = true;
+    public bool DisableDuringDutyRecorderPlayback = true;
 }

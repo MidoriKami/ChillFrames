@@ -17,6 +17,7 @@ internal static class Condition
         if (Blacklist.Enabled && Blacklist.Mode == BlacklistMode.Inclusion && InFilteredZone()) return false;
         if (Blacklist.Enabled && Blacklist.Mode == BlacklistMode.Inclusion && !InFilteredZone()) return true;
 
+        if (IsDutyRecorderPlayback() && Settings.DisableDuringDutyRecorderPlayback) return true;
         if (BoundByDuty() && Settings.DisableDuringDuty) return true;
         if (InCombat() && Settings.DisableDuringCombat) return true;
         if (InCutscene() && Settings.DisableDuringCutscene) return true;
@@ -83,5 +84,10 @@ internal static class Condition
     private static bool IslandDoingSomethingMode()
     {
         return Service.GameGui.GetAddonByName("MJIPadGuide", 1) != IntPtr.Zero;
+    }
+
+    private static bool IsDutyRecorderPlayback()
+    {
+        return Service.Condition[ConditionFlag.DutyRecorderPlayback];
     }
 }

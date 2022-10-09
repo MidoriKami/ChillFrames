@@ -31,6 +31,7 @@ internal class GeneralConfigurationTab : ITabItem
         ImGui.Checkbox("Disable during Quest Events", ref Settings.DisableDuringQuestEvent);
         ImGui.Checkbox("Disable during Crafting", ref Settings.DisableDuringCrafting);
         ImGui.Checkbox("Disable in Island Sanctuary", ref Settings.DisableIslandSanctuary);
+        ImGui.Checkbox("Disable during duty recorder playback", ref Settings.DisableDuringDutyRecorderPlayback);
 
         ImGuiHelpers.ScaledDummy(20.0f);
 
