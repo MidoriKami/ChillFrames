@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ChillFrames.Commands;
 using ChillFrames.Interfaces;
+using ChillFrames.Utilities;
 
 namespace ChillFrames.System;
 
@@ -19,9 +21,16 @@ internal class CommandSystem
         }
         else
         {
-            foreach (var commandProcessor in commandProcessors)
+            if (commandProcessors.Any(moduleCommand => moduleCommand.ModuleCommands.Contains(arguments)))
             {
-                commandProcessor.ProcessCommand(command, arguments);
+                foreach (var commandProcessor in commandProcessors)
+                {
+                    commandProcessor.ProcessCommand(command, arguments);
+                }
+            }
+            else
+            {
+                Chat.Error("Command", $"Invalid Command '{arguments}'");
             }
         }
     }

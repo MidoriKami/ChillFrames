@@ -5,7 +5,7 @@ namespace ChillFrames.Interfaces;
 
 internal interface ICommand
 {
-    protected List<string> ModuleCommands { get; }
+    List<string> ModuleCommands { get; }
 
     protected void Execute(string primaryCommand, string? secondaryCommand);
 

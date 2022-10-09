@@ -1,33 +1,32 @@
 ﻿using System.Collections.Generic;
 using ChillFrames.Interfaces;
+using ChillFrames.Utilities;
 
-namespace ChillFrames.Commands
+namespace ChillFrames.Commands;
+
+internal class GeneralCommands : ICommand
 {
-    internal class GeneralCommands : ICommand
+    List<string> ICommand.ModuleCommands { get; } = new()
     {
-        List<string> ICommand.ModuleCommands { get; } = new()
+        "enable",
+        "disable",
+        "on",
+        "off"
+    };
+
+    void ICommand.Execute(string primaryCommand, string? secondaryCommand)
+    {
+        switch (primaryCommand)
         {
-            "enable",
-            "disable",
-            "on",
-            "off"
-        };
+            case "on" or "enable":
+                Chat.Print("Command", "Enabling Limiter");
+                Service.Configuration.General.EnableLimiter = true;
+                break;
 
-        void ICommand.Execute(string primaryCommand, string? secondaryCommand)
-        {
-            switch (primaryCommand)
-            {
-                case null:
-                    break;
-
-                case "on" or "enable":
-                    Service.Configuration.General.EnableLimiter = true;
-                    break;
-
-                case "off" or "disable":
-                    Service.Configuration.General.EnableLimiter = false;
-                    break;
-            }
+            case "off" or "disable":
+                Chat.Print("Command", "Disabling Limiter");
+                Service.Configuration.General.EnableLimiter = false;
+                break;
         }
     }
 }
