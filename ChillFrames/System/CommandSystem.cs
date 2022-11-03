@@ -15,13 +15,15 @@ internal class CommandSystem
 
     public void DispatchCommands(string command, string arguments)
     {
+        var primaryCommand = CommandHelper.GetPrimaryCommand(arguments)?.ToLower();
+        
         if (arguments == string.Empty)
         {
             ChillFramesPlugin.SettingsWindow.Toggle();
         }
-        else
+        else if(primaryCommand != null)
         {
-            if (commandProcessors.Any(moduleCommand => moduleCommand.ModuleCommands.Contains(arguments)))
+            if (commandProcessors.Any(moduleCommand => moduleCommand.ModuleCommands.Contains(primaryCommand)))
             {
                 foreach (var commandProcessor in commandProcessors)
                 {
