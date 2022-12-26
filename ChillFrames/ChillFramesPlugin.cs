@@ -1,7 +1,7 @@
-﻿using ChillFrames.Data;
+﻿using ChillFrames.Commands;
+using ChillFrames.Data;
 using ChillFrames.System;
 using ChillFrames.Windows;
-using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 
@@ -13,7 +13,6 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
     private const string ShorthandCommand = "/pcf";
 
     public static SettingsWindow SettingsWindow = null!;
-    private readonly CommandSystem commandSystem;
     private readonly FrameLimiter frameLimiter;
 
     public ChillFramesPlugin(
@@ -22,38 +21,33 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
         // Create Static Services for use everywhere
         pluginInterface.Create<Service>();
             
+        KamiLib.KamiLib.Initialize(pluginInterface, Name);
+        KamiLib.KamiLib.CommandManager.AddHandler(ShorthandCommand, "shorthand command to open configuration window");
+        KamiLib.KamiLib.CommandManager.AddCommand(new GeneralCommands());
+
         // If configuration json exists load it, if not make new config object
         Service.Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Service.Configuration.Initialize(Service.PluginInterface);
 
-        // Register Slash Commands
-        Service.Commands.AddHandler(ShorthandCommand, new CommandInfo(OnCommand)
-        {
-            HelpMessage = "shorthand command to open configuration window"
-        });
-
         // Create Systems
         SettingsWindow = new SettingsWindow();
-        commandSystem = new CommandSystem();
         frameLimiter = new FrameLimiter();
 
         // Register draw callbacks
         Service.PluginInterface.UiBuilder.Draw += Service.WindowSystem.Draw;
         Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
     }
-
-    private void OnCommand(string command, string arguments) => commandSystem.DispatchCommands(command, arguments);
-
+    
     private void DrawConfigUI() => SettingsWindow.Toggle();
 
     public void Dispose()
     {
+        KamiLib.KamiLib.Dispose();
+        
         Service.PluginInterface.UiBuilder.Draw -= Service.WindowSystem.Draw;
         Service.PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUI;
 
         SettingsWindow.Dispose();
         frameLimiter.Dispose();
-
-        Service.Commands.RemoveHandler(ShorthandCommand);
     }
 }

@@ -4,12 +4,12 @@ using System.Numerics;
 using System.Reflection;
 using ChillFrames.Data.SettingsObjects;
 using ChillFrames.Interfaces;
-using ChillFrames.System;
 using ChillFrames.Tabs;
-using ChillFrames.Utilities;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using KamiLib.Utilities;
+using Condition = ChillFrames.System.Condition;
 
 namespace ChillFrames.Windows;
 
