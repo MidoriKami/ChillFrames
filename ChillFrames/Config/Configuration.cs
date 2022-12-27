@@ -1,22 +1,21 @@
 ﻿using System;
-using ChillFrames.Data.SettingsObjects;
 using Dalamud.Configuration;
 using Dalamud.Plugin;
+using KamiLib.Configuration;
 
-namespace ChillFrames.Data;
+namespace ChillFrames.Config;
 
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
     public int Version { get; set; } = 1;
 
-    public bool devMode = false;
-    public float DisableIncrement = 0.025f;
-    public float EnableIncrement = 0.01f;
+    public bool DevMode = false;
+    public Setting<float> DisableIncrementSetting = new(0.025f);
+    public Setting<float> EnableIncrementSetting = new(0.01f);
 
     public GeneralSettings General = new();
     public BlacklistSettings Blacklist = new();
-    public SystemSettings System = new();
 
     [NonSerialized]
     private DalamudPluginInterface? pluginInterface;
