@@ -6,8 +6,8 @@ namespace ChillFrames.Tabs;
 
 internal class GeneralConfigurationTab : ITabItem
 {
-    private GeneralSettings Settings => Service.Configuration.General;
-    private BlacklistSettings Blacklist => Service.Configuration.Blacklist;
+    private static GeneralSettings Settings => Service.Configuration.General;
+    private static BlacklistSettings Blacklist => Service.Configuration.Blacklist;
 
     public string TabName => "Conditions";
     public bool Enabled => true;

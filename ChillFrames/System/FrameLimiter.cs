@@ -23,10 +23,10 @@ internal class FrameLimiter : IDisposable
 
     private readonly Stopwatch timer = new();
     private readonly Stopwatch steppingStopwatch = new();
-    public GeneralSettings Settings => Service.Configuration.General;
+    private static GeneralSettings Settings => Service.Configuration.General;
 
-    private int TargetFramerate => Settings.FrameRateLimitSetting.Value;
-    private int TargetFrametime => 1000 / TargetFramerate;
+    private static int TargetFramerate => Settings.FrameRateLimitSetting.Value;
+    private static int TargetFrametime => 1000 / TargetFramerate;
 
     private LimiterState state;
     private bool enabledLastFrame;

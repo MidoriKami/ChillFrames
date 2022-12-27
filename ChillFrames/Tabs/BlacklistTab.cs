@@ -7,7 +7,7 @@ namespace ChillFrames.Tabs;
 
 internal class BlacklistTab : ITabItem
 {
-    private BlacklistSettings Settings => Service.Configuration.Blacklist;
+    private static BlacklistSettings Settings => Service.Configuration.Blacklist;
     
     public string TabName => "Blacklist";
     public bool Enabled => Service.Configuration.Blacklist.EnabledSetting.Value;
