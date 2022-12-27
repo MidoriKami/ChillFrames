@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using ChillFrames.Data.SettingsObjects;
-using ChillFrames.Enums;
+using ChillFrames.Config;
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 
 namespace ChillFrames.System;
+
+public enum LimiterState
+{
+    Enabled,
+    Disabled,
+    SteadyState
+}
 
 internal class FrameLimiter : IDisposable
 {
@@ -19,15 +25,15 @@ internal class FrameLimiter : IDisposable
     private readonly Stopwatch steppingStopwatch = new();
     public GeneralSettings Settings => Service.Configuration.General;
 
-    private int TargetFramerate => Settings.FrameRateLimit;
+    private int TargetFramerate => Settings.FrameRateLimitSetting.Value;
     private int TargetFrametime => 1000 / TargetFramerate;
 
     private LimiterState state;
     private bool enabledLastFrame;
     private float delayRatio = 1.0f;
 
-    public static float DisableIncrement = Service.Configuration.DisableIncrement;
-    public static float EnableIncrement = Service.Configuration.EnableIncrement;
+    private static float DisableIncrement => Service.Configuration.DisableIncrementSetting.Value;
+    private static float EnableIncrement => Service.Configuration.EnableIncrementSetting.Value;
 
     public FrameLimiter()
     {
@@ -51,7 +57,7 @@ internal class FrameLimiter : IDisposable
 
         UpdateRate();
 
-        if (Settings.EnableLimiter && (!Condition.DisableFramerateLimit() || state != LimiterState.SteadyState))
+        if (Settings.EnableLimiterSetting.Value && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
             var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
 
@@ -68,7 +74,7 @@ internal class FrameLimiter : IDisposable
 
     private void UpdateState()
     {
-        var shouldLimit = !Condition.DisableFramerateLimit();
+        var shouldLimit = !FrameLimiterCondition.DisableFramerateLimit();
 
         if (enabledLastFrame != shouldLimit)
         {
