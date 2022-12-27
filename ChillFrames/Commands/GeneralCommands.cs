@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChillFrames.System;
 using KamiLib.CommandSystem;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
-using Condition = ChillFrames.System.Condition;
 
 namespace ChillFrames.Commands;
 
@@ -20,7 +20,7 @@ public class GeneralCommands : IPluginCommand
             CommandAction = () =>
             {
                 Chat.Print("Command", "Enabling Limiter");
-                Service.Configuration.General.EnableLimiter = true;
+                Service.Configuration.General.EnableLimiterSetting.Value = true;
                 Service.Configuration.Save(); 
             },
             GetHelpText = () => "Enable framerate limiter"
@@ -32,7 +32,7 @@ public class GeneralCommands : IPluginCommand
             CommandAction = () =>
             {
                 Chat.Print("Command", "Disabling Limiter");
-                Service.Configuration.General.EnableLimiter = false;
+                Service.Configuration.General.EnableLimiterSetting.Value = false;
                 Service.Configuration.Save(); 
             },
             GetHelpText = () => "Disable framerate limiter"
@@ -43,8 +43,8 @@ public class GeneralCommands : IPluginCommand
             Aliases = new List<string>{"t"},
             CommandAction = () =>
             {
-                Chat.Print("Command", Service.Configuration.General.EnableLimiter ? "Disabling Limiter" : "Enabling Limiter");
-                Service.Configuration.General.EnableLimiter = !Service.Configuration.General.EnableLimiter;
+                Chat.Print("Command", Service.Configuration.General.EnableLimiterSetting.Value ? "Disabling Limiter" : "Enabling Limiter");
+                Service.Configuration.General.EnableLimiterSetting.Value = !Service.Configuration.General.EnableLimiterSetting.Value;
                 Service.Configuration.Save();
             },
             GetHelpText = () => "Toggle framerate limiter"
@@ -64,7 +64,7 @@ public class GeneralCommands : IPluginCommand
                     case [ { } param ]:
                         var targetFramerate = Math.Clamp(int.Parse(param), 10, 255);
                         Chat.Print("Command", $"Setting Framerate Limit: {targetFramerate}");
-                        Service.Configuration.General.FrameRateLimit = targetFramerate;
+                        Service.Configuration.General.FrameRateLimitSetting.Value = targetFramerate;
                         Service.Configuration.Save();
                         break;
                 }
@@ -74,70 +74,39 @@ public class GeneralCommands : IPluginCommand
         new SubCommand
         {
             CommandKeyword = "status",
-            CanExecute = () => Service.Configuration.General.EnableLimiter,
-            CommandAction = () => Chat.Print("Command", Condition.DisableFramerateLimit() ? "Limiter Inactive" : "Limiter Active"),
+            CanExecute = () => Service.Configuration.General.EnableLimiterSetting.Value,
+            CommandAction = () => Chat.Print("Command", FrameLimiterCondition.DisableFramerateLimit() ? "Limiter Inactive" : "Limiter Active"),
             GetHelpText = () => "Get limiter status"
         },
         new SubCommand
         {
             CommandKeyword = "status",
-            CanExecute = () => !Service.Configuration.General.EnableLimiter,
+            CanExecute = () => !Service.Configuration.General.EnableLimiterSetting.Value,
             CommandAction = () => Chat.Print("Command", "Limiter is disabled"),
             GetHelpText = () => "Get limiter status"
-        }
+        },
+        new SubCommand
+        {
+            CommandKeyword = "devset",
+            Hidden = true,
+            ParameterAction = strings =>
+            {
+                switch (strings)
+                {
+                    case null:
+                    case [ null ]:
+                        Chat.PrintError("Additional Parameter Missing");
+                        break;
+                    
+                    case [ { } param ]:
+                        var targetFramerate = Math.Clamp(int.Parse(param), 1, 255);
+                        Chat.Print("Command", $"Setting Framerate Limit: {targetFramerate}");
+                        Service.Configuration.General.FrameRateLimitSetting.Value = targetFramerate;
+                        Service.Configuration.Save();
+                        break;
+                }
+            },
+            GetHelpText = () => "Set target framerate"
+        },
     };
 }
-
-// internal class GeneralCommands : ICommand
-// {
-//     List<string> ICommand.ModuleCommands { get; } = new()
-//     {
-//         "enable",
-//         "disable",
-//         "on",
-//         "off",
-//         "toggle",
-//         "set",
-//         "status"
-//     };
-//
-//     void ICommand.Execute(string primaryCommand, string? secondaryCommand)
-//     {
-//         switch (primaryCommand)
-//         {
-//             case "on" or "enable":
-//                 Chat.Print("Command", "Enabling Limiter");
-//                 Service.Configuration.General.EnableLimiter = true;
-//                 Service.Configuration.Save();
-//                 break;
-//
-//             case "off" or "disable":
-//                 Chat.Print("Command", "Disabling Limiter");
-//                 Service.Configuration.General.EnableLimiter = false;
-//                 Service.Configuration.Save();
-//                 break;
-//             
-//             case "toggle":
-//                 Chat.Print("Command", Service.Configuration.General.EnableLimiter ? "Disabling Limiter" : "Enabling Limiter");
-//                 Service.Configuration.General.EnableLimiter = !Service.Configuration.General.EnableLimiter;
-//                 Service.Configuration.Save();
-//                 break;
-//             
-//             case "set" when secondaryCommand != null:
-//                 var targetFramerate = Math.Clamp(int.Parse(secondaryCommand), 10, 255);
-//                 Chat.Print("Command", $"Setting Framerate Limit: {targetFramerate}");
-//                 Service.Configuration.General.FrameRateLimit = targetFramerate;
-//                 Service.Configuration.Save();
-//                 break;
-//             
-//             case "status" when Service.Configuration.General.EnableLimiter:
-//                 Chat.Print("Command", Condition.DisableFramerateLimit() ? "Limiter Inactive" : "Limiter Active");
-//                 break;
-//             
-//             case "status" when !Service.Configuration.General.EnableLimiter:
-//                 Chat.Print("Command", "Limiter is disabled");
-//                 break;
-//         }
-//         
-//     }
-// }
