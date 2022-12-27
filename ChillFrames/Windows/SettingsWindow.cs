@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
-using ChillFrames.Data.SettingsObjects;
+using ChillFrames.Config;
 using ChillFrames.Interfaces;
+using ChillFrames.System;
 using ChillFrames.Tabs;
 using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using KamiLib.CommandSystem;
 using KamiLib.Utilities;
-using Condition = ChillFrames.System.Condition;
 
 namespace ChillFrames.Windows;
 
@@ -26,11 +28,11 @@ public class SettingsWindow : Window, IDisposable
 
     public SettingsWindow() : base("ChillFrames Settings")
     {
-        Service.WindowSystem.AddWindow(this);
-
+        KamiLib.KamiLib.CommandManager.AddCommand(new ConfigurationWindowCommands<SettingsWindow>());
+        
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(350, 400),
+            MinimumSize = new Vector2(350, 535),
             MaximumSize = new Vector2(9999,9999)
         };
 
@@ -54,12 +56,15 @@ public class SettingsWindow : Window, IDisposable
     {
         if (!IsOpen) return;
 
-
-        Utilities.Draw.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiter, "Enables the Framerate Limiter\n" + "When the configured conditions are true");
-
+        if (ImGui.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiterSetting.Value))
+        {
+            Service.Configuration.Save();
+        }
+        ImGuiComponents.HelpMarker("Enables the Framerate Limiter\n" + "When the configured conditions are true");
+        
         ImGui.Indent(25.0f * ImGuiHelpers.GlobalScale);
 
-        if (!Condition.DisableFramerateLimit() && Settings.EnableLimiter)
+        if (!FrameLimiterCondition.DisableFramerateLimit() && Settings.EnableLimiterSetting.Value)
         {
             ImGui.TextColored(Colors.Green, "Limiter Active");
         }
@@ -91,7 +96,7 @@ public class SettingsWindow : Window, IDisposable
 
                 if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    if (ImGui.BeginChild("ChillFramesSettings", ImGuiHelpers.ScaledVector2(0, -23), true)) 
+                    if (ImGui.BeginChild("ChillFramesSettings", ImGuiHelpers.ScaledVector2(0, -23), false, ImGuiWindowFlags.NoScrollbar)) 
                     {
                         ImGui.PushID(tab.TabName);
 
