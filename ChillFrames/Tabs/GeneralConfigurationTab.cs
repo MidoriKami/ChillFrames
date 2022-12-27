@@ -1,9 +1,6 @@
-﻿using System;
-using ChillFrames.Data.SettingsObjects;
+﻿using ChillFrames.Config;
 using ChillFrames.Interfaces;
-using Dalamud.Interface;
-using Dalamud.Interface.Components;
-using ImGuiNET;
+using KamiLib.InfoBoxSystem;
 
 namespace ChillFrames.Tabs;
 
@@ -15,41 +12,28 @@ internal class GeneralConfigurationTab : ITabItem
     public string TabName => "Conditions";
     public bool Enabled => true;
 
-    private int newFramerateLimit;
-
-    public GeneralConfigurationTab()
-    {
-        newFramerateLimit = Settings.FrameRateLimit;
-    }
-
     public void Draw()
     {
-        ImGui.Checkbox("Disable during combat", ref Settings.DisableDuringCombat);
-        ImGui.Checkbox("Disable during duty", ref Settings.DisableDuringDuty);
-        ImGui.Checkbox("Disable during cutscene", ref Settings.DisableDuringCutscene);
-        ImGui.Checkbox("Disable in specific zones", ref Blacklist.Enabled);
-        ImGui.Checkbox("Disable during Quest Events", ref Settings.DisableDuringQuestEvent);
-        ImGui.Checkbox("Disable during Crafting", ref Settings.DisableDuringCrafting);
-        ImGui.Checkbox("Disable in Island Sanctuary", ref Settings.DisableIslandSanctuary);
-        ImGui.Checkbox("Disable during duty recorder playback", ref Settings.DisableDuringDutyRecorderPlayback);
-
-        ImGuiHelpers.ScaledDummy(20.0f);
-
-        ImGui.SetNextItemWidth(50 * ImGuiHelpers.GlobalScale);
-
-        ImGui.InputInt("Framerate Limit", ref newFramerateLimit, 0, 0);
-        if (ImGui.IsItemDeactivatedAfterEdit())
-        {
-            Settings.FrameRateLimit = Math.Max(newFramerateLimit, 10);
-        }
-            
-        ImGuiComponents.HelpMarker("The framerate value to limit the game to\n" + "Minimum: 10");
-
-        var frametimeExact = 1000 / Settings.FrameRateLimit + 1;
-        var approximateFramerate = 1000 / frametimeExact;
-
-        Utilities.Draw.NumericDisplay("Approximated Framerate", approximateFramerate);
-        ImGuiComponents.HelpMarker("Framerate limit will be approximated not exact");
+        InfoBox.Instance
+            .AddTitle("General Settings", 1.0f)
+            .AddString("The framerate limiter will be active unless any of the below conditions are met and enabled")
+            .AddHelpMarker("For example, with 'Disable during combat' enabled\nAnytime you are in combat, ChillFrames will NOT lower your framerate")
+            .AddConfigCheckbox("Disable during combat", Settings.DisableDuringCombatSetting)
+            .AddConfigCheckbox("Disable during duty", Settings.DisableDuringDutySetting)
+            .AddConfigCheckbox("Disable during cutscene", Settings.DisableDuringCutsceneSetting)
+            .AddConfigCheckbox("Disable in specific zones", Blacklist.EnabledSetting)
+            .AddConfigCheckbox("Disable during Quest Events", Settings.DisableDuringQuestEventSetting)
+            .AddConfigCheckbox("Disable during Crafting", Settings.DisableDuringCraftingSetting)
+            .AddConfigCheckbox("Disable in Island Sanctuary", Settings.DisableIslandSanctuarySetting)
+            .AddConfigCheckbox("Disable during duty recorder playback", Settings.DisableDuringDutyRecorderPlaybackSetting)
+            .Draw();
+        
+        InfoBox.Instance
+            .AddTitle("Framerate Target", 1.0f)
+            .AddInputInt("Framerate Limit", Settings.FrameRateLimitSetting, 10, 255, 0, 0, InfoBox.Instance.InnerWidth / 4.0f)
+            .AddString($"Approximated Framerate {1000 / (1000 / Settings.FrameRateLimitSetting.Value + 1)}")
+            .AddHelpMarker("Framerate limit will be approximated not exact")
+            .Draw();
     }
 
     public void Dispose()
