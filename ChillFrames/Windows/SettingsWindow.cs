@@ -15,7 +15,7 @@ using KamiLib.Utilities;
 
 namespace ChillFrames.Windows;
 
-public class SettingsWindow : Window, IDisposable
+public class SettingsWindow : Window
 {
     private static GeneralSettings Settings => Service.Configuration.General;
 
@@ -41,12 +41,7 @@ public class SettingsWindow : Window, IDisposable
         Flags |= ImGuiWindowFlags.NoScrollbar;
         Flags |= ImGuiWindowFlags.NoScrollWithMouse;
     }
-
-    public void Dispose()
-    {
-        tabBar.Dispose();
-    }
-
+    
     public override void Draw()
     {
         if (!IsOpen) return;
