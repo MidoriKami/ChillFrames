@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
 using ChillFrames.Config;
 using ChillFrames.System;
-using ChillFrames.Tabs;
+using ChillFrames.Windows.Tabs;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;

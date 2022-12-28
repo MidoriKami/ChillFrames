@@ -3,7 +3,7 @@ using KamiLib.BlacklistSystem;
 using KamiLib.InfoBoxSystem;
 using KamiLib.Interfaces;
 
-namespace ChillFrames.Tabs;
+namespace ChillFrames.Windows.Tabs;
 
 internal class BlacklistTab : ITabItem
 {
@@ -11,10 +11,6 @@ internal class BlacklistTab : ITabItem
     
     public string TabName => "Blacklist";
     public bool Enabled => Service.Configuration.Blacklist.EnabledSetting.Value;
-
-    public void Dispose()
-    {
-    }
 
     public void Draw()
     {

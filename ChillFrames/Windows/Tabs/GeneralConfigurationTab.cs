@@ -2,7 +2,7 @@
 using KamiLib.InfoBoxSystem;
 using KamiLib.Interfaces;
 
-namespace ChillFrames.Tabs;
+namespace ChillFrames.Windows.Tabs;
 
 internal class GeneralConfigurationTab : ITabItem
 {
@@ -34,10 +34,5 @@ internal class GeneralConfigurationTab : ITabItem
             .AddString($"Approximated Framerate {1000 / (1000 / Settings.FrameRateLimitSetting.Value + 1)}")
             .AddHelpMarker("Framerate limit will be approximated not exact")
             .Draw();
-    }
-
-    public void Dispose()
-    {
-
     }
 }

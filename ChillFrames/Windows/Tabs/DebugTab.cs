@@ -1,7 +1,7 @@
 ﻿using KamiLib.InfoBoxSystem;
 using KamiLib.Interfaces;
 
-namespace ChillFrames.Tabs;
+namespace ChillFrames.Windows.Tabs;
 
 internal class DebugTab : ITabItem
 {
@@ -15,10 +15,5 @@ internal class DebugTab : ITabItem
             .AddDragFloat("Disable Increment", Service.Configuration.DisableIncrementSetting, 0.001f, 0.150f, InfoBox.Instance.InnerWidth / 2.0f, 3)
             .AddDragFloat("Enable Increment", Service.Configuration.EnableIncrementSetting, 0.001f, 0.150f, InfoBox.Instance.InnerWidth / 2.0f, 3)
             .Draw();
-    }
-
-    public void Dispose()
-    {
-
     }
 }
