@@ -1,6 +1,6 @@
 ﻿using ChillFrames.Config;
-using ChillFrames.Interfaces;
 using KamiLib.InfoBoxSystem;
+using KamiLib.Interfaces;
 
 namespace ChillFrames.Tabs;
 

@@ -1,7 +1,7 @@
 ﻿using ChillFrames.Config;
-using ChillFrames.Interfaces;
 using KamiLib.BlacklistSystem;
 using KamiLib.InfoBoxSystem;
+using KamiLib.Interfaces;
 
 namespace ChillFrames.Tabs;
 
@@ -20,11 +20,19 @@ internal class BlacklistTab : ITabItem
     {
         InfoBox.Instance
             .AddTitle("Blacklist Mode", 1.0f)
+            .BeginTable()
+            .BeginRow()
             .AddConfigRadio("Exclude", Settings.ModeSetting, BlacklistMode.Exclusion, "Do not limit framerate in these zones")
             .AddConfigRadio("Include", Settings.ModeSetting, BlacklistMode.Inclusion, "Limit framerate only in these zones")
+            .EndRow()
+            .EndTable()
             .Draw();
 
-        BlacklistDraw.DrawAddRemoveHere(Settings.BlacklistedZones);
+        if (Service.ClientState.TerritoryType != 0)
+        {
+            BlacklistDraw.DrawAddRemoveHere(Settings.BlacklistedZones);
+
+        }
         
         BlacklistDraw.DrawTerritorySearch(Settings.BlacklistedZones);
         
