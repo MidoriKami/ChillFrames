@@ -90,7 +90,7 @@ public class SettingsWindow : Window
 
         var stringSize = ImGui.CalcTextSize(versionString);
 
-        var x = ImGui.GetWindowWidth() / 2 - (stringSize.X / 2) * ImGuiHelpers.GlobalScale;
+        var x = ImGui.GetContentRegionAvail().X / 2 - stringSize.X / 2;
         var y = ImGui.GetWindowHeight() - 30 * ImGuiHelpers.GlobalScale;
             
         ImGui.SetCursorPos(new Vector2(x, y));
