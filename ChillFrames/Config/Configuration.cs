@@ -8,7 +8,7 @@ namespace ChillFrames.Config;
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    public int Version { get; set; } = 1;
+    public int Version { get; set; } = 2;
 
     public bool DevMode = false;
     public Setting<float> DisableIncrementSetting = new(0.025f);
