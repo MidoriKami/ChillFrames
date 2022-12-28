@@ -2,8 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using ChillFrames.Config;
-using Dalamud.Hooking;
-using Dalamud.Utility.Signatures;
+using Dalamud.Game;
 
 namespace ChillFrames.System;
 
@@ -16,13 +15,8 @@ public enum LimiterState
 
 internal class FrameLimiter : IDisposable
 {
-    private delegate void SwapChainPresent(IntPtr address);
-
-    [Signature("E8 ?? ?? ?? ?? C6 47 79 00", DetourName = nameof(Swapchain_Present))]
-    private readonly Hook<SwapChainPresent>? swapchainMethod = null;
-
-    private readonly Stopwatch timer = new();
-    private readonly Stopwatch steppingStopwatch = new();
+    private readonly Stopwatch timer = Stopwatch.StartNew();
+    private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
     private static GeneralSettings Settings => Service.Configuration.General;
 
     private static int TargetFramerate => Settings.FrameRateLimitSetting.Value;
@@ -36,23 +30,17 @@ internal class FrameLimiter : IDisposable
     private static float EnableIncrement => Service.Configuration.EnableIncrementSetting.Value;
 
     public FrameLimiter()
-    {
-        SignatureHelper.Initialise(this);
-
-        timer.Start();
-        steppingStopwatch.Start();
-        swapchainMethod?.Enable();
+    { 
+        Service.Framework.Update += OnFrameworkUpdate;
     }
 
     public void Dispose()
     {
-        swapchainMethod?.Dispose();
+        Service.Framework.Update -= OnFrameworkUpdate;
     }
 
-    private void Swapchain_Present(IntPtr address)
+    private void OnFrameworkUpdate(Framework framework)
     {
-        swapchainMethod!.Original(address);
-
         UpdateState();
 
         UpdateRate();
