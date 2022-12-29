@@ -8,6 +8,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using KamiLib;
 using KamiLib.CommandSystem;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
@@ -22,7 +23,7 @@ public class SettingsWindow : Window
 
     public SettingsWindow() : base("ChillFrames Settings")
     {
-        KamiLib.KamiLib.CommandManager.AddCommand(new ConfigurationWindowCommands<SettingsWindow>());
+        KamiCommon.CommandManager.AddCommand(new ConfigurationWindowCommands<SettingsWindow>());
         
         tabBar.AddTab(new List<ITabItem>
         {

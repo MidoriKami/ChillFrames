@@ -27,7 +27,6 @@ internal class BlacklistTab : ITabItem
         if (Service.ClientState.TerritoryType != 0)
         {
             BlacklistDraw.DrawAddRemoveHere(Settings.BlacklistedZones);
-
         }
         
         BlacklistDraw.DrawTerritorySearch(Settings.BlacklistedZones);

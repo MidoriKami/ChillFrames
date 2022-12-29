@@ -4,6 +4,7 @@ using ChillFrames.System;
 using ChillFrames.Windows;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using KamiLib;
 
 namespace ChillFrames;
 
@@ -20,7 +21,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
         // Create Static Services for use everywhere
         pluginInterface.Create<Service>();
         
-        KamiLib.KamiLib.Initialize(pluginInterface, Name, () => Service.Configuration.Save());
+        KamiCommon.Initialize(pluginInterface, Name, () => Service.Configuration.Save());
 
         // Load migrated config if needed
         ConfigMigration.LoadConfiguration();
@@ -29,9 +30,9 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
         Service.Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Service.Configuration.Initialize(Service.PluginInterface);
 
-        KamiLib.KamiLib.CommandManager.AddHandler(ShorthandCommand, "shorthand command to open configuration window");
-        KamiLib.KamiLib.CommandManager.AddCommand(new GeneralCommands());
-        KamiLib.KamiLib.WindowManager.AddWindow(new SettingsWindow());        
+        KamiCommon.CommandManager.AddHandler(ShorthandCommand, "shorthand command to open configuration window");
+        KamiCommon.CommandManager.AddCommand(new GeneralCommands());
+        KamiCommon.WindowManager.AddWindow(new SettingsWindow());        
         
         // Create Systems
         frameLimiter = new FrameLimiter();
@@ -39,7 +40,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
     
     public void Dispose()
     {
-        KamiLib.KamiLib.Dispose();
+        KamiCommon.Dispose();
 
         frameLimiter.Dispose();
     }
