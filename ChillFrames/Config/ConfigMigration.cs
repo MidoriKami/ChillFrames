@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using KamiLib.ConfigMigration;
 using KamiLib.Configuration;
 
 namespace ChillFrames.Config;
