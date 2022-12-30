@@ -84,7 +84,7 @@ public class SettingsWindow : Window
 
     public override void OnClose() => Service.Configuration.Save();
 
-    private void DrawVersionNumber()
+    private static void DrawVersionNumber()
     {
         var assemblyInformation = Assembly.GetExecutingAssembly().FullName!.Split(',');
         var versionString = assemblyInformation[1].Replace('=', ' ');
