@@ -2,7 +2,6 @@
 using ChillFrames.Config;
 using ChillFrames.System;
 using ChillFrames.Windows;
-using Dalamud.IoC;
 using Dalamud.Plugin;
 using KamiLib;
 
@@ -15,8 +14,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
 
     private readonly FrameLimiter frameLimiter;
 
-    public ChillFramesPlugin(
-        [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface)
+    public ChillFramesPlugin(DalamudPluginInterface pluginInterface)
     {
         // Create Static Services for use everywhere
         pluginInterface.Create<Service>();
