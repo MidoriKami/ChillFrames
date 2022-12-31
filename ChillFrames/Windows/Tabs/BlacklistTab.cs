@@ -10,7 +10,7 @@ internal class BlacklistTab : ITabItem
     private static BlacklistSettings Settings => Service.Configuration.Blacklist;
     
     public string TabName => "Blacklist";
-    public bool Enabled => Service.Configuration.Blacklist.EnabledSetting.Value;
+    public bool Enabled => Service.Configuration.Blacklist.EnabledSetting;
 
     public void Draw()
     {

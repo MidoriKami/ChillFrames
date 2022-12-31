@@ -8,8 +8,6 @@ using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using KamiLib;
-using KamiLib.CommandSystem;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
 
@@ -23,8 +21,6 @@ public class SettingsWindow : Window
 
     public SettingsWindow() : base("ChillFrames Settings")
     {
-        KamiCommon.CommandManager.AddCommand(new ConfigurationWindowCommands<SettingsWindow>());
-        
         tabBar.AddTab(new List<ITabItem>
         {
             new GeneralConfigurationTab(),
@@ -72,7 +68,7 @@ public class SettingsWindow : Window
 
     private static void DrawLimiterStatus()
     {
-        if (!FrameLimiterCondition.DisableFramerateLimit() && Settings.EnableLimiterSetting.Value)
+        if (!FrameLimiterCondition.DisableFramerateLimit() && Settings.EnableLimiterSetting)
         {
             ImGui.TextColored(Colors.Green, "Limiter Active");
         }

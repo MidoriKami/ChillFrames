@@ -30,9 +30,10 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
         Service.Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Service.Configuration.Initialize(Service.PluginInterface);
 
+        KamiCommon.WindowManager.AddConfigurationWindow(new SettingsWindow());      
+        
         KamiCommon.CommandManager.AddHandler(ShorthandCommand, "shorthand command to open configuration window");
         KamiCommon.CommandManager.AddCommand(new GeneralCommands());
-        KamiCommon.WindowManager.AddWindow(new SettingsWindow());        
         
         // Create Systems
         frameLimiter = new FrameLimiter();

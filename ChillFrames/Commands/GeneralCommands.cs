@@ -43,7 +43,7 @@ public class GeneralCommands : IPluginCommand
             Aliases = new List<string>{"t"},
             CommandAction = () =>
             {
-                Chat.Print("Command", Service.Configuration.General.EnableLimiterSetting.Value ? "Disabling Limiter" : "Enabling Limiter");
+                Chat.Print("Command", Service.Configuration.General.EnableLimiterSetting ? "Disabling Limiter" : "Enabling Limiter");
                 Service.Configuration.General.EnableLimiterSetting.Value = !Service.Configuration.General.EnableLimiterSetting.Value;
                 Service.Configuration.Save();
             },
@@ -74,14 +74,14 @@ public class GeneralCommands : IPluginCommand
         new SubCommand
         {
             CommandKeyword = "status",
-            CanExecute = () => Service.Configuration.General.EnableLimiterSetting.Value,
+            CanExecute = () => Service.Configuration.General.EnableLimiterSetting,
             CommandAction = () => Chat.Print("Command", FrameLimiterCondition.DisableFramerateLimit() ? "Limiter Inactive" : "Limiter Active"),
             GetHelpText = () => "Get limiter status"
         },
         new SubCommand
         {
             CommandKeyword = "status",
-            CanExecute = () => !Service.Configuration.General.EnableLimiterSetting.Value,
+            CanExecute = () => !Service.Configuration.General.EnableLimiterSetting,
             CommandAction = () => Chat.Print("Command", "Limiter is disabled"),
             GetHelpText = () => "Get limiter status"
         },

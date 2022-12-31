@@ -45,7 +45,7 @@ internal class FrameLimiter : IDisposable
 
         UpdateRate();
 
-        if (Settings.EnableLimiterSetting.Value && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
+        if (Settings.EnableLimiterSetting && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
             var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
 
