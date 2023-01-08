@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>1.0</Version>
-	<AssemblyVersion>1.6.0.0</AssemblyVersion>
+	<AssemblyVersion>1.6.1.0</AssemblyVersion>
     <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
   </PropertyGroup>
 
@@ -10,7 +10,6 @@
 	  <TargetFramework>net7.0-windows</TargetFramework>
 	  <Platforms>x64</Platforms>
 	  <Nullable>enable</Nullable>
-	  <LangVersion>preview</LangVersion>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -29,7 +28,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DalamudPackager" Version="2.1.8" />
+		<PackageReference Include="DalamudPackager" Version="2.1.10" />
 	</ItemGroup>
 
 	<ItemGroup>
