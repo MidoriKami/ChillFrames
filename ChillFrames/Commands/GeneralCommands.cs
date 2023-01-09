@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ChillFrames.System;
-using KamiLib.CommandSystem;
+using KamiLib.ChatCommands;
 using KamiLib.Interfaces;
-using KamiLib.Utilities;
 
 namespace ChillFrames.Commands;
 

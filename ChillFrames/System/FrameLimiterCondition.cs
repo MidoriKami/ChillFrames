@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using ChillFrames.Config;
-using Condition = KamiLib.Utilities.Condition;
+using KamiLib.GameState;
 
 namespace ChillFrames.System;
 

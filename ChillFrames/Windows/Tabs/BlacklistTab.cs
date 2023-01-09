@@ -1,6 +1,6 @@
 ﻿using ChillFrames.Config;
-using KamiLib.BlacklistSystem;
-using KamiLib.InfoBoxSystem;
+using KamiLib.Blacklist;
+using KamiLib.Drawing;
 using KamiLib.Interfaces;
 
 namespace ChillFrames.Windows.Tabs;

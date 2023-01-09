@@ -5,14 +5,10 @@ namespace ChillFrames.Config;
 
 public enum BlacklistMode
 {
-    /// <summary>
-    /// Do not limit Framerate in these zones
-    /// </summary>
+    // Do not limit Framerate in these zones
     Exclusion,
 
-    /// <summary>
-    /// Only limit framerate in these zones
-    /// </summary>
+    // Only limit framerate in these zones
     Inclusion
 }
 
