@@ -7,9 +7,7 @@ public static class ConfigMigration
 {
     public static void LoadConfiguration()
     {
-        Migrate.LoadFile(Service.PluginInterface.ConfigFile);
-
-        switch (Migrate.GetFileVersion())
+        switch (Migrate.GetFileVersion(Service.PluginInterface.ConfigFile))
         {
             case 1:
                 Service.Configuration = MigrateVersionOne();
