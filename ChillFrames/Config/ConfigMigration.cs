@@ -15,7 +15,7 @@ public static class ConfigMigration
                 Service.Configuration.Save();
                 break;
             
-            case 2:
+            default:
                 Service.Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
                 Service.Configuration.Initialize(Service.PluginInterface);
                 break;
