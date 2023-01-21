@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>1.0</Version>
-	<AssemblyVersion>1.6.1.1</AssemblyVersion>
+	<AssemblyVersion>1.6.1.2</AssemblyVersion>
     <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
   </PropertyGroup>
 
