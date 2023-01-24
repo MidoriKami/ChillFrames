@@ -14,4 +14,5 @@ public class GeneralSettings
     public Setting<bool> DisableDuringCraftingSetting = new(true);
     public Setting<bool> DisableIslandSanctuarySetting = new(true);
     public Setting<bool> DisableDuringDutyRecorderPlaybackSetting = new(true);
+    public Setting<bool> DisableDuringBardPerformance = new(true);
 }

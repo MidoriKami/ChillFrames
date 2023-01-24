@@ -22,6 +22,7 @@ internal static class FrameLimiterCondition
         if (Condition.IsInQuestEvent() && Settings.DisableDuringQuestEventSetting) return true;
         if (Condition.IsCrafting() && Settings.DisableDuringCraftingSetting) return true;
         if (Condition.IsInIslandSanctuary() && Settings.DisableIslandSanctuarySetting) return true;
+        if (Condition.IsInBardPerformance() && Settings.DisableDuringBardPerformance) return true;
         if (Condition.IsBetweenAreas()) return true;
 
         return false;
