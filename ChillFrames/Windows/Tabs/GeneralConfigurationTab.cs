@@ -1,4 +1,7 @@
-﻿using ChillFrames.Config;
+﻿using System;
+using ChillFrames.Config;
+using ImGuiNET;
+using KamiLib;
 using KamiLib.Drawing;
 using KamiLib.Interfaces;
 
@@ -29,10 +32,24 @@ internal class GeneralConfigurationTab : ITabItem
             .Draw();
         
         InfoBox.Instance
-            .AddTitle("Framerate Target", 1.0f)
-            .AddInputInt("Framerate Limit", Settings.FrameRateLimitSetting, 10, 255, 0, 0, InfoBox.Instance.InnerWidth / 4.0f)
+            .AddTitle("Framerate Target", out var innerWidth, 1.0f)
+            .AddAction(() => FramerateInputInt(innerWidth))
             .AddString($"Approximated Framerate {1000 / (1000 / Settings.FrameRateLimitSetting.Value + 1)}")
             .AddHelpMarker("Framerate limit will be approximated not exact")
             .Draw();
+    }
+
+    private int tempFramerateTarget;
+    
+    private void FramerateInputInt(float width)
+    {
+        ImGui.SetNextItemWidth(width / 4.0f);
+
+        ImGui.InputInt("Framerate Limit", ref tempFramerateTarget, 0, 0);
+        if (ImGui.IsItemDeactivatedAfterEdit())
+        {
+            Settings.FrameRateLimitSetting.Value = Math.Clamp(tempFramerateTarget, 10, 255);
+            KamiCommon.SaveConfiguration();
+        }
     }
 }
