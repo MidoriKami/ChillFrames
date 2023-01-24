@@ -29,6 +29,7 @@ internal class GeneralConfigurationTab : ITabItem
             .AddConfigCheckbox("Disable during Crafting", Settings.DisableDuringCraftingSetting)
             .AddConfigCheckbox("Disable in Island Sanctuary", Settings.DisableIslandSanctuarySetting)
             .AddConfigCheckbox("Disable during duty recorder playback", Settings.DisableDuringDutyRecorderPlaybackSetting)
+            .AddConfigCheckbox("Disable during bard performance", Settings.DisableDuringBardPerformance)
             .Draw();
         
         InfoBox.Instance
