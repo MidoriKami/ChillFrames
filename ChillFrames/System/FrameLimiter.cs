@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using ChillFrames.Config;
 using Dalamud.Game;
-using Dalamud.Logging;
 
 namespace ChillFrames.System;
 
