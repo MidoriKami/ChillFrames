@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using ChillFrames.Config;
 using Dalamud.Game;
+using Dalamud.Logging;
 
 namespace ChillFrames.System;
 
@@ -21,6 +23,7 @@ internal class FrameLimiter : IDisposable
 
     private static int TargetFramerate => Settings.FrameRateLimitSetting.Value;
     private static int TargetFrametime => 1000 / TargetFramerate;
+    private static float PreciseFrameTime => 1000.0f / Settings.FrameRateLimitSetting.Value;
 
     private LimiterState state;
     private bool enabledLastFrame;
@@ -45,19 +48,45 @@ internal class FrameLimiter : IDisposable
 
         UpdateRate();
 
+        TryLimitFramerate();
+
+        timer.Restart();
+    }
+    
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    private void TryLimitFramerate()
+    {
         if (Settings.EnableLimiterSetting && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
             var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
 
-            delayTime = (int)(delayRatio * delayTime);
-
-            if (delayTime > 0)
+            if (Settings.PreciseFramerate)
             {
-                Thread.Sleep(delayTime);
+                var padding = TargetFramerate switch
+                {
+                    <= 100 => 2,
+                    _ => 1
+                };
+                
+                if (delayTime - padding > 0)
+                {
+                    Thread.Sleep(delayTime - padding);
+
+                    while (timer.Elapsed.Ticks < PreciseFrameTime * 10000)
+                    { }
+                }
+            }
+            else
+            {
+                delayTime = (int) (delayRatio * delayTime);
+
+                if (delayTime > 0)
+                {
+                    Thread.Sleep(delayTime);
+                }
             }
         }
-
-        timer.Restart();
+        
     }
 
     private void UpdateState()

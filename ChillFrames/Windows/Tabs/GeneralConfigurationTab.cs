@@ -31,13 +31,25 @@ internal class GeneralConfigurationTab : ITabItem
             .AddConfigCheckbox("Disable during duty recorder playback", Settings.DisableDuringDutyRecorderPlaybackSetting)
             .AddConfigCheckbox("Disable during bard performance", Settings.DisableDuringBardPerformance)
             .Draw();
-        
-        InfoBox.Instance
-            .AddTitle("Framerate Target", out var innerWidth, 1.0f)
-            .AddAction(() => FramerateInputInt(innerWidth))
-            .AddString($"Approximated Framerate {1000 / (1000 / Settings.FrameRateLimitSetting.Value + 1)}")
-            .AddHelpMarker("Framerate limit will be approximated not exact")
-            .Draw();
+
+        if (Settings.PreciseFramerate)
+        {
+            InfoBox.Instance
+                .AddTitle("Framerate Target", out var innerWidth, 1.0f)
+                .AddConfigCheckbox("Precise Mode", Settings.PreciseFramerate, "More precisely limits framerate\nEnabling this will consume more power")
+                .AddAction(() => FramerateInputInt(innerWidth))
+                .Draw();
+        }
+        else
+        {
+            InfoBox.Instance
+                .AddTitle("Framerate Target", out var innerWidth, 1.0f)
+                .AddConfigCheckbox("Precise Mode", Settings.PreciseFramerate, "More precisely limits framerate\nEnabling this will consume more power")
+                .AddAction(() => FramerateInputInt(innerWidth))
+                .AddString($"Approximated Framerate {1000 / (1000 / Settings.FrameRateLimitSetting.Value + 1)}")
+                .AddHelpMarker("Framerate limit will be approximated not exact")
+                .Draw();
+        }
     }
 
     private int tempFramerateTarget;
@@ -45,6 +57,8 @@ internal class GeneralConfigurationTab : ITabItem
     private void FramerateInputInt(float width)
     {
         ImGui.SetNextItemWidth(width / 4.0f);
+
+        tempFramerateTarget = Settings.FrameRateLimitSetting.Value;
 
         ImGui.InputInt("Framerate Limit", ref tempFramerateTarget, 0, 0);
         if (ImGui.IsItemDeactivatedAfterEdit())

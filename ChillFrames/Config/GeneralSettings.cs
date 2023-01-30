@@ -6,6 +6,7 @@ public class GeneralSettings
 {
     public Setting<bool> EnableLimiterSetting = new(true);
     public Setting<int> FrameRateLimitSetting = new(60);
+    public Setting<bool> PreciseFramerate = new(false);
 
     public Setting<bool> DisableDuringCutsceneSetting = new(true);
     public Setting<bool> DisableDuringCombatSetting = new(true);
