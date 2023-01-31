@@ -22,7 +22,7 @@ internal class FrameLimiter : IDisposable
 
     private static int TargetFramerate => Settings.FrameRateLimitSetting.Value;
     private static int TargetFrametime => 1000 / TargetFramerate;
-    private static float PreciseFrameTime => 1000.0f / Settings.FrameRateLimitSetting.Value;
+    private static int PreciseFrameTickTime => (int)(1000.0f / Settings.FrameRateLimitSetting.Value * 10000);
 
     private LimiterState state;
     private bool enabledLastFrame;
@@ -57,22 +57,18 @@ internal class FrameLimiter : IDisposable
     {
         if (Settings.EnableLimiterSetting && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
-            var delayTime = TargetFrametime - timer.Elapsed.Milliseconds;
+            var delayTime = (int)(TargetFrametime - timer.ElapsedMilliseconds);
 
             if (Settings.PreciseFramerate)
             {
-                var padding = TargetFramerate switch
+                if (delayTime - 1 > 0)
                 {
-                    <= 100 => 2,
-                    _ => 1
-                };
+                    Thread.Sleep(delayTime - 1);
+                }
                 
-                if (delayTime - padding > 0)
+                while (timer.ElapsedTicks <= PreciseFrameTickTime)
                 {
-                    Thread.Sleep(delayTime - padding);
-
-                    while (timer.Elapsed.Ticks < PreciseFrameTime * 10000)
-                    { }
+                    ((Action)(() => { }))();
                 }
             }
             else
