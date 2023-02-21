@@ -28,7 +28,7 @@ For example, if you want maximum fps while crafting you would check `Disable dur
 
 General Configuration             |  Blacklist Configuration
 :-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/9083275/194431350-4c214031-4ccf-4972-8c40-189524e85eb3.png)  |  ![image](https://user-images.githubusercontent.com/9083275/194431382-185756ef-1795-405e-9dd8-1b05ac7e44cb.png)
+![image](https://user-images.githubusercontent.com/9083275/220265664-bfa7f456-dd9b-4f8b-88fd-e351a61d649c.png)  |  ![image](https://user-images.githubusercontent.com/9083275/220265612-b7d9439a-ae56-461a-a794-2b24d7df27a6.png)
 
 ## Testimonials
 
