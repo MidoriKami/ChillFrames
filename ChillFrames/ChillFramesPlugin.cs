@@ -21,7 +21,8 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
         
         KamiCommon.Initialize(pluginInterface, Name, () => Service.Configuration.Save());
 
-        ConfigMigration.LoadConfiguration();
+        Service.Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        Service.Configuration.Initialize(Service.PluginInterface);
 
         KamiCommon.WindowManager.AddConfigurationWindow(new SettingsWindow());      
         

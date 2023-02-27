@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ChillFrames.Config;
 using KamiLib.GameState;
+using KamiLib.ZoneFilterList;
 
 namespace ChillFrames.System;
 
@@ -11,10 +12,9 @@ internal static class FrameLimiterCondition
 
     public static bool DisableFramerateLimit()
     {
-        if (Blacklist.EnabledSetting && Blacklist.ModeSetting == BlacklistMode.Exclusion && InFilteredZone()) return true;
-        if (Blacklist.EnabledSetting && Blacklist.ModeSetting == BlacklistMode.Inclusion && InFilteredZone()) return false;
-        if (Blacklist.EnabledSetting && Blacklist.ModeSetting == BlacklistMode.Inclusion && !InFilteredZone()) return true;
-
+        if (Blacklist is { EnabledSetting.Value: true, FilterSetting.Value: ZoneFilterTypeId.Blacklist } && InFilteredZone()) return true;
+        if (Blacklist is { EnabledSetting.Value: true, FilterSetting.Value: ZoneFilterTypeId.Whitelist } && InFilteredZone()) return false;
+        
         if (Condition.IsDutyRecorderPlayback() && Settings.DisableDuringDutyRecorderPlaybackSetting) return true;
         if (Condition.IsBoundByDuty() && Settings.DisableDuringDutySetting) return true;
         if (Condition.IsInCombat() && Settings.DisableDuringCombatSetting) return true;

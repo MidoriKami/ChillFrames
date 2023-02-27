@@ -30,7 +30,7 @@ public class SettingsWindow : Window
         
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(350, 510),
+            MinimumSize = new Vector2(350, 530),
             MaximumSize = new Vector2(9999,9999)
         };
 
