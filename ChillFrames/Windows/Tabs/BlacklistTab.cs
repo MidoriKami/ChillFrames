@@ -17,7 +17,7 @@ internal class BlacklistTab : ITabItem
     public void Draw()
     {
         InfoBox.Instance
-            .AddTitle("Zone Filer Mode", 1.0f)
+            .AddTitle("Zone Filter Mode", 1.0f)
             .BeginTable()
             .BeginRow()
             .AddConfigRadio("Never Limit", Settings.FilterSetting, ZoneFilterTypeId.Blacklist, "Never limit framerate in these zones")
