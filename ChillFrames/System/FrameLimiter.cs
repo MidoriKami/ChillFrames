@@ -18,18 +18,22 @@ internal class FrameLimiter : IDisposable
 {
     private readonly Stopwatch timer = Stopwatch.StartNew();
     private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
-    private static GeneralSettings Settings => Service.Configuration.General;
+    private static LimiterSettings Settings => ChillFramesSystem.Config.Limiter;
 
-    private static int TargetFramerate => Settings.FrameRateLimitSetting.Value;
-    private static int TargetFrametime => 1000 / TargetFramerate;
-    private static int PreciseFrameTickTime => (int)(1000.0f / Settings.FrameRateLimitSetting.Value * 10000);
+    private static int TargetIdleFramerate => Settings.IdleFramerateTarget;
+    private static int TargetIdleFrametime => 1000 / TargetIdleFramerate;
+    private static int PreciseIdleFrametime => (int)(1000.0f / TargetIdleFramerate * 10000);
+    
+    private static int TargetActiveFramerate => Settings.ActiveFramerateTarget;
+    private static int TargetActiveFrametime => 1000 / TargetActiveFramerate;
+    private static int PreciseActiveFrametime => (int)(1000.0f / TargetActiveFramerate * 10000);
 
     private LimiterState state;
     private bool enabledLastFrame;
     private float delayRatio = 1.0f;
 
-    private static float DisableIncrement => Service.Configuration.DisableIncrementSetting.Value;
-    private static float EnableIncrement => Service.Configuration.EnableIncrementSetting.Value;
+    private static float DisableIncrement => ChillFramesSystem.Config.DisableIncrementSetting;
+    private static float EnableIncrement => ChillFramesSystem.Config.EnableIncrementSetting;
 
     public FrameLimiter()
     { 
@@ -55,33 +59,45 @@ internal class FrameLimiter : IDisposable
     [MethodImpl(MethodImplOptions.NoOptimization)]
     private void TryLimitFramerate()
     {
-        if (Settings.EnableLimiterSetting && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
+        if (!ChillFramesSystem.Config.PluginEnable) return;
+        
+        if (Settings.EnableIdleFramerateLimit && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
-            var delayTime = (int)(TargetFrametime - timer.ElapsedMilliseconds);
+            PerformLimiting(TargetIdleFrametime, PreciseIdleFrametime);
+        }
+        else if (Settings.EnableActiveFramerateLimit && (FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
+        {
+            PerformLimiting(TargetActiveFrametime, PreciseActiveFrametime);
+        }
+    }
+    
+    private void PerformLimiting(int targetFrametime, int preciseFrameTickTime)
+    {
+        var delayTime = (int) (targetFrametime - timer.ElapsedMilliseconds);
 
-            if (Settings.PreciseFramerate)
+        if (Settings.PreciseFramerate)
+        {
+            if (delayTime - 1 > 0)
             {
-                if (delayTime - 1 > 0)
-                {
-                    Thread.Sleep(delayTime - 1);
-                }
-                
-                while (timer.ElapsedTicks <= PreciseFrameTickTime)
-                {
-                    ((Action)(() => { }))();
-                }
+                Thread.Sleep(delayTime - 1);
             }
-            else
-            {
-                delayTime = (int) (delayRatio * delayTime);
 
-                if (delayTime > 0)
+            while (timer.ElapsedTicks <= preciseFrameTickTime)
+            {
+                ((Action) (() =>
                 {
-                    Thread.Sleep(delayTime);
-                }
+                }))();
             }
         }
-        
+        else
+        {
+            delayTime = (int) (delayRatio * delayTime);
+
+            if (delayTime > 0)
+            {
+                Thread.Sleep(delayTime);
+            }
+        }
     }
 
     private void UpdateState()

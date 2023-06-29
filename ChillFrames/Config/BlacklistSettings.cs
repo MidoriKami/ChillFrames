@@ -1,13 +1,22 @@
-﻿using System.Collections.Generic;
-using KamiLib.Configuration;
-using KamiLib.ZoneFilterList;
+﻿// ReSharper disable CollectionNeverUpdated.Global
+using System.Collections.Generic;
+using KamiLib.AutomaticUserInterface;
+using NoTankYou.Models.Attributes;
 
 namespace ChillFrames.Config;
 
-public class BlacklistSettings
+[Category("Zone Filter Enable")]
+public interface IBlacklistEnable
 {
-    public Setting<bool> EnabledSetting = new(false);
-    public Setting<ZoneFilterTypeId> FilterSetting = new(ZoneFilterTypeId.Blacklist);
+    [BoolConfig("Enable")]
+    public bool Enabled { get; set; }
+}
 
-    public Setting<List<uint>> BlacklistedZones = new(new List<uint>());
+[Category("Zone Filters")]
+public class BlacklistSettings : IBlacklistEnable
+{
+    public bool Enabled { get; set; } = false;
+
+    [Blacklist]
+    public HashSet<uint> BlacklistedZones { get; set; } = new();
 }

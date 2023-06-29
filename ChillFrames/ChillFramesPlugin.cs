@@ -1,42 +1,34 @@
-﻿using ChillFrames.Commands;
-using ChillFrames.Config;
-using ChillFrames.System;
+﻿using ChillFrames.System;
 using ChillFrames.Windows;
 using Dalamud.Plugin;
 using KamiLib;
+using KamiLib.Commands;
 
 namespace ChillFrames;
 
 public sealed class ChillFramesPlugin : IDalamudPlugin
 {
     public string Name => "ChillFrames";
-    private const string ShorthandCommand = "/pcf";
 
-    private readonly FrameLimiter frameLimiter;
-
+    public static ChillFramesSystem System = null!;
+    
     public ChillFramesPlugin(DalamudPluginInterface pluginInterface)
     {
-        // Create Static Services for use everywhere
         pluginInterface.Create<Service>();
         
-        KamiCommon.Initialize(pluginInterface, Name, () => Service.Configuration.Save());
+        KamiCommon.Initialize(pluginInterface, Name);
 
-        Service.Configuration = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-        Service.Configuration.Initialize(Service.PluginInterface);
+        System = new ChillFramesSystem();
 
         KamiCommon.WindowManager.AddConfigurationWindow(new SettingsWindow());      
         
-        KamiCommon.CommandManager.AddHandler(ShorthandCommand, "shorthand command to open configuration window");
-        KamiCommon.CommandManager.AddCommand(new GeneralCommands());
-        
-        // Create Systems
-        frameLimiter = new FrameLimiter();
+        CommandController.RegisterMainCommand("/chillframes", "/pcf");
     }
     
     public void Dispose()
     {
         KamiCommon.Dispose();
 
-        frameLimiter.Dispose();
+        System.Dispose();
     }
 }

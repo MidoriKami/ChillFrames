@@ -1,19 +1,47 @@
-﻿using KamiLib.Configuration;
+﻿
+using ChillFrames.Windows.Components;
+using KamiLib.AutomaticUserInterface;
 
 namespace ChillFrames.Config;
 
-public class GeneralSettings
+[Category("Feature Toggles")]
+public interface IFeatureToggles
 {
-    public Setting<bool> EnableLimiterSetting = new(true);
-    public Setting<int> FrameRateLimitSetting = new(60);
-    public Setting<bool> PreciseFramerate = new(false);
+    [BoolConfig("InCutscenes")]
+    public bool DisableDuringCutsceneSetting { get; set; }
+    
+    [BoolConfig("InCombat")]
+    public bool DisableDuringCombatSetting { get; set; }
+    
+    [BoolConfig("InDuties")]
+    public bool DisableDuringDutySetting { get; set; }
+    
+    [BoolConfig("InQuestEvent")]
+    public bool DisableDuringQuestEventSetting { get; set; }
+    
+    [BoolConfig("InCrafting")]
+    public bool DisableDuringCraftingSetting { get; set; }
+    
+    [BoolConfig("InIslandSanctuary")]
+    public bool DisableIslandSanctuarySetting { get; set; }
+    
+    [BoolConfig("InDutyRecorderPlayback")]
+    public bool DisableDuringDutyRecorderPlaybackSetting { get; set; }
+    
+    [BoolConfig("InBardPerformance")]
+    public bool DisableDuringBardPerformance { get; set; }
+}
 
-    public Setting<bool> DisableDuringCutsceneSetting = new(true);
-    public Setting<bool> DisableDuringCombatSetting = new(true);
-    public Setting<bool> DisableDuringDutySetting = new(true);
-    public Setting<bool> DisableDuringQuestEventSetting = new(true);
-    public Setting<bool> DisableDuringCraftingSetting = new(true);
-    public Setting<bool> DisableIslandSanctuarySetting = new(true);
-    public Setting<bool> DisableDuringDutyRecorderPlaybackSetting = new(true);
-    public Setting<bool> DisableDuringBardPerformance = new(true);
+public class GeneralSettings : IFeatureToggles
+{
+    // IFeatureToggles
+    public bool DisableDuringCutsceneSetting { get; set; } = true;
+    public bool DisableDuringCombatSetting { get; set; } = true;
+    public bool DisableDuringDutySetting { get; set; } = true;
+    public bool DisableDuringQuestEventSetting { get; set; } = true;
+    public bool DisableDuringCraftingSetting { get; set; } = true;
+    public bool DisableIslandSanctuarySetting { get; set; } = true;
+    public bool DisableDuringDutyRecorderPlaybackSetting { get; set; } = true;
+    public bool DisableDuringBardPerformance { get; set; } = true;
+
 }

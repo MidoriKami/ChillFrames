@@ -1,19 +1,17 @@
 ﻿using System.Linq;
 using ChillFrames.Config;
 using KamiLib.GameState;
-using KamiLib.ZoneFilterList;
 
 namespace ChillFrames.System;
 
 internal static class FrameLimiterCondition
 {
-    private static GeneralSettings Settings => Service.Configuration.General;
-    private static BlacklistSettings Blacklist => Service.Configuration.Blacklist;
+    private static GeneralSettings Settings => ChillFramesSystem.Config.General;
+    private static BlacklistSettings Blacklist => ChillFramesSystem.Config.Blacklist;
 
     public static bool DisableFramerateLimit()
     {
-        if (Blacklist is { EnabledSetting.Value: true, FilterSetting.Value: ZoneFilterTypeId.Blacklist } && InFilteredZone()) return true;
-        if (Blacklist is { EnabledSetting.Value: true, FilterSetting.Value: ZoneFilterTypeId.Whitelist } && InFilteredZone()) return false;
+        if (Blacklist is { Enabled: true } && InFilteredZone()) return true;
         
         if (Condition.IsDutyRecorderPlayback() && Settings.DisableDuringDutyRecorderPlaybackSetting) return true;
         if (Condition.IsBoundByDuty() && Settings.DisableDuringDutySetting) return true;
@@ -28,8 +26,5 @@ internal static class FrameLimiterCondition
         return false;
     }
 
-    private static bool InFilteredZone()
-    {
-        return Blacklist.BlacklistedZones.Value.Any(territory => territory == Service.ClientState.TerritoryType);
-    }
+    private static bool InFilteredZone() => Blacklist.BlacklistedZones.Any(territory => territory == Service.ClientState.TerritoryType);
 }

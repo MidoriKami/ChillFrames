@@ -1,97 +1,100 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
-using System.Reflection;
-using ChillFrames.Config;
 using ChillFrames.System;
 using ChillFrames.Windows.Tabs;
 using Dalamud.Interface;
-using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using KamiLib.Drawing;
+using KamiLib.Commands;
 using KamiLib.Interfaces;
+using KamiLib.Utilities;
 
 namespace ChillFrames.Windows;
 
 public class SettingsWindow : Window
 {
-    private static GeneralSettings Settings => Service.Configuration.General;
-
-    private readonly TabBar tabBar = new("ChillFramesSettingsTabBar", ImGuiHelpers.ScaledVector2(0.0f, -23.0f));
+    private readonly IEnumerable<ITabItem> tabs;
 
     public SettingsWindow() : base("ChillFrames Settings")
     {
-        tabBar.AddTab(new List<ITabItem>
+        tabs = new ITabItem[]
         {
-            new GeneralConfigurationTab(),
-            new BlacklistTab(),
-            new DebugTab(),
-        });
+            new LimiterSettingsTab(),
+            new GeneralSettingsTab(),
+            new ZoneFilterTab(),
+        };
         
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(350, 530),
+            MinimumSize = new Vector2(400, 475),
             MaximumSize = new Vector2(9999,9999)
         };
 
         Flags |= ImGuiWindowFlags.NoScrollbar;
         Flags |= ImGuiWindowFlags.NoScrollWithMouse;
+        
+        CommandController.RegisterCommands(this);
     }
     
     public override void Draw()
     {
-        if (!IsOpen) return;
-        var indentSize = 25.0f * ImGuiHelpers.GlobalScale;
-
-        DrawLimiterEnableDisable();
-        
-        ImGui.Indent(indentSize);
-        DrawLimiterStatus();
-        ImGui.Unindent(indentSize);
-        
-        ImGuiHelpers.ScaledDummy(5.0f);
-
-        tabBar.Draw();
-
-        DrawVersionNumber();
-    }
-
-    private static void DrawLimiterEnableDisable()
-    {
-        if (ImGui.Checkbox("Enable Framerate Limiter", ref Settings.EnableLimiterSetting.Value))
+        if (ImGui.BeginChild("##MainToggleAndStatus", ImGuiHelpers.ScaledVector2(0.0f, 60.0f)))
         {
-            Service.Configuration.Save();
-        }
-        ImGuiComponents.HelpMarker("Enables the Framerate Limiter\n" + "When the configured conditions are true");
-
-    }
-
-    private static void DrawLimiterStatus()
-    {
-        if (!FrameLimiterCondition.DisableFramerateLimit() && Settings.EnableLimiterSetting)
-        {
-            ImGui.TextColored(Colors.Green, "Limiter Active");
-        }
-        else
-        {
-            ImGui.TextColored(Colors.Red, "Limiter Inactive");
-        }
-    }
-
-    public override void OnClose() => Service.Configuration.Save();
-
-    private static void DrawVersionNumber()
-    {
-        var assemblyInformation = Assembly.GetExecutingAssembly().FullName!.Split(',');
-        var versionString = assemblyInformation[1].Replace('=', ' ');
-
-        var stringSize = ImGui.CalcTextSize(versionString);
-
-        var x = ImGui.GetContentRegionAvail().X / 2 - stringSize.X / 2;
-        var y = ImGui.GetWindowHeight() - 30 * ImGuiHelpers.GlobalScale;
+            var config = ChillFramesSystem.Config;
             
-        ImGui.SetCursorPos(new Vector2(x, y));
+            var value = config.PluginEnable;
+            if (ImGui.Checkbox("Enable Framerate Limiter", ref value))
+            {
+                config.PluginEnable = value;
+                config.Save();
+            }
+            
+            if (!FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableIdleFramerateLimit && config.PluginEnable)
+            {
+                ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active. Target Framerate: {config.Limiter.IdleFramerateTarget}");
+            }
+            else if (FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableActiveFramerateLimit && config.PluginEnable)
+            {
+                ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active Target Framerate: {config.Limiter.ActiveFramerateTarget}");
+            }
+            else
+            {
+                ImGui.TextColored(KnownColor.Red.AsVector4(), "Limiter Inactive");
+            }
+        }
+        ImGui.EndChild();
 
-        ImGui.TextColored(Colors.Grey, versionString);
+        var region = ImGui.GetContentRegionAvail();
+        
+        if (ImGui.BeginTabBar("TabBar"))
+        {
+            foreach (var tab in tabs)
+            {
+                if (ImGui.BeginTabItem(tab.TabName))
+                {
+                    if (ImGui.BeginChild("TabChild", new Vector2(0.0f, region.Y - 50.0f), false, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+                    {
+                        tab.Draw();
+                    }
+                    ImGui.EndChild();
+
+                    ImGui.EndTabItem();
+                }
+            }
+
+            ImGui.EndTabBar();
+        }
+
+        PluginVersion.Instance.DrawVersionText();
+    }
+    
+    [BaseCommandHandler("OpenConfigWindow")]
+    public void OpenConfigWindow()
+    {
+        if (!Service.ClientState.IsLoggedIn) return;
+        if (Service.ClientState.IsPvP) return;
+            
+        Toggle();
     }
 }
