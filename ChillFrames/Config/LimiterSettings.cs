@@ -13,13 +13,13 @@ public interface ILimiterSettings
     [BoolConfig("Enable Idle Framerate Limiter", "This will limit the games framerate whenever any of the conditions are not met\nFor example, while afk in Limsa you want to limit your framerate to save power")]
     public bool EnableIdleFramerateLimit { get; set; }
     
-    [DelayedIntCounterConfig("Idle Framerate Target", false)]
+    [DelayedIntCounterConfig("Idle Framerate Target", false, 1, 255)]
     public int IdleFramerateTarget { get; set; }
     
     [BoolConfig("Enable Active Framerate Limiter", "This will limit the games framerate whenever any of the conditions are met\nFor example, while in duties you want to limit your framerate to your displays refresh rate")]
     public bool EnableActiveFramerateLimit { get; set; }
     
-    [DelayedIntCounterConfig("Active Framerate Target", false)]
+    [DelayedIntCounterConfig("Active Framerate Target", false, 1, 255)]
     public int ActiveFramerateTarget { get; set; }
 }
 
