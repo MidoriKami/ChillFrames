@@ -13,16 +13,23 @@ public class DelayedIntCounterConfigAttribute : IntCounterConfigAttribute
 
     private readonly bool showStep;
 
-    public DelayedIntCounterConfigAttribute(string? label, string? helpText = null) : base(label)
+    private readonly int minValue;
+    private readonly int maxValue;
+
+    public DelayedIntCounterConfigAttribute(string? label, int minValue = 0, int maxValue = 100, string? helpText = null) : base(label)
     {
         helpTextKey = helpText;
         showStep = true;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
     
-    public DelayedIntCounterConfigAttribute(string? label, bool showStepButtons, string? helpText = null) : base(label)
+    public DelayedIntCounterConfigAttribute(string? label, bool showStepButtons, int minValue = 0, int maxValue = 100, string? helpText = null) : base(label)
     {
         helpTextKey = helpText;
         showStep = showStepButtons;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
     
     protected override void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null)
@@ -33,6 +40,8 @@ public class DelayedIntCounterConfigAttribute : IntCounterConfigAttribute
 
         if (ImGui.IsItemDeactivatedAfterEdit())
         {
+            intValue = Math.Clamp(intValue, minValue, maxValue);
+            
             SetValue(obj, field, intValue);
             saveAction?.Invoke();
         }
