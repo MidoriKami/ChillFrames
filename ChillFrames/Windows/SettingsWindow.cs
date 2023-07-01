@@ -56,7 +56,7 @@ public class SettingsWindow : Window
             }
             else if (FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableActiveFramerateLimit && config.PluginEnable)
             {
-                ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active Target Framerate: {config.Limiter.ActiveFramerateTarget}");
+                ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active. Target Framerate: {config.Limiter.ActiveFramerateTarget}");
             }
             else
             {

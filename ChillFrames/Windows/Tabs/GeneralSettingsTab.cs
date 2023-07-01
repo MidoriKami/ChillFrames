@@ -10,7 +10,7 @@ public class GeneralSettingsTab : ITabItem
     public bool Enabled => true;
     public void Draw()
     {
-        ImGui.TextWrapped("The `Idle Framerate Target` will be used\nwhile any of the below conditions are met and enabled");
+        ImGui.TextWrapped("The `Idle Framerate Target` will be used\nunless any of the below conditions are met and enabled");
         ImGuiHelpers.ScaledDummy(5.0f);
         
         ChillFramesPlugin.System.DrawGeneralConfig();
