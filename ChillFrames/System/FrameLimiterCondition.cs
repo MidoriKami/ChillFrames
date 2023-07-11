@@ -11,8 +11,6 @@ internal static class FrameLimiterCondition
 
     public static bool DisableFramerateLimit()
     {
-        if (Blacklist is { Enabled: true } && InFilteredZone()) return true;
-        
         if (Condition.IsDutyRecorderPlayback() && Settings.DisableDuringDutyRecorderPlaybackSetting) return true;
         if (Condition.IsBoundByDuty() && Settings.DisableDuringDutySetting) return true;
         if (Condition.IsInCombat() && Settings.DisableDuringCombatSetting) return true;
@@ -25,6 +23,8 @@ internal static class FrameLimiterCondition
 
         return false;
     }
+
+    public static bool IsBlacklisted => Blacklist is { Enabled: true } && InFilteredZone();
 
     private static bool InFilteredZone() => Blacklist.BlacklistedZones.Any(territory => territory == Service.ClientState.TerritoryType);
 }

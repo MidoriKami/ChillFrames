@@ -49,8 +49,12 @@ public class SettingsWindow : Window
                 config.PluginEnable = value;
                 config.Save();
             }
-            
-            if (!FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableIdleFramerateLimit && config.PluginEnable)
+
+            if (FrameLimiterCondition.IsBlacklisted)
+            {
+                ImGui.TextColored(KnownColor.Red.AsVector4(), "Limiter Inactive, In Blacklisted Zone");
+            }
+            else if (!FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableIdleFramerateLimit && config.PluginEnable)
             {
                 ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active. Target Framerate: {config.Limiter.IdleFramerateTarget}");
             }

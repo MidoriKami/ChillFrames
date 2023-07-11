@@ -60,6 +60,7 @@ internal class FrameLimiter : IDisposable
     private void TryLimitFramerate()
     {
         if (!ChillFramesSystem.Config.PluginEnable) return;
+        if (FrameLimiterCondition.IsBlacklisted) return;
         
         if (Settings.EnableIdleFramerateLimit && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
