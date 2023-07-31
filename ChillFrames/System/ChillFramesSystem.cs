@@ -1,5 +1,6 @@
 ﻿// ReSharper disable UnusedMember.Local
 using System;
+using System.Collections.Generic;
 using System.IO;
 using ChillFrames.Config;
 using KamiLib.AutomaticUserInterface;
@@ -10,8 +11,10 @@ namespace ChillFrames.System;
 
 public class ChillFramesSystem : IDisposable
 {
+    internal const string BlockListNamespace = "ChillFrames.StopRequests";
     public static Configuration Config = null!;
     private readonly FrameLimiter frameLimiter;
+    internal readonly HashSet<string> BlockList;
     
     public ChillFramesSystem()
     {
@@ -20,6 +23,9 @@ public class ChillFramesSystem : IDisposable
         LoadConfiguration();
 
         frameLimiter = new FrameLimiter();
+
+        BlockList = Service.PluginInterface.GetOrCreateData<HashSet<string>>(BlockListNamespace, () => new());
+        BlockList.Clear();  
     }
 
     public void Dispose()
