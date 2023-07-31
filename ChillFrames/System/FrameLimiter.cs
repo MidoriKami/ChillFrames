@@ -61,7 +61,7 @@ internal class FrameLimiter : IDisposable
     {
         if (!ChillFramesSystem.Config.PluginEnable) return;
         if (FrameLimiterCondition.IsBlacklisted) return;
-        if (ChillFramesPlugin.System.BlockList.Count > 0) return;
+        if (ChillFramesSystem.BlockList.Count > 0) return;
         
         if (Settings.EnableIdleFramerateLimit && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
         {
@@ -86,9 +86,7 @@ internal class FrameLimiter : IDisposable
 
             while (timer.ElapsedTicks <= preciseFrameTickTime)
             {
-                ((Action) (() =>
-                {
-                }))();
+                ((Action) (() => { }))();
             }
         }
         else

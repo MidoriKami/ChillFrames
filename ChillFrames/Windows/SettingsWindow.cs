@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
 using ChillFrames.System;
 using ChillFrames.Windows.Tabs;
 using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using KamiLib.Commands;
@@ -40,7 +40,7 @@ public class SettingsWindow : Window
     
     public override void Draw()
     {
-        if (ImGui.BeginChild("##MainToggleAndStatus", ImGuiHelpers.ScaledVector2(0.0f, ChillFramesPlugin.System.BlockList.Count>0?80f:60.0f)))
+        if (ImGui.BeginChild("##MainToggleAndStatus", ImGuiHelpers.ScaledVector2(0.0f, 60.0f)))
         {
             var config = ChillFramesSystem.Config;
             
@@ -51,13 +51,19 @@ public class SettingsWindow : Window
                 config.Save();
             }
 
-            if(ChillFramesPlugin.System.BlockList.Count > 0)
+            if(ChillFramesSystem.BlockList.Count > 0)
             {
-                ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.AsVector4(), $"Limiter is inactive - requested by plugin: {string.Join(",", ChillFramesPlugin.System.BlockList)}");
-                if(ImGui.SmallButton("Release all locks"))
+                if (ImGuiComponents.IconButton("##ReleaseLocks", FontAwesomeIcon.Unlock))
                 {
-                    ChillFramesPlugin.System.BlockList.Clear();
+                    ChillFramesSystem.BlockList.Clear();
                 }
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.SetTooltip("Remove limiter lock");
+                }
+                
+                ImGui.SameLine();
+                ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.AsVector4(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", ChillFramesSystem.BlockList)}");
             }
             else if (FrameLimiterCondition.IsBlacklisted)
             {

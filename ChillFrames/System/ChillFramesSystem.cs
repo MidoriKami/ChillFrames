@@ -11,10 +11,10 @@ namespace ChillFrames.System;
 
 public class ChillFramesSystem : IDisposable
 {
-    internal const string BlockListNamespace = "ChillFrames.StopRequests";
     public static Configuration Config = null!;
     private readonly FrameLimiter frameLimiter;
-    internal readonly HashSet<string> BlockList;
+    private readonly ChillFramesIpcController ipcController;
+    public static HashSet<string> BlockList = null!;
     
     public ChillFramesSystem()
     {
@@ -22,15 +22,15 @@ public class ChillFramesSystem : IDisposable
         
         LoadConfiguration();
 
+        BlockList = new HashSet<string>();
         frameLimiter = new FrameLimiter();
-
-        BlockList = Service.PluginInterface.GetOrCreateData<HashSet<string>>(BlockListNamespace, () => new());
-        BlockList.Clear();  
+        ipcController = new ChillFramesIpcController();
     }
 
     public void Dispose()
     {
         frameLimiter.Dispose();
+        ipcController.Dispose();
     }
 
     private void LoadConfiguration()
@@ -88,7 +88,7 @@ public class ChillFramesSystem : IDisposable
     [DoubleTierCommandHandler("Set the Idle Limiter to the specified value", "idle", "set")]
     private void SetIdleLimit(params string[] args)
     {
-        if (args.Length is not 1) return;
+        if (args.Length < 1) return;
         if (int.Parse(args[0]) < 1) return;
         
         Config.Limiter.IdleFramerateTarget = int.Parse(args[0]);
@@ -98,7 +98,7 @@ public class ChillFramesSystem : IDisposable
     [DoubleTierCommandHandler("Set the Active Limiter to the specified value", "active", "set")]
     private void SetActiveLimit(params string[] args)
     {
-        if (args.Length is not 1) return;
+        if (args.Length < 1) return;
         if (int.Parse(args[0]) < 1) return;
 
         Config.Limiter.ActiveFramerateTarget = int.Parse(args[0]);
