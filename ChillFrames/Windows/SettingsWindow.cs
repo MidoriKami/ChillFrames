@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using ChillFrames.System;
 using ChillFrames.Windows.Tabs;
@@ -39,7 +40,7 @@ public class SettingsWindow : Window
     
     public override void Draw()
     {
-        if (ImGui.BeginChild("##MainToggleAndStatus", ImGuiHelpers.ScaledVector2(0.0f, 60.0f)))
+        if (ImGui.BeginChild("##MainToggleAndStatus", ImGuiHelpers.ScaledVector2(0.0f, ChillFramesPlugin.System.BlockList.Count>0?80f:60.0f)))
         {
             var config = ChillFramesSystem.Config;
             
@@ -50,7 +51,15 @@ public class SettingsWindow : Window
                 config.Save();
             }
 
-            if (FrameLimiterCondition.IsBlacklisted)
+            if(ChillFramesPlugin.System.BlockList.Count > 0)
+            {
+                ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.AsVector4(), $"Limiter is inactive - requested by plugin: {string.Join(",", ChillFramesPlugin.System.BlockList)}");
+                if(ImGui.SmallButton("Release all locks"))
+                {
+                    ChillFramesPlugin.System.BlockList.Clear();
+                }
+            }
+            else if (FrameLimiterCondition.IsBlacklisted)
             {
                 ImGui.TextColored(KnownColor.Red.AsVector4(), "Limiter Inactive, In Blacklisted Zone");
             }
