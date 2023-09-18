@@ -2,7 +2,7 @@
   "Author": "MidoriKami",
   "Name": "Chill Frames",
   "Punchline": "Limit Framerate while out of combat",
-  "Description": "Tired of your GPU melting your face off while just running around? Why render at 240 FPS when you're just staring at that gathering node? Fret no more! Chill Frames allows you dynamically limit your framerate when doing unimportant tasks!\n\n/pcf help → Display all available commands",
+  "Description": "Tired of your GPU melting your face off while just running around? Why render at 240 FPS when you're just staring at that gathering node? Fret no more! Chill Frames allows you dynamically limit your framerate when doing unimportant tasks!",
   "Tags": [
     "utility"
   ],
