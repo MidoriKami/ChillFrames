@@ -5,6 +5,7 @@ using ChillFrames.System;
 using ChillFrames.Windows.Tabs;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using KamiLib.Commands;

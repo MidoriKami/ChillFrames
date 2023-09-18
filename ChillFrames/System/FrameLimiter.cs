@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ChillFrames.Config;
-using Dalamud.Game;
+using Dalamud.Plugin.Services;
 
 namespace ChillFrames.System;
 
@@ -45,7 +45,7 @@ internal class FrameLimiter : IDisposable
         Service.Framework.Update -= OnFrameworkUpdate;
     }
 
-    private void OnFrameworkUpdate(Framework framework)
+    private void OnFrameworkUpdate(IFramework framework)
     {
         UpdateState();
 

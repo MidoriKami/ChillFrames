@@ -5,7 +5,7 @@ using System.IO;
 using ChillFrames.Config;
 using KamiLib.AutomaticUserInterface;
 using KamiLib.Commands;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ChillFrames.System;
 
@@ -36,20 +36,20 @@ public class ChillFramesSystem : IDisposable
     private void LoadConfiguration()
     {
         // If we have an existing config
-        if (Service.PluginInterface.ConfigFile is { Exists: true } fileInfo )
+        if (Service.PluginInterface.ConfigFile is { Exists: true, FullName: var path} )
         {
-            var file = File.ReadAllText(fileInfo.FullName);
-            var versionInfo = JsonConvert.DeserializeObject<ConfigVersion>(file);
-            
-            if (versionInfo is not { Version: 3 } ) // We are null, or not the current version, make a new config
+            var fileText = File.ReadAllText(path);
+
+            switch (JObject.Parse(fileText).GetValue("Version")?.ToObject<int>())
             {
-                Config = new Configuration();
-                Config.Save();
-            }
-            else 
-            {
-                Config = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-                Config.Save();
+                case not 3:
+                    Config = new Configuration();
+                    Config.Save();
+                    break;
+                
+                default:
+                    Config = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+                    break;
             }
         }
         else
