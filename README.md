@@ -26,9 +26,11 @@ The various options allow you to turn off the frame limiter (that is, to have ma
 
 For example, if you want maximum fps while crafting you would check `Disable during Crafting`
 
-General Configuration             |  Blacklist Configuration
-:-------------------------:|:-------------------------:
-![image](https://user-images.githubusercontent.com/9083275/220265664-bfa7f456-dd9b-4f8b-88fd-e351a61d649c.png)  |  ![image](https://user-images.githubusercontent.com/9083275/220265612-b7d9439a-ae56-461a-a794-2b24d7df27a6.png)
+| General Configuration             |  Blacklist Configuration |
+|------------------------|-------------------------|
+| ![image](https://github.com/MidoriKami/ChillFrames/assets/9083275/2435dd16-a1b8-4cea-810d-591a59b80480) |  ![image](https://github.com/MidoriKami/ChillFrames/assets/9083275/020e46d7-f0a1-4fc5-8eae-75fecb885a48) |
+| ![image](https://github.com/MidoriKami/ChillFrames/assets/9083275/a48c2dc0-bc55-477a-a941-5013513824ea) | |
+
 
 ## Testimonials
 
