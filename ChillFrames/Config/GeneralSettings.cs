@@ -1,6 +1,4 @@
-﻿
-using ChillFrames.Windows.Components;
-using KamiLib.AutomaticUserInterface;
+﻿using KamiLib.AutomaticUserInterface;
 
 namespace ChillFrames.Config;
 
