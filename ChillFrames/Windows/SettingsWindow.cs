@@ -64,23 +64,23 @@ public class SettingsWindow : Window
                 }
                 
                 ImGui.SameLine();
-                ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.AsVector4(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", ChillFramesSystem.BlockList)}");
+                ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", ChillFramesSystem.BlockList)}");
             }
             else if (FrameLimiterCondition.IsBlacklisted)
             {
-                ImGui.TextColored(KnownColor.Red.AsVector4(), "Limiter Inactive, In Blacklisted Zone");
+                ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive, In Blacklisted Zone");
             }
             else if (!FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableIdleFramerateLimit && config.PluginEnable)
             {
-                ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active. Target Framerate: {config.Limiter.IdleFramerateTarget}");
+                ImGui.TextColored(KnownColor.Green.Vector(), $"Limiter Active. Target Framerate: {config.Limiter.IdleFramerateTarget}");
             }
             else if (FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableActiveFramerateLimit && config.PluginEnable)
             {
-                ImGui.TextColored(KnownColor.Green.AsVector4(), $"Limiter Active. Target Framerate: {config.Limiter.ActiveFramerateTarget}");
+                ImGui.TextColored(KnownColor.Green.Vector(), $"Limiter Active. Target Framerate: {config.Limiter.ActiveFramerateTarget}");
             }
             else
             {
-                ImGui.TextColored(KnownColor.Red.AsVector4(), "Limiter Inactive");
+                ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
             }
         }
         ImGui.EndChild();
