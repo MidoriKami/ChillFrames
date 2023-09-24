@@ -28,6 +28,9 @@ public interface IFeatureToggles
     
     [BoolConfig("InBardPerformance")]
     public bool DisableDuringBardPerformance { get; set; }
+    
+    [BoolConfig("InGpose")]
+    public bool DisableDuringGpose { get; set; }
 }
 
 public class GeneralSettings : IFeatureToggles
@@ -41,5 +44,6 @@ public class GeneralSettings : IFeatureToggles
     public bool DisableIslandSanctuarySetting { get; set; } = true;
     public bool DisableDuringDutyRecorderPlaybackSetting { get; set; } = true;
     public bool DisableDuringBardPerformance { get; set; } = true;
+    public bool DisableDuringGpose { get; set; } = true;
 
 }

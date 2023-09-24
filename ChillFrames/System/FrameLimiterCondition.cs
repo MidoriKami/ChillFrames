@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ChillFrames.Config;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using KamiLib.GameState;
 
 namespace ChillFrames.System;
@@ -19,6 +20,7 @@ internal static class FrameLimiterCondition
         if (Condition.IsCrafting() && Settings.DisableDuringCraftingSetting) return true;
         if (Condition.IsInIslandSanctuary() && Settings.DisableIslandSanctuarySetting) return true;
         if (Condition.IsInBardPerformance() && Settings.DisableDuringBardPerformance) return true;
+        if (GameMain.IsInGPose() && Settings.DisableDuringGpose) return true;
         if (Condition.IsBetweenAreas()) return true;
 
         return false;
