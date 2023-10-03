@@ -8,9 +8,10 @@ using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using KamiLib.Commands;
+using KamiLib.Command;
 using KamiLib.Interfaces;
-using KamiLib.Utilities;
+using KamiLib.System;
+using KamiLib.Utility;
 
 namespace ChillFrames.Windows;
 

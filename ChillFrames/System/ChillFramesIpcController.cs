@@ -1,6 +1,6 @@
 ﻿using System;
 using Dalamud.Plugin.Ipc;
-using KamiLib.Utilities;
+using KamiLib.Utility;
 
 namespace ChillFrames.System;
 

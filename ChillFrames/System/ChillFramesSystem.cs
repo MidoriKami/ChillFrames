@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using ChillFrames.Config;
 using KamiLib.AutomaticUserInterface;
-using KamiLib.Commands;
+using KamiLib.Command;
+using KamiLib.System;
 using Newtonsoft.Json.Linq;
 
 namespace ChillFrames.System;

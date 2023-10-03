@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using ChillFrames.Config;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using KamiLib.GameState;
+using KamiLib.Game;
 
 namespace ChillFrames.System;
 
