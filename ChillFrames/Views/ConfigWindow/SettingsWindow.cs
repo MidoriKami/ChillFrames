@@ -38,8 +38,6 @@ public class SettingsWindow : Window
         Flags |= ImGuiWindowFlags.NoScrollbar;
         Flags |= ImGuiWindowFlags.NoScrollWithMouse;
 
-        IsOpen = true;
-
         CommandController.RegisterCommands(this);
     }
 
