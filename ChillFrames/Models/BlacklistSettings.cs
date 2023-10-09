@@ -5,15 +5,8 @@ using KamiLib.AutomaticUserInterface;
 
 namespace ChillFrames.Models;
 
-[Category("Zone Filter Enable")]
-public interface IBlacklistEnable
-{
-    [BoolConfig("Enable")] public bool Enabled { get; set; }
-}
-
 [Category("Zone Filters")]
-public class BlacklistSettings : IBlacklistEnable
+public class BlacklistSettings
 {
     [Blacklist] public HashSet<uint> BlacklistedZones { get; set; } = new();
-    public bool Enabled { get; set; } = false;
 }

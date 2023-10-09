@@ -25,7 +25,7 @@ public class SettingsWindow : Window
         tabBar = new TabBar {
             TabItems = new ITabItem[] {
                 new LimiterSettingsTab(),
-                new ZoneFilterTab()
+                new BlacklistTab()
             }
         };
 
