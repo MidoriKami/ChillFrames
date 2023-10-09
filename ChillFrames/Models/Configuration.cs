@@ -1,18 +1,21 @@
 ﻿using Dalamud.Configuration;
 
-namespace ChillFrames.Config;
+namespace ChillFrames.Models;
 
 public class Configuration : IPluginConfiguration
 {
-    public int Version { get; set; } = 3;
-
-    public bool PluginEnable = true;
+    public BlacklistSettings Blacklist = new();
     public float DisableIncrementSetting = 0.025f;
     public float EnableIncrementSetting = 0.01f;
 
     public GeneralSettings General = new();
     public LimiterSettings Limiter = new();
-    public BlacklistSettings Blacklist = new();
 
-    public void Save() => Service.PluginInterface.SavePluginConfig(this);
+    public bool PluginEnable = true;
+    public int Version { get; set; } = 3;
+
+    public void Save()
+    {
+        Service.PluginInterface.SavePluginConfig(this);
+    }
 }

@@ -2,26 +2,26 @@
 using Dalamud.Plugin.Ipc;
 using KamiLib.Utility;
 
-namespace ChillFrames.System;
+namespace ChillFrames.Controllers;
 
 public class ChillFramesIpcController : IDisposable
 {
     /// <summary>
-    /// Function Signature: string GetVersion() <br/><br/>
-    /// Gets the current version of this plugin, can be used as a IPC Ready Check<br/><br/>
-    /// Returns the current version string<br/>"Version #.#.#.#"
+    ///     Function Signature: string GetVersion() <br /><br />
+    ///     Gets the current version of this plugin, can be used as a IPC Ready Check<br /><br />
+    ///     Returns the current version string<br />"Version #.#.#.#"
     /// </summary>
     private static ICallGateProvider<string>? _getVersion;
-    
+
     /// <summary>
-    /// Function Signature: bool DisableLimiter(string callingPluginName) <br/><br/>
-    /// Locks out ChillFrame's frame limiter, this results in the framerate being unmodified entirely by ChillFrames.
+    ///     Function Signature: bool DisableLimiter(string callingPluginName) <br /><br />
+    ///     Locks out ChillFrame's frame limiter, this results in the framerate being unmodified entirely by ChillFrames.
     /// </summary>
     private static ICallGateProvider<string, bool>? _disableLimiter;
 
     /// <summary>
-    /// Function Signature: bool EnableLimiter(string callingPluginName) <br/><br/>
-    /// Removes the lockout placed by callingPluginName.
+    ///     Function Signature: bool EnableLimiter(string callingPluginName) <br /><br />
+    ///     Removes the lockout placed by callingPluginName.
     /// </summary>
     private static ICallGateProvider<string, bool>? _enableLimiter;
 
@@ -43,12 +43,18 @@ public class ChillFramesIpcController : IDisposable
         _enableLimiter?.UnregisterFunc();
     }
 
-    private static string GetVersion() 
-        => PluginVersion.Instance.VersionText;
-    
-    private bool DisableLimiter(string callingPluginName) 
-        => ChillFramesSystem.BlockList.Add(callingPluginName);
-    
+    private static string GetVersion()
+    {
+        return PluginVersion.Instance.VersionText;
+    }
+
+    private bool DisableLimiter(string callingPluginName)
+    {
+        return ChillFramesSystem.BlockList.Add(callingPluginName);
+    }
+
     private bool EnableLimiter(string callingPluginName)
-        => ChillFramesSystem.BlockList.Remove(callingPluginName);
+    {
+        return ChillFramesSystem.BlockList.Remove(callingPluginName);
+    }
 }

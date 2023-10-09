@@ -20,6 +20,7 @@
     <None Remove="ChillFrames.json" />
     <None Remove="README.md" />
 	<None Remove="..\.editorconfig" Link=".editorconfig" />
+	<None Remove="packages.lock.json" />
   </ItemGroup>
 	
 	<PropertyGroup>
@@ -64,5 +65,10 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\KamiLib\KamiLib.csproj" />
 	</ItemGroup>
+
+
+
+
+
 
 </Project>

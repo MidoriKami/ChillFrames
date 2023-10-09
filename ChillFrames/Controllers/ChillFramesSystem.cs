@@ -1,43 +1,49 @@
 ﻿// ReSharper disable UnusedMember.Local
+
 using System;
 using System.Collections.Generic;
 using System.IO;
-using ChillFrames.Config;
-using KamiLib.AutomaticUserInterface;
+using System.Linq;
+using ChillFrames.Interfaces;
+using ChillFrames.Models;
 using KamiLib.Command;
 using KamiLib.System;
+using KamiLib.Utility;
 using Newtonsoft.Json.Linq;
 
-namespace ChillFrames.System;
+namespace ChillFrames.Controllers;
 
 public class ChillFramesSystem : IDisposable
 {
     public static Configuration Config = null!;
-    private readonly FrameLimiter frameLimiter;
-    private readonly ChillFramesIpcController ipcController;
     public static HashSet<string> BlockList = null!;
-    
+    private readonly FrameLimiterController frameLimiterController;
+    private readonly ChillFramesIpcController ipcController;
+    public List<IFrameLimiterOption> LimiterOptions;
+
     public ChillFramesSystem()
     {
         CommandController.RegisterCommands(this);
+
+        LimiterOptions = Reflection.ActivateOfInterface<IFrameLimiterOption>().ToList();
         
         LoadConfiguration();
 
         BlockList = new HashSet<string>();
-        frameLimiter = new FrameLimiter();
+        frameLimiterController = new FrameLimiterController();
         ipcController = new ChillFramesIpcController();
     }
 
     public void Dispose()
     {
-        frameLimiter.Dispose();
+        frameLimiterController.Dispose();
         ipcController.Dispose();
     }
 
     private void LoadConfiguration()
     {
         // If we have an existing config
-        if (Service.PluginInterface.ConfigFile is { Exists: true, FullName: var path} )
+        if (Service.PluginInterface.ConfigFile is { Exists: true, FullName: var path })
         {
             var fileText = File.ReadAllText(path);
 
@@ -47,7 +53,7 @@ public class ChillFramesSystem : IDisposable
                     Config = new Configuration();
                     Config.Save();
                     break;
-                
+
                 default:
                     Config = Service.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
                     break;
@@ -61,24 +67,20 @@ public class ChillFramesSystem : IDisposable
         }
     }
 
-    public void DrawGeneralConfig() => DrawableAttribute.DrawAttributes(Config.General, Config.Save);
-    public void DrawLimiterConfig() => DrawableAttribute.DrawAttributes(Config.Limiter, Config.Save);
-    public void DrawZoneFilterConfig() => DrawableAttribute.DrawAttributes(Config.Blacklist, Config.Save);
-
     [SingleTierCommandHandler("Enable Plugin's Framerate Limiter", "enable")]
     private void EnableLimiter()
     {
         Config.PluginEnable = true;
         Config.Save();
     }
-    
+
     [SingleTierCommandHandler("Disable Plugin's Framerate Limiter", "disable")]
     private void DisableLimiter()
     {
         Config.PluginEnable = false;
         Config.Save();
     }
-    
+
     [SingleTierCommandHandler("Toggle Plugin's Framerate Limiter", "toggle")]
     private void ToggleLimiter()
     {
@@ -91,7 +93,7 @@ public class ChillFramesSystem : IDisposable
     {
         if (args.Length < 1) return;
         if (int.Parse(args[0]) < 1) return;
-        
+
         Config.Limiter.IdleFramerateTarget = int.Parse(args[0]);
         Config.Save();
     }
