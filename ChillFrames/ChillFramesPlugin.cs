@@ -24,7 +24,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
 
         System = new ChillFramesSystem();
 
-        KamiCommon.WindowManager.AddConfigurationWindow(new SettingsWindow());
+        KamiCommon.WindowManager.AddConfigurationWindow(new SettingsWindow(), true);
 
         CommandController.RegisterMainCommand("/chillframes", "/pcf");
     }
