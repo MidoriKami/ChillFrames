@@ -151,11 +151,5 @@ public class SettingsWindow : Window
     }
 
     [BaseCommandHandler("OpenConfigWindow")]
-    public void OpenConfigWindow()
-    {
-        if (!Service.ClientState.IsLoggedIn) return;
-        if (Service.ClientState.IsPvP) return;
-
-        Toggle();
-    }
+    public void OpenConfigWindow() => Toggle();
 }
