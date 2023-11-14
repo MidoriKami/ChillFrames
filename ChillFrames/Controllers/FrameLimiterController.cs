@@ -87,9 +87,7 @@ internal class FrameLimiterController : IDisposable
 
             while (timer.ElapsedTicks <= preciseFrameTickTime)
             {
-                ((Action) (() =>
-                {
-                }))();
+                ((Action) (() => { }))();
             }
         }
         else
