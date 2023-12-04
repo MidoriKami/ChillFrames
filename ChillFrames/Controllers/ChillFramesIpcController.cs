@@ -43,18 +43,12 @@ public class ChillFramesIpcController : IDisposable
         _enableLimiter?.UnregisterFunc();
     }
 
-    private static string GetVersion()
-    {
-        return PluginVersion.Instance.VersionText;
-    }
+    private static string GetVersion() 
+        => PluginVersion.Instance.VersionText;
 
-    private bool DisableLimiter(string callingPluginName)
-    {
-        return ChillFramesSystem.BlockList.Add(callingPluginName);
-    }
+    private bool DisableLimiter(string callingPluginName) 
+        => ChillFramesSystem.BlockList.Add(callingPluginName);
 
-    private bool EnableLimiter(string callingPluginName)
-    {
-        return ChillFramesSystem.BlockList.Remove(callingPluginName);
-    }
+    private bool EnableLimiter(string callingPluginName) 
+        => ChillFramesSystem.BlockList.Remove(callingPluginName);
 }

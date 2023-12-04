@@ -31,7 +31,7 @@ public class SettingsWindow : Window
 
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(425.0f, 435.0f),
+            MinimumSize = new Vector2(450.0f, 435.0f),
             MaximumSize = new Vector2(9999, 9999)
         };
 
@@ -51,45 +51,6 @@ public class SettingsWindow : Window
     {
         DrawLimiterStatus();
         tabBar.Draw();
-        DrawSettingsModal();
-    }
-    
-    private void DrawSettingsModal()
-    {
-        ImGui.SetNextWindowSize( new Vector2(350.0f, 250.0f));
-        if (ImGui.BeginPopupContextWindow("ChillFrames Framerate Configuration"))
-        {
-            ImGui.Text("The idle limiter is used when no overrides are active");
-            ImGui.Separator();
-            var configChanged = ImGui.Checkbox("Enable Idle Limiter", ref ChillFramesSystem.Config.Limiter.EnableIdleFramerateLimit);
-
-            ImGui.PushItemWidth(ImGui.GetContentRegionMax().X / 3.0f);
-            ImGui.InputInt("Target Idle Framerate", ref idleFramerateLimitTemp, 0, 0);
-            if (ImGui.IsItemDeactivatedAfterEdit())
-            {
-                ChillFramesSystem.Config.Limiter.IdleFramerateTarget = idleFramerateLimitTemp;
-                configChanged = true;
-            }
-            
-            ImGuiHelpers.ScaledDummy(25.0f);
-            ImGui.Text("The active limiter is used when overrides are active");
-            ImGui.Separator();
-            
-            configChanged |= ImGui.Checkbox("Enable Active Limiter", ref ChillFramesSystem.Config.Limiter.EnableActiveFramerateLimit);
-
-            ImGui.PushItemWidth(ImGui.GetContentRegionMax().X / 3.0f);
-            ImGui.InputInt("Target Active Framerate", ref activeFramerateLimitTemp, 0, 0);
-            if (ImGui.IsItemDeactivatedAfterEdit())
-            {
-                ChillFramesSystem.Config.Limiter.ActiveFramerateTarget = activeFramerateLimitTemp;
-                configChanged = true;
-            }
-            
-            if (configChanged) ChillFramesSystem.Config.Save();
-            
-            DrawModalCloseButtons();
-            ImGui.EndPopup();
-        }
     }
     
     private void DrawLimiterStatus()
@@ -116,38 +77,18 @@ public class SettingsWindow : Window
         }
         else if (!FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableIdleFramerateLimit && config.PluginEnable)
         {
-            ImGui.TextColored(KnownColor.Green.Vector(), $"Limiter Active. Target Framerate: {config.Limiter.IdleFramerateTarget}");
+            ImGui.TextColored(KnownColor.Green.Vector(), $"Target Framerate: {config.Limiter.IdleFramerateTarget}");
         }
         else if (FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableActiveFramerateLimit && config.PluginEnable)
         {
-            ImGui.TextColored(KnownColor.Green.Vector(), $"Limiter Active. Target Framerate: {config.Limiter.ActiveFramerateTarget}");
+            ImGui.TextColored(KnownColor.Green.Vector(), $"Target Framerate: {config.Limiter.ActiveFramerateTarget}");
         }
         else
         {
             ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
         }
         
-        ImGui.SameLine(ImGui.GetContentRegionMax().X - 23.0f * ImGuiHelpers.GlobalScale - ImGui.GetStyle().FramePadding.X);
-        if (ImGuiComponents.IconButton("SettingsButton", FontAwesomeIcon.Cog))
-        {
-            ImGui.OpenPopup("ChillFrames Framerate Configuration");
-        }
-    }
-        
-    private void DrawModalCloseButtons()
-    {
-        ImGui.SetCursorPosY(ImGui.GetContentRegionMax().Y - 23.0f * ImGuiHelpers.GlobalScale);
-        if (ImGui.Button("Save", ImGuiHelpers.ScaledVector2(100.0f, 23.0f)))
-        {
-            ChillFramesSystem.Config.Save();
-        }
-
-        ImGui.SameLine(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
-        if (ImGui.Button("Save & Close", ImGuiHelpers.ScaledVector2(100.0f, 23.0f)))
-        {
-            ChillFramesSystem.Config.Save();
-            ImGui.CloseCurrentPopup();
-        }
+        ImGuiHelpers.ScaledDummy(5.0f);
     }
 
     [BaseCommandHandler("OpenConfigWindow")]
