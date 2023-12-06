@@ -61,7 +61,7 @@ public class LimiterSettingsTab : ITabItem {
         ImGui.Text(option.Label);
 
         ImGui.TableNextColumn();
-        if (option.IsActive()) {
+        if (option.GetActive()) {
             ImGui.TextColored(KnownColor.Green.Vector(), "Active");
         }
         else {
@@ -70,13 +70,13 @@ public class LimiterSettingsTab : ITabItem {
 
         ImGui.TableNextColumn();
         ImGui.PushItemWidth(185.0f * ImGuiHelpers.GlobalScale);
-        if (ImGui.BeginCombo($"##OptionCombo_{option.Label}", option.IsEnabled() ? UpperLimitString : LowerLimitString)) {
-            if (ImGui.Selectable(UpperLimitString, option.IsEnabled())) {
+        if (ImGui.BeginCombo($"##OptionCombo_{option.Label}", option.IsEnabled ? UpperLimitString : LowerLimitString)) {
+            if (ImGui.Selectable(UpperLimitString, option.IsEnabled)) {
                 option.GetSetting() = true;
                 ChillFramesSystem.Config.Save();
             }
 
-            if (ImGui.Selectable(LowerLimitString, !option.IsEnabled())) {
+            if (ImGui.Selectable(LowerLimitString, !option.IsEnabled)) {
                 option.GetSetting() = false;
                 ChillFramesSystem.Config.Save();
             }

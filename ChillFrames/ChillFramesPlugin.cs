@@ -6,12 +6,10 @@ using KamiLib.System;
 
 namespace ChillFrames;
 
-public sealed class ChillFramesPlugin : IDalamudPlugin
-{
+public sealed class ChillFramesPlugin : IDalamudPlugin {
     public static ChillFramesSystem System = null!;
 
-    public ChillFramesPlugin(DalamudPluginInterface pluginInterface)
-    {
+    public ChillFramesPlugin(DalamudPluginInterface pluginInterface) {
         pluginInterface.Create<Service>();
 
         // We need to disable these, so users can monitor the config window and see what conditions are active at what times.
@@ -29,8 +27,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin
         CommandController.RegisterMainCommand("/chillframes", "/pcf");
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         KamiCommon.Dispose();
 
         System.Dispose();

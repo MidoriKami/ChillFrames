@@ -7,15 +7,13 @@ using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Controllers;
 
-public enum LimiterState
-{
+public enum LimiterState {
     Enabled,
     Disabled,
     SteadyState
 }
 
-internal class FrameLimiterController : IDisposable
-{
+internal class FrameLimiterController : IDisposable {
     private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
     private readonly Stopwatch timer = Stopwatch.StartNew();
     private float delayRatio = 1.0f;
@@ -36,18 +34,15 @@ internal class FrameLimiterController : IDisposable
     private static float DisableIncrement => ChillFramesSystem.Config.DisableIncrementSetting;
     private static float EnableIncrement => ChillFramesSystem.Config.EnableIncrementSetting;
     
-    public FrameLimiterController()
-    {
+    public FrameLimiterController() {
         Service.Framework.Update += OnFrameworkUpdate;
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         Service.Framework.Update -= OnFrameworkUpdate;
     }
 
-    private void OnFrameworkUpdate(IFramework framework)
-    {
+    private void OnFrameworkUpdate(IFramework framework) {
         UpdateState();
 
         UpdateRate();
@@ -58,45 +53,36 @@ internal class FrameLimiterController : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.NoOptimization)]
-    private void TryLimitFramerate()
-    {
+    private void TryLimitFramerate() {
         if (!ChillFramesSystem.Config.PluginEnable) return;
         if (FrameLimiterCondition.IsBlacklisted) return;
         if (ChillFramesSystem.BlockList.Count > 0) return;
 
-        if (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState)
-        {
+        if (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState) {
             PerformLimiting(TargetIdleFrametime, PreciseIdleFrametime);
         }
-        else if (FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState)
-        {
+        else if (FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState) {
             PerformLimiting(TargetActiveFrametime, PreciseActiveFrametime);
         }
     }
 
-    private void PerformLimiting(int targetFrametime, int preciseFrameTickTime)
-    {
+    private void PerformLimiting(int targetFrametime, int preciseFrameTickTime) {
         var delayTime = (int) (targetFrametime - timer.ElapsedMilliseconds);
 
-        if (delayTime - 1 > 0)
-        {
+        if (delayTime - 1 > 0) {
             Thread.Sleep(delayTime - 1);
         }
 
-        while (timer.ElapsedTicks <= preciseFrameTickTime)
-        {
+        while (timer.ElapsedTicks <= preciseFrameTickTime) {
             ((Action) (() => { }))();
         }
     }
 
-    private void UpdateState()
-    {
+    private void UpdateState() {
         var shouldLimit = !FrameLimiterCondition.DisableFramerateLimit();
 
-        if (enabledLastFrame != shouldLimit)
-        {
-            state = enabledLastFrame switch
-            {
+        if (enabledLastFrame != shouldLimit) {
+            state = enabledLastFrame switch {
                 true => LimiterState.Disabled,
                 false => LimiterState.Enabled
             };
@@ -105,14 +91,11 @@ internal class FrameLimiterController : IDisposable
         enabledLastFrame = shouldLimit;
     }
 
-    private void UpdateRate()
-    {
+    private void UpdateRate() {
         const int stepDelay = 40;
 
-        if (steppingStopwatch.ElapsedMilliseconds > stepDelay)
-        {
-            switch (state)
-            {
+        if (steppingStopwatch.ElapsedMilliseconds > stepDelay) {
+            switch (state) {
                 case LimiterState.Enabled when delayRatio < 1.0f:
                     delayRatio += EnableIncrement;
                     break;

@@ -1,7 +1,6 @@
 ﻿namespace ChillFrames.Models;
 
-public class GeneralSettings
-{
+public class GeneralSettings {
     public bool DisableDuringBardPerformance = true;
     public bool DisableDuringCombatSetting = true;
     public bool DisableDuringCraftingSetting = true;

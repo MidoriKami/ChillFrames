@@ -4,9 +4,8 @@ using KamiLib.Game;
 
 namespace ChillFrames.Models.LimiterOptions;
 
-public class IslandSanctuary : IFrameLimiterOption
-{
+public class IslandSanctuary : IFrameLimiterOption {
     public string Label => "Island Sanctuary";
-    public bool IsActive() => Condition.IsInIslandSanctuary();
+    public bool GetActive() => Condition.IsInIslandSanctuary();
     public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableIslandSanctuarySetting;
 }

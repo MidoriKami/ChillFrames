@@ -1,11 +1,11 @@
 ﻿namespace ChillFrames.Interfaces;
 
-public interface IFrameLimiterOption
-{
+public interface IFrameLimiterOption {
     string Label { get; }
 
-    bool IsActive();
+    bool GetActive();
     ref bool GetSetting();
 
-    bool IsEnabled() => GetSetting();
+    bool IsEnabled => GetSetting();
+    bool IsActive => GetActive();
 }

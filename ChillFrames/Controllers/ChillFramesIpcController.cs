@@ -4,8 +4,7 @@ using KamiLib.Utility;
 
 namespace ChillFrames.Controllers;
 
-public class ChillFramesIpcController : IDisposable
-{
+public class ChillFramesIpcController : IDisposable {
     /// <summary>
     ///     Function Signature: string GetVersion() <br /><br />
     ///     Gets the current version of this plugin, can be used as a IPC Ready Check<br /><br />
@@ -25,8 +24,7 @@ public class ChillFramesIpcController : IDisposable
     /// </summary>
     private static ICallGateProvider<string, bool>? _enableLimiter;
 
-    public ChillFramesIpcController()
-    {
+    public ChillFramesIpcController() {
         _getVersion = Service.PluginInterface.GetIpcProvider<string>("ChillFrames.GetVersion");
         _disableLimiter = Service.PluginInterface.GetIpcProvider<string, bool>("ChillFrames.DisableLimiter");
         _enableLimiter = Service.PluginInterface.GetIpcProvider<string, bool>("ChillFrames.EnableLimiter");
@@ -36,8 +34,7 @@ public class ChillFramesIpcController : IDisposable
         _enableLimiter.RegisterFunc(EnableLimiter);
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         _getVersion?.UnregisterFunc();
         _disableLimiter?.UnregisterFunc();
         _enableLimiter?.UnregisterFunc();

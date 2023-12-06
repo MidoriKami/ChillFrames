@@ -2,8 +2,7 @@
 
 namespace ChillFrames.Models;
 
-public class Configuration : IPluginConfiguration
-{
+public class Configuration : IPluginConfiguration {
     public BlacklistSettings Blacklist = new();
     public float DisableIncrementSetting = 0.025f;
     public float EnableIncrementSetting = 0.01f;
@@ -14,8 +13,5 @@ public class Configuration : IPluginConfiguration
     public bool PluginEnable = true;
     public int Version { get; set; } = 3;
 
-    public void Save()
-    {
-        Service.PluginInterface.SavePluginConfig(this);
-    }
+    public void Save() => Service.PluginInterface.SavePluginConfig(this);
 }
