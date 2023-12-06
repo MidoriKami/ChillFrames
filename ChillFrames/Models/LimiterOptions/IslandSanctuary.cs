@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class IslandSanctuary : IFrameLimiterOption {
     public string Label => "Island Sanctuary";
-    public bool GetActive() => Condition.IsInIslandSanctuary();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableIslandSanctuarySetting;
+    public bool Active => Condition.IsInIslandSanctuary();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableIslandSanctuarySetting;
 }

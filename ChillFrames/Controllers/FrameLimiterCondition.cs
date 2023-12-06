@@ -9,7 +9,7 @@ internal static class FrameLimiterCondition {
             .Any(territory => territory == Service.ClientState.TerritoryType);
 
     public static bool DisableFramerateLimit() {
-        if (ChillFramesPlugin.System.LimiterOptions.Any(option => option is { IsEnabled: true, IsActive: true })) return true;
+        if (ChillFramesPlugin.System.LimiterOptions.Any(option => option is { Enabled: true, Active: true })) return true;
         if (Condition.IsBetweenAreas()) return true;
 
         return false;

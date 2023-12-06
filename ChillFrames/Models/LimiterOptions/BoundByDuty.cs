@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class BoundByDuty : IFrameLimiterOption {
     public string Label => "Duties";
-    public bool GetActive() => Condition.IsBoundByDuty();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableDuringDutySetting;
+    public bool Active => Condition.IsBoundByDuty();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringDutySetting;
 }

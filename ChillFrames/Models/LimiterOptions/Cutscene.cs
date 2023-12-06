@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class Cutscene : IFrameLimiterOption {
     public string Label => "Cutscenes";
-    public bool GetActive() => Condition.IsInCutscene();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableDuringCutsceneSetting;
+    public bool Active => Condition.IsInCutscene();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringCutsceneSetting;
 }

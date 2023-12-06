@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class Crafting : IFrameLimiterOption {
     public string Label => "Crafting";
-    public bool GetActive() => Condition.IsCrafting();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableDuringCraftingSetting;
+    public bool Active => Condition.IsCrafting();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringCraftingSetting;
 }

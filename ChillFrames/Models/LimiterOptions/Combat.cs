@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class Combat : IFrameLimiterOption {
     public string Label => "Combat";
-    public bool GetActive() => Condition.IsInCombat();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableDuringCombatSetting;
+    public bool Active => Condition.IsInCombat();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringCombatSetting;
 }

@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class BardPerformance : IFrameLimiterOption {
     public string Label => "Bard Performance";
-    public bool GetActive() => Condition.IsInBardPerformance();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableDuringBardPerformance;
+    public bool Active => Condition.IsInBardPerformance();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringBardPerformance;
 }

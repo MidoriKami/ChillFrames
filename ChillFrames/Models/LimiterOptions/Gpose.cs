@@ -6,6 +6,6 @@ namespace ChillFrames.Models.LimiterOptions;
 
 public class Gpose : IFrameLimiterOption {
     public string Label => "GPose";
-    public bool GetActive() => GameMain.IsInGPose();
-    public ref bool GetSetting() => ref ChillFramesSystem.Config.General.DisableDuringGpose;
+    public bool Active => GameMain.IsInGPose();
+    public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringGpose;
 }
