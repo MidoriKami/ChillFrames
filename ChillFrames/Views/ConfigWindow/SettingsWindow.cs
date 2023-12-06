@@ -75,11 +75,11 @@ public class SettingsWindow : Window
         {
             ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive, In Blacklisted Zone");
         }
-        else if (!FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableIdleFramerateLimit && config.PluginEnable)
+        else if (!FrameLimiterCondition.DisableFramerateLimit() && config.PluginEnable)
         {
             ImGui.TextColored(KnownColor.Green.Vector(), $"Target Framerate: {config.Limiter.IdleFramerateTarget}");
         }
-        else if (FrameLimiterCondition.DisableFramerateLimit() && config.Limiter.EnableActiveFramerateLimit && config.PluginEnable)
+        else if (FrameLimiterCondition.DisableFramerateLimit() && config.PluginEnable)
         {
             ImGui.TextColored(KnownColor.Green.Vector(), $"Target Framerate: {config.Limiter.ActiveFramerateTarget}");
         }

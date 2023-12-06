@@ -64,11 +64,11 @@ internal class FrameLimiterController : IDisposable
         if (FrameLimiterCondition.IsBlacklisted) return;
         if (ChillFramesSystem.BlockList.Count > 0) return;
 
-        if (Settings.EnableIdleFramerateLimit && (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
+        if (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState)
         {
             PerformLimiting(TargetIdleFrametime, PreciseIdleFrametime);
         }
-        else if (Settings.EnableActiveFramerateLimit && (FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState))
+        else if (FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState)
         {
             PerformLimiting(TargetActiveFrametime, PreciseActiveFrametime);
         }
@@ -78,26 +78,14 @@ internal class FrameLimiterController : IDisposable
     {
         var delayTime = (int) (targetFrametime - timer.ElapsedMilliseconds);
 
-        if (Settings.PreciseFramerate)
+        if (delayTime - 1 > 0)
         {
-            if (delayTime - 1 > 0)
-            {
-                Thread.Sleep(delayTime - 1);
-            }
-
-            while (timer.ElapsedTicks <= preciseFrameTickTime)
-            {
-                ((Action) (() => { }))();
-            }
+            Thread.Sleep(delayTime - 1);
         }
-        else
-        {
-            delayTime = (int) (delayRatio * delayTime);
 
-            if (delayTime > 0)
-            {
-                Thread.Sleep(delayTime);
-            }
+        while (timer.ElapsedTicks <= preciseFrameTickTime)
+        {
+            ((Action) (() => { }))();
         }
     }
 
