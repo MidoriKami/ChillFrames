@@ -33,6 +33,8 @@ internal class FrameLimiterController : IDisposable {
 
     private static float DisableIncrement => ChillFramesSystem.Config.DisableIncrementSetting;
     private static float EnableIncrement => ChillFramesSystem.Config.EnableIncrementSetting;
+
+    public static TimeSpan LastFrametime;
     
     public FrameLimiterController() {
         Service.Framework.Update += OnFrameworkUpdate;
@@ -49,6 +51,7 @@ internal class FrameLimiterController : IDisposable {
 
         TryLimitFramerate();
 
+        LastFrametime = timer.Elapsed;
         timer.Restart();
     }
 
