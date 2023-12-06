@@ -1,9 +1,11 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using ChillFrames.Controllers;
+using ChillFrames.Models;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using KamiLib.Command;
@@ -16,6 +18,7 @@ namespace ChillFrames.Views.ConfigWindow;
 public class SettingsWindow : Window {
     private int idleFramerateLimitTemp = int.MinValue;
     private int activeFramerateLimitTemp = int.MinValue;
+    private Configuration Config => ChillFramesSystem.Config;
 
     private readonly TabBar tabBar;
 
@@ -28,7 +31,7 @@ public class SettingsWindow : Window {
         };
 
         SizeConstraints = new WindowSizeConstraints {
-            MinimumSize = new Vector2(450.0f, 435.0f),
+            MinimumSize = new Vector2(450.0f, 425.0f),
             MaximumSize = new Vector2(9999, 9999)
         };
 
@@ -49,33 +52,46 @@ public class SettingsWindow : Window {
     }
     
     private void DrawLimiterStatus() {
-        var config = ChillFramesSystem.Config;
-        
-        if (ChillFramesSystem.BlockList.Count > 0) {
-            if (ImGuiComponents.IconButton("##ReleaseLocks", FontAwesomeIcon.Unlock)) {
-                ChillFramesSystem.BlockList.Clear();
-            }
-            if (ImGui.IsItemHovered()) {
-                ImGui.SetTooltip("Remove limiter lock");
-            }
+        using var statusTable = ImRaii.Table("status_table", 2);
+        if (statusTable) {
+            ImGui.TableNextColumn();
+            ImGui.Text($"Current Framerate");
 
-            ImGui.SameLine();
-            ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", ChillFramesSystem.BlockList)}");
+            ImGui.TableNextColumn();
+            ImGui.Text($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:F} fps");
+
+            ImGui.TableNextColumn();
+            if (ChillFramesSystem.BlockList.Count > 0) {
+                if (ImGuiComponents.IconButton("##ReleaseLocks", FontAwesomeIcon.Unlock)) {
+                    ChillFramesSystem.BlockList.Clear();
+                }
+                if (ImGui.IsItemHovered()) {
+                    ImGui.SetTooltip("Remove limiter lock");
+                }
+
+                ImGui.SameLine();
+                ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", ChillFramesSystem.BlockList)}");
+                ImGui.TableNextColumn();
+            }
+            else if (FrameLimiterCondition.IsBlacklisted) {
+                ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive, In Blacklisted Zone");
+                ImGui.TableNextColumn();
+            }
+            else if (!FrameLimiterCondition.DisableFramerateLimit() && Config.PluginEnable) {
+                ImGui.Text($"Target Framerate");
+                ImGui.TableNextColumn();
+                ImGui.Text($"{Config.Limiter.IdleFramerateTarget} fps");
+            }
+            else if (FrameLimiterCondition.DisableFramerateLimit() && Config.PluginEnable) {
+                ImGui.Text($"Target Framerate");
+                ImGui.TableNextColumn();
+                ImGui.Text($"{Config.Limiter.ActiveFramerateTarget} fps");
+            }
+            else {
+                ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
+                ImGui.TableNextColumn();
+            }
         }
-        else if (FrameLimiterCondition.IsBlacklisted) {
-            ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive, In Blacklisted Zone");
-        }
-        else if (!FrameLimiterCondition.DisableFramerateLimit() && config.PluginEnable) {
-            ImGui.TextColored(KnownColor.Green.Vector(), $"Target Framerate: {config.Limiter.IdleFramerateTarget}");
-        }
-        else if (FrameLimiterCondition.DisableFramerateLimit() && config.PluginEnable) {
-            ImGui.TextColored(KnownColor.Green.Vector(), $"Target Framerate: {config.Limiter.ActiveFramerateTarget}");
-        }
-        else {
-            ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
-        }
-        
-        ImGuiHelpers.ScaledDummy(5.0f);
     }
 
     [BaseCommandHandler("OpenConfigWindow")]
