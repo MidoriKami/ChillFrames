@@ -79,7 +79,7 @@ public class ChillFramesSystem : IDisposable {
         Config.Save();
     }
 
-    [DoubleTierCommandHandler("Set the Idle Limiter to the specified value", "idle", "set")]
+    [DoubleTierCommandHandler("Set the Idle Limiter to the specified value", "fps", "setlower")]
     private void SetIdleLimit(params string[] args) {
         if (args.Length < 1) return;
         if (int.Parse(args[0]) < 1) return;
@@ -88,7 +88,7 @@ public class ChillFramesSystem : IDisposable {
         Config.Save();
     }
 
-    [DoubleTierCommandHandler("Set the Active Limiter to the specified value", "active", "set")]
+    [DoubleTierCommandHandler("Set the Active Limiter to the specified value", "fps", "setupper")]
     private void SetActiveLimit(params string[] args) {
         if (args.Length < 1) return;
         if (int.Parse(args[0]) < 1) return;
