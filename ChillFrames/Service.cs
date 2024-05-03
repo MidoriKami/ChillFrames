@@ -4,8 +4,12 @@ using Dalamud.Plugin.Services;
 
 namespace ChillFrames;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 public class Service {
-    [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
-    [PluginService] public static IClientState ClientState { get; private set; } = null!;
-    [PluginService] public static IFramework Framework { get; private set; } = null!;
+    [PluginService] public static DalamudPluginInterface PluginInterface { get; set; }
+    [PluginService] public static IClientState ClientState { get; set; }
+    [PluginService] public static IFramework Framework { get; set; }
+    [PluginService] public static ICommandManager CommandManager { get; set; }
+    [PluginService] public static IPluginLog PluginLog { get; set; }
+    [PluginService] public static ICondition Condition { get; set; }
 }

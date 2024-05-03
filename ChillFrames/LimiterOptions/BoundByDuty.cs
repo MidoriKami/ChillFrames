@@ -1,11 +1,11 @@
 ﻿using ChillFrames.Controllers;
 using ChillFrames.Interfaces;
-using KamiLib.Game;
+using KamiLib.Classes;
 
 namespace ChillFrames.Models.LimiterOptions;
 
 public class BoundByDuty : IFrameLimiterOption {
     public string Label => "Duties";
-    public bool Active => Condition.IsBoundByDuty();
+    public bool Active => Service.Condition.IsBoundByDuty();
     public ref bool Enabled => ref ChillFramesSystem.Config.General.DisableDuringDutySetting;
 }

@@ -1,8 +1,5 @@
 ﻿using ChillFrames.Controllers;
-using ChillFrames.Views.ConfigWindow;
 using Dalamud.Plugin;
-using KamiLib;
-using KamiLib.System;
 
 namespace ChillFrames;
 
@@ -18,18 +15,10 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         pluginInterface.UiBuilder.DisableGposeUiHide = true;
         pluginInterface.UiBuilder.DisableUserUiHide = true;
 
-        KamiCommon.Initialize(pluginInterface, "ChillFrames");
-
         System = new ChillFramesSystem();
-
-        KamiCommon.WindowManager.AddConfigurationWindow(new SettingsWindow(), true);
-
-        CommandController.RegisterMainCommand("/chillframes", "/pcf");
     }
 
     public void Dispose() {
-        KamiCommon.Dispose();
-
         System.Dispose();
     }
 }

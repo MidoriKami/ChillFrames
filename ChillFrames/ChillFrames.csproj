@@ -1,68 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-	<AssemblyVersion>2.1.1.3</AssemblyVersion>
-    <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
-  </PropertyGroup>
-
-  <PropertyGroup>
-	  <TargetFramework>net7.0-windows</TargetFramework>
-	  <Platforms>x64</Platforms>
-	  <Nullable>enable</Nullable>
-	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	  <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-	  <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="ChillFrames.json" />
-    <None Remove="README.md" />
-	<None Remove="..\.editorconfig" Link=".editorconfig" />
-	<None Remove="packages.lock.json" />
-  </ItemGroup>
-	
-	<PropertyGroup>
-		<DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="DalamudPackager" Version="2.1.12" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="FFXIVClientStructs">
-			<HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Newtonsoft.Json">
-			<HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Dalamud">
-			<HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="ImGui.NET">
-			<HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="ImGuiScene">
-			<HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Lumina">
-			<HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="Lumina.Excel">
-			<HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\KamiLib\KamiLib.csproj" />
-	</ItemGroup>
+<Project Sdk="Dalamud.NET.Sdk/9.0.1">
+    <PropertyGroup>
+        <AssemblyVersion>2.1.1.3</AssemblyVersion>
+        <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\KamiLib\KamiLib.csproj"/>
+    </ItemGroup>
 </Project>

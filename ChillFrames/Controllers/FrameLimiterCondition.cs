@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using KamiLib.Game;
+using KamiLib.Classes;
 
 namespace ChillFrames.Controllers;
 
@@ -10,7 +10,7 @@ internal static class FrameLimiterCondition {
 
     public static bool DisableFramerateLimit() {
         if (ChillFramesPlugin.System.LimiterOptions.Any(option => option is { Enabled: true, Active: true })) return true;
-        if (Condition.IsBetweenAreas()) return true;
+        if (Service.Condition.IsBetweenAreas()) return true;
 
         return false;
     }
