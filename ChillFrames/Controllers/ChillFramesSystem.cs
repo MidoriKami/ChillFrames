@@ -1,15 +1,11 @@
-﻿// ReSharper disable UnusedMember.Local
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ChillFrames.Interfaces;
 using ChillFrames.Views.ConfigWindow;
 using KamiLib.Classes;
 using KamiLib.CommandManager;
 using KamiLib.Window;
-using Newtonsoft.Json.Linq;
 using Configuration = ChillFrames.Models.Configuration;
 
 namespace ChillFrames.Controllers;
@@ -22,6 +18,7 @@ public class ChillFramesSystem : IDisposable {
     public List<IFrameLimiterOption> LimiterOptions;
     public static WindowManager WindowManager = null!;
     public static CommandManager CommandManager = null!;
+    public static DtrController DtrController = null!;
 
     public ChillFramesSystem() {
         LimiterOptions = Reflection.ActivateOfInterface<IFrameLimiterOption>().ToList();
@@ -30,10 +27,28 @@ public class ChillFramesSystem : IDisposable {
 
         frameLimiterController = new FrameLimiterController();
         ipcController = new ChillFramesIpcController();
-        CommandManager = new CommandManager(Service.CommandManager, Service.PluginLog, "chillframes", "pcf");
+        CommandManager = new CommandManager(Service.PluginInterface, "chillframes", "pcf");
         WindowManager = new WindowManager(Service.PluginInterface);
+        DtrController = new DtrController(); 
 
         WindowManager.AddWindow(new SettingsWindow(), true, true);
+
+        CommandManager.RegisterCommand(new ToggleCommandHandler {
+            EnableDelegate = EnableLimiter,
+            DisableDelegate = DisableLimiter,
+            ToggleDelegate = ToggleLimiter,
+            BaseActivationPath = string.Empty,
+        });
+        
+        CommandManager.RegisterCommand(new CommandHandler {
+            Delegate = SetIdleLimit,
+            ActivationPath = "/fps/setlower",
+        });
+        
+        CommandManager.RegisterCommand(new CommandHandler {
+            Delegate = SetActiveLimit,
+            ActivationPath = "/fps/setupper",
+        });
     }
 
     public void Dispose() {
@@ -43,39 +58,42 @@ public class ChillFramesSystem : IDisposable {
         CommandManager.Dispose();
     }
 
-    // [SingleTierCommandHandler("Enable Plugin's Framerate Limiter", "enable")]
-    // private void EnableLimiter() {
-    //     Config.PluginEnable = true;
-    //     Config.Save();
-    // }
-    //
-    // [SingleTierCommandHandler("Disable Plugin's Framerate Limiter", "disable")]
-    // private void DisableLimiter() {
-    //     Config.PluginEnable = false;
-    //     Config.Save();
-    // }
-    //
-    // [SingleTierCommandHandler("Toggle Plugin's Framerate Limiter", "toggle")]
-    // private void ToggleLimiter() {
-    //     Config.PluginEnable = !Config.PluginEnable;
-    //     Config.Save();
-    // }
-    //
-    // [DoubleTierCommandHandler("Set the Lower Limit to the specified value", "fps", "setlower")]
-    // private void SetIdleLimit(params string[] args) {
-    //     if (args.Length < 1) return;
-    //     if (int.Parse(args[0]) < 1) return;
-    //
-    //     Config.Limiter.IdleFramerateTarget = int.Parse(args[0]);
-    //     Config.Save();
-    // }
-    //
-    // [DoubleTierCommandHandler("Set the Upper Limit to the specified value", "fps", "setupper")]
-    // private void SetActiveLimit(params string[] args) {
-    //     if (args.Length < 1) return;
-    //     if (int.Parse(args[0]) < 1) return;
-    //
-    //     Config.Limiter.ActiveFramerateTarget = int.Parse(args[0]);
-    //     Config.Save();
-    // }
+    private void EnableLimiter(params string[] args) {
+        Config.PluginEnable = true;
+        Config.Save();
+    }
+
+    private void DisableLimiter(params string[] args) {
+        Config.PluginEnable = false;
+        Config.Save();
+    }
+    
+    private void ToggleLimiter(params string[] args) {
+        if (args.Any()) {
+            if (bool.TryParse(args[0], out var value)) {
+                Config.PluginEnable = value;
+                Config.Save();
+            }
+        }
+        else {
+            Config.PluginEnable = !Config.PluginEnable;
+            Config.Save();
+        }
+    }
+    
+    private void SetIdleLimit(params string[] args) {
+        if (args.Length < 1) return;
+        if (!int.TryParse(args[0], out var newTarget) || newTarget <= 0) return;
+    
+        Config.Limiter.IdleFramerateTarget = newTarget;
+        Config.Save();
+    }
+    
+    private void SetActiveLimit(params string[] args) {
+        if (args.Length < 1) return;
+        if (!int.TryParse(args[0], out var newTarget) || newTarget <= 0) return;
+    
+        Config.Limiter.ActiveFramerateTarget = newTarget;
+        Config.Save();
+    }
 }

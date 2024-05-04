@@ -9,7 +9,6 @@ public class Service {
     [PluginService] public static DalamudPluginInterface PluginInterface { get; set; }
     [PluginService] public static IClientState ClientState { get; set; }
     [PluginService] public static IFramework Framework { get; set; }
-    [PluginService] public static ICommandManager CommandManager { get; set; }
-    [PluginService] public static IPluginLog PluginLog { get; set; }
     [PluginService] public static ICondition Condition { get; set; }
+    [PluginService] public static IDtrBar DtrBar { get; set; }
 }

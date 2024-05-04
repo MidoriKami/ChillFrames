@@ -17,6 +17,8 @@ public class GeneralSettings {
     public bool DisableDuringGpose = true;
     public bool DisableDuringQuestEventSetting = true;
     public bool DisableIslandSanctuarySetting = true;
+    public bool EnableDtrBar = true;
+    public bool EnableDtrColor = true;
 }
 
 public class LimiterSettings {

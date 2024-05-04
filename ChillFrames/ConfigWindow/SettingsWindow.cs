@@ -19,7 +19,8 @@ public class SettingsWindow : Window {
     private Configuration Config => ChillFramesSystem.Config;
 
     private readonly TabBar tabBar = new("ChillFramesSettingsTabBar", [
-        new LimiterSettingsTab()
+        new LimiterSettingsTab(),
+        new DtrSettingsTab(),
         // new BlacklistTab(),
     ]);
 
@@ -29,8 +30,7 @@ public class SettingsWindow : Window {
         
         ChillFramesSystem.CommandManager.RegisterCommand(new CommandHandler {
             Delegate = OpenConfigWindow,
-            ActivationPath = "/config/window/open",
-            HelpText = "Open Configuration Window",
+            ActivationPath = "/",
         });
     }
 

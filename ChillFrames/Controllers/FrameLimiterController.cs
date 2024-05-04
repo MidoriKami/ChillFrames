@@ -53,6 +53,10 @@ internal class FrameLimiterController : IDisposable {
 
         LastFrametime = timer.Elapsed;
         timer.Restart();
+
+        if (ChillFramesSystem.Config.General.EnableDtrBar) {
+            ChillFramesSystem.DtrController.Update();
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoOptimization)]

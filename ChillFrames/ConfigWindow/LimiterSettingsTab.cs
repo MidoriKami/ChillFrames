@@ -12,8 +12,7 @@ namespace ChillFrames.Views.ConfigWindow;
 
 public class LimiterSettingsTab : ITabItem {
     public string Name => "Limiter Settings";
-    public bool Enabled { get; set; } = true;
-
+    public bool Disabled => false;
     private string LowerLimitString => $"Use Lower Limit ( {ChillFramesSystem.Config.Limiter.IdleFramerateTarget} fps )";
     private string UpperLimitString => $"Use Upper Limit ( {ChillFramesSystem.Config.Limiter.ActiveFramerateTarget} fps )";
 
