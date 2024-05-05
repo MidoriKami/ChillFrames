@@ -2,8 +2,8 @@
 using System.Drawing;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Interface;
+using Dalamud.Utility;
 using Lumina.Text;
-using SeStringBuilder = Dalamud.Game.Text.SeStringHandling.SeStringBuilder;
 
 namespace ChillFrames.Controllers;
 
@@ -32,8 +32,11 @@ public class DtrController : IDisposable {
     public void Update() {
         if (ChillFramesSystem.Config.General.EnableDtrColor) {
             dtrEntry.Text = new SeStringBuilder()
-                .AddUiForeground($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS", (ushort)(ChillFramesSystem.Config.PluginEnable ? 45 : 26))
-                .Build();
+                .PushColorRgba(ChillFramesSystem.Config.PluginEnable ? ChillFramesSystem.Config.General.EnabledColor : ChillFramesSystem.Config.General.DisabledColor)
+                .Append($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
+                .PopColor()
+                .ToSeString()
+                .ToDalamudString();
         }
         else {
             dtrEntry.Text = $"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS";

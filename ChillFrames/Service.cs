@@ -11,4 +11,6 @@ public class Service {
     [PluginService] public static IFramework Framework { get; set; }
     [PluginService] public static ICondition Condition { get; set; }
     [PluginService] public static IDtrBar DtrBar { get; set; }
+    [PluginService] public static IDataManager DataManager { get; set; }
+    [PluginService] public static ITextureProvider TextureProvider { get; set; }
 }

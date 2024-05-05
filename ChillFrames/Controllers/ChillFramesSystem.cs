@@ -12,13 +12,16 @@ namespace ChillFrames.Controllers;
 
 public class ChillFramesSystem : IDisposable {
     public static Configuration Config = null!;
-    public static HashSet<string> BlockList = [];
-    private readonly FrameLimiterController frameLimiterController;
-    private readonly ChillFramesIpcController ipcController;
-    public List<IFrameLimiterOption> LimiterOptions;
     public static WindowManager WindowManager = null!;
     public static CommandManager CommandManager = null!;
     public static DtrController DtrController = null!;
+
+    public static HashSet<string> BlockList = [];
+
+    private readonly FrameLimiterController frameLimiterController;
+    private readonly ChillFramesIpcController ipcController;
+    
+    public List<IFrameLimiterOption> LimiterOptions;
 
     public ChillFramesSystem() {
         LimiterOptions = Reflection.ActivateOfInterface<IFrameLimiterOption>().ToList();
@@ -31,7 +34,7 @@ public class ChillFramesSystem : IDisposable {
         WindowManager = new WindowManager(Service.PluginInterface);
         DtrController = new DtrController(); 
 
-        WindowManager.AddWindow(new SettingsWindow(), true, true);
+        WindowManager.AddWindow(new SettingsWindow(), false, true);
 
         CommandManager.RegisterCommand(new ToggleCommandHandler {
             EnableDelegate = EnableLimiter,
