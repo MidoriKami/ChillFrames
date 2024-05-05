@@ -21,7 +21,7 @@ public class SettingsWindow : Window {
     private readonly TabBar tabBar = new("ChillFramesSettingsTabBar", [
         new LimiterSettingsTab(),
         new DtrSettingsTab(),
-        // new BlacklistTab(),
+        new BlacklistTab(),
     ]);
 
     public SettingsWindow() : base("ChillFrames Settings", new Vector2(450.0f, 425.0f)) {

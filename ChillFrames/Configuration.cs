@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Numerics;
 using Dalamud.Configuration;
+using Dalamud.Interface;
 
 namespace ChillFrames.Models;
 
@@ -19,6 +22,8 @@ public class GeneralSettings {
     public bool DisableIslandSanctuarySetting = true;
     public bool EnableDtrBar = true;
     public bool EnableDtrColor = true;
+    public Vector4 EnabledColor = KnownColor.Green.Vector();
+    public Vector4 DisabledColor = KnownColor.Red.Vector();
 }
 
 public class LimiterSettings {
