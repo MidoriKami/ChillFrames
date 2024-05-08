@@ -34,7 +34,7 @@ public class ChillFramesSystem : IDisposable {
         WindowManager = new WindowManager(Service.PluginInterface);
         DtrController = new DtrController(); 
 
-        WindowManager.AddWindow(new SettingsWindow(), false, true);
+        WindowManager.AddWindow(new SettingsWindow(), WindowFlags.IsConfigWindow);
 
         CommandManager.RegisterCommand(new ToggleCommandHandler {
             EnableDelegate = EnableLimiter,

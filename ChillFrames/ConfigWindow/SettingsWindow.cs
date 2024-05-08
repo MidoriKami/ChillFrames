@@ -39,7 +39,7 @@ public class SettingsWindow : Window {
         if (activeFramerateLimitTemp is int.MinValue) activeFramerateLimitTemp = ChillFramesSystem.Config.Limiter.ActiveFramerateTarget;
     }
 
-    public override void Draw() {
+    protected override void DrawContents() {
         DrawLimiterStatus();
         tabBar.Draw();
     }
