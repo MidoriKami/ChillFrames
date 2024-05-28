@@ -1,6 +1,6 @@
 ﻿using ChillFrames.Controllers;
 using ChillFrames.Interfaces;
-using KamiLib.Classes;
+using KamiLib.Extensions;
 
 namespace ChillFrames.Models.LimiterOptions;
 

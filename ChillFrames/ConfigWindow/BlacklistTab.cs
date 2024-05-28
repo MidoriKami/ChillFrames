@@ -6,9 +6,9 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using KamiLib.Classes;
-using KamiLib.TabBar;
-using KamiLib.Window;
+using KamiLib.Components;
+using KamiLib.Extensions;
+using KamiLib.Window.SelectionWindows;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChillFrames.Views.ConfigWindow;

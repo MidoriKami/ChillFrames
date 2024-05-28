@@ -8,7 +8,7 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using KamiLib.CommandManager;
-using KamiLib.TabBar;
+using KamiLib.Components;
 using Window = KamiLib.Window.Window;
 
 namespace ChillFrames.Views.ConfigWindow;

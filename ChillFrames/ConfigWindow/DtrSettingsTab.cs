@@ -3,7 +3,7 @@ using ChillFrames.Controllers;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using ImGuiNET;
-using KamiLib.TabBar;
+using KamiLib.Components;
 
 namespace ChillFrames.Views.ConfigWindow;
 

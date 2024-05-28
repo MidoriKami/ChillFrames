@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using KamiLib.Classes;
+using KamiLib.Extensions;
 
 namespace ChillFrames.Controllers;
 
