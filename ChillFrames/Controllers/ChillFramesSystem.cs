@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChillFrames.Interfaces;
-using ChillFrames.Views.ConfigWindow;
+using ChillFrames.ConfigWindow;
+using ChillFrames.LimiterOptions;
 using KamiLib.Classes;
 using KamiLib.CommandManager;
 using KamiLib.Window;
-using Configuration = ChillFrames.Models.Configuration;
+using Configuration = ChillFrames.Configuration;
 
 namespace ChillFrames.Controllers;
 

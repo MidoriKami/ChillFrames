@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
 using ChillFrames.Controllers;
-using ChillFrames.Models;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
@@ -11,7 +10,7 @@ using KamiLib.CommandManager;
 using KamiLib.Components;
 using Window = KamiLib.Window.Window;
 
-namespace ChillFrames.Views.ConfigWindow;
+namespace ChillFrames.ConfigWindow;
 
 public class SettingsWindow : Window {
     private int idleFramerateLimitTemp = int.MinValue;

@@ -5,7 +5,7 @@ using Dalamud.Interface.Utility;
 using ImGuiNET;
 using KamiLib.Components;
 
-namespace ChillFrames.Views.ConfigWindow;
+namespace ChillFrames.ConfigWindow;
 
 public class DtrSettingsTab : ITabItem {
     public string Name => "DTR Entry";

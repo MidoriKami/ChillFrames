@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using ChillFrames.Controllers;
-using ChillFrames.Interfaces;
+using ChillFrames.LimiterOptions;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using KamiLib.Components;
 
-namespace ChillFrames.Views.ConfigWindow;
+namespace ChillFrames.ConfigWindow;
 
 public class LimiterSettingsTab : ITabItem {
     public string Name => "Limiter Settings";

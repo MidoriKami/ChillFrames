@@ -11,7 +11,7 @@ using KamiLib.Extensions;
 using KamiLib.Window.SelectionWindows;
 using Lumina.Excel.GeneratedSheets;
 
-namespace ChillFrames.Views.ConfigWindow;
+namespace ChillFrames.ConfigWindow;
 
 public class BlacklistTab : ITabItem {
     public string Name => "Zone Blacklist";

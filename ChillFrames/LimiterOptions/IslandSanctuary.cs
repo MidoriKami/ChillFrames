@@ -1,8 +1,7 @@
 ﻿using ChillFrames.Controllers;
-using ChillFrames.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game.MJI;
 
-namespace ChillFrames.Models.LimiterOptions;
+namespace ChillFrames.LimiterOptions;
 
 public unsafe class IslandSanctuary : IFrameLimiterOption {
     public string Label => "Island Sanctuary";

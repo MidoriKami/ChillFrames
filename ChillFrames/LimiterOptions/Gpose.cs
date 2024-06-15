@@ -1,8 +1,7 @@
 ﻿using ChillFrames.Controllers;
-using ChillFrames.Interfaces;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
-namespace ChillFrames.Models.LimiterOptions;
+namespace ChillFrames.LimiterOptions;
 
 public class Gpose : IFrameLimiterOption {
     public string Label => "GPose";

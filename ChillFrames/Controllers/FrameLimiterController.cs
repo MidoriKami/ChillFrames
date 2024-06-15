@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using ChillFrames.Models;
 using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Controllers;

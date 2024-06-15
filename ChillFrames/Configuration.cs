@@ -4,7 +4,7 @@ using System.Numerics;
 using Dalamud.Configuration;
 using Dalamud.Interface;
 
-namespace ChillFrames.Models;
+namespace ChillFrames;
 
 public class BlacklistSettings {
     public HashSet<uint> BlacklistedZones { get; set; } = [];

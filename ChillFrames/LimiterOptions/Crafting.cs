@@ -1,8 +1,7 @@
 ﻿using ChillFrames.Controllers;
-using ChillFrames.Interfaces;
 using KamiLib.Extensions;
 
-namespace ChillFrames.Models.LimiterOptions;
+namespace ChillFrames.LimiterOptions;
 
 public class Crafting : IFrameLimiterOption {
     public string Label => "Crafting";
