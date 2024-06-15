@@ -1,4 +1,4 @@
-﻿namespace ChillFrames.LimiterOptions;
+﻿namespace ChillFrames.Classes;
 
 public interface IFrameLimiterOption {
     string Label { get; }

@@ -1,8 +1,7 @@
 ﻿using System;
 using Dalamud.Game.Gui.Dtr;
-using Dalamud.Utility;
-using Lumina.Text;
-
+using Dalamud.Game.Text.SeStringHandling;
+    
 namespace ChillFrames.Controllers;
 
 public class DtrController : IDisposable {
@@ -11,30 +10,29 @@ public class DtrController : IDisposable {
     public DtrController() {
         dtrEntry = Service.DtrBar.Get("Chill Frames");
 
-        dtrEntry.Tooltip = ChillFramesSystem.Config.PluginEnable ? "Click to Disable Limiter" : $"Click to Enable Limiter";
+        dtrEntry.Tooltip = System.Config.PluginEnable ? "Click to Disable Limiter" : "Click to Enable Limiter";
         dtrEntry.OnClick = DtrOnClick;
 
-        dtrEntry.Shown = ChillFramesSystem.Config.General.EnableDtrBar;
+        dtrEntry.Shown = System.Config.General.EnableDtrBar;
     }
     
     public void Dispose() 
         => dtrEntry.Dispose();
 
     private void DtrOnClick() {
-        ChillFramesSystem.Config.PluginEnable = !ChillFramesSystem.Config.PluginEnable;
-        ChillFramesSystem.Config.Save();
+        System.Config.PluginEnable = !System.Config.PluginEnable;
+        System.Config.Save();
         
-        dtrEntry.Tooltip = ChillFramesSystem.Config.PluginEnable ? "Click to Disable Limiter" : $"Click to Enable Limiter";
+        dtrEntry.Tooltip = System.Config.PluginEnable ? "Click to Disable Limiter" : $"Click to Enable Limiter";
     }
 
     public void Update() {
-        if (ChillFramesSystem.Config.General.EnableDtrColor) {
+        if (System.Config.General.EnableDtrColor) {
             dtrEntry.Text = new SeStringBuilder()
-                .PushColorRgba(ChillFramesSystem.Config.PluginEnable ? ChillFramesSystem.Config.General.EnabledColor : ChillFramesSystem.Config.General.DisabledColor)
-                .Append($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
-                .PopColor()
-                .ToSeString()
-                .ToDalamudString();
+                .AddUiForeground(System.Config.PluginEnable ? System.Config.General.EnabledColor : System.Config.General.DisabledColor)
+                .AddText($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
+                .AddUiForegroundOff()
+                .Build();
         }
         else {
             dtrEntry.Text = $"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS";
@@ -42,5 +40,5 @@ public class DtrController : IDisposable {
     }
 
     public void UpdateEnabled() 
-        => dtrEntry.Shown = ChillFramesSystem.Config.General.EnableDtrBar;
+        => dtrEntry.Shown = System.Config.General.EnableDtrBar;
 }

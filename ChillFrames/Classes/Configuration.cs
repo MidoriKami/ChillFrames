@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Numerics;
-using Dalamud.Configuration;
-using Dalamud.Interface;
+using System.Text.Json.Serialization;
+using KamiLib.Configuration;
+using Lumina.Excel.GeneratedSheets;
 
-namespace ChillFrames;
+namespace ChillFrames.Classes;
 
 public class BlacklistSettings {
     public HashSet<uint> BlacklistedZones { get; set; } = [];
@@ -22,8 +21,11 @@ public class GeneralSettings {
     public bool DisableIslandSanctuarySetting = true;
     public bool EnableDtrBar = true;
     public bool EnableDtrColor = true;
-    public Vector4 EnabledColor = KnownColor.Green.Vector();
-    public Vector4 DisabledColor = KnownColor.Red.Vector();
+    public ushort EnabledColor = 1;
+    public ushort DisabledColor = 66;
+
+    [JsonIgnore] public UIColor EnabledUiColor => Service.DataManager.GetExcelSheet<UIColor>()!.GetRow(EnabledColor)!;
+    [JsonIgnore] public UIColor DisabledUiColor => Service.DataManager.GetExcelSheet<UIColor>()!.GetRow(DisabledColor)!;
 }
 
 public class LimiterSettings {
@@ -31,7 +33,7 @@ public class LimiterSettings {
     public int IdleFramerateTarget = 60;
 }
 
-public class Configuration : IPluginConfiguration {
+public class Configuration {
     public BlacklistSettings Blacklist = new();
     public float DisableIncrementSetting = 0.025f;
     public float EnableIncrementSetting = 0.01f;
@@ -42,5 +44,9 @@ public class Configuration : IPluginConfiguration {
     public bool PluginEnable = true;
     public int Version { get; set; } = 3;
 
-    public void Save() => Service.PluginInterface.SavePluginConfig(this);
+    public static Configuration Load()
+        => Service.PluginInterface.LoadConfigFile("System.config.json", () => new Configuration());
+
+    public void Save() 
+        => Service.PluginInterface.SaveConfigFile("System.config.json", this);
 }

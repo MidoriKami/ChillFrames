@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using ChillFrames.Classes;
 using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Controllers;
@@ -12,7 +13,7 @@ public enum LimiterState {
     SteadyState
 }
 
-internal class FrameLimiterController : IDisposable {
+public class FrameLimiterController : IDisposable {
     private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
     private readonly Stopwatch timer = Stopwatch.StartNew();
     private float delayRatio = 1.0f;
@@ -20,7 +21,7 @@ internal class FrameLimiterController : IDisposable {
 
     private LimiterState state;
 
-    private static LimiterSettings Settings => ChillFramesSystem.Config.Limiter;
+    private static LimiterSettings Settings => System.Config.Limiter;
 
     private static int TargetIdleFramerate => Settings.IdleFramerateTarget;
     private static int TargetIdleFrametime => 1000 / TargetIdleFramerate;
@@ -30,8 +31,8 @@ internal class FrameLimiterController : IDisposable {
     private static int TargetActiveFrametime => 1000 / TargetActiveFramerate;
     private static int PreciseActiveFrametime => (int) (1000.0f / TargetActiveFramerate * 10000);
 
-    private static float DisableIncrement => ChillFramesSystem.Config.DisableIncrementSetting;
-    private static float EnableIncrement => ChillFramesSystem.Config.EnableIncrementSetting;
+    private static float DisableIncrement => System.Config.DisableIncrementSetting;
+    private static float EnableIncrement => System.Config.EnableIncrementSetting;
 
     public static TimeSpan LastFrametime;
     
@@ -53,16 +54,16 @@ internal class FrameLimiterController : IDisposable {
         LastFrametime = timer.Elapsed;
         timer.Restart();
 
-        if (ChillFramesSystem.Config.General.EnableDtrBar) {
-            ChillFramesSystem.DtrController.Update();
+        if (System.Config.General.EnableDtrBar) {
+            System.DtrController.Update();
         }
     }
 
     [MethodImpl(MethodImplOptions.NoOptimization)]
     private void TryLimitFramerate() {
-        if (!ChillFramesSystem.Config.PluginEnable) return;
+        if (!System.Config.PluginEnable) return;
         if (FrameLimiterCondition.IsBlacklisted) return;
-        if (ChillFramesSystem.BlockList.Count > 0) return;
+        if (System.BlockList.Count > 0) return;
 
         if (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState) {
             PerformLimiting(TargetIdleFrametime, PreciseIdleFrametime);
