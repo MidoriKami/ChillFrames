@@ -10,7 +10,7 @@ using KamiLib.Window;
 namespace ChillFrames;
 
 public sealed class ChillFramesPlugin : IDalamudPlugin {
-    public ChillFramesPlugin(DalamudPluginInterface pluginInterface) {
+    public ChillFramesPlugin(IDalamudPluginInterface pluginInterface) {
         pluginInterface.Create<Service>();
 
         // We need to disable these, so users can monitor the config window and see what conditions are active at what times.

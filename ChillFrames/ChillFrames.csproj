@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Dalamud.NET.Sdk/9.0.1">
+<Project Sdk="Dalamud.NET.Sdk/9.0.2">
     <PropertyGroup>
         <AssemblyVersion>2.1.1.3</AssemblyVersion>
         <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
@@ -7,5 +7,9 @@
     
     <ItemGroup>
         <ProjectReference Include="..\KamiLib\KamiLib.csproj"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="DalamudPackager" Version="2.1.13" />
     </ItemGroup>
 </Project>

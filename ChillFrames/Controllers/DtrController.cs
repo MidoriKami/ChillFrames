@@ -5,7 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 namespace ChillFrames.Controllers;
 
 public class DtrController : IDisposable {
-    private readonly DtrBarEntry dtrEntry;
+    private readonly IDtrBarEntry dtrEntry;
     
     public DtrController() {
         dtrEntry = Service.DtrBar.Get("Chill Frames");
@@ -17,7 +17,7 @@ public class DtrController : IDisposable {
     }
     
     public void Dispose() 
-        => dtrEntry.Dispose();
+        => dtrEntry.Remove();
 
     private void DtrOnClick() {
         System.Config.PluginEnable = !System.Config.PluginEnable;
