@@ -29,7 +29,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         System.WindowManager = new WindowManager(Service.PluginInterface);
         System.DtrController = new DtrController(); 
 
-        System.WindowManager.AddWindow(new SettingsWindow(), WindowFlags.IsConfigWindow);
+        System.WindowManager.AddWindow(new SettingsWindow(), WindowFlags.IsConfigWindow | WindowFlags.OpenImmediately);
 
         System.CommandManager.RegisterCommand(new ToggleCommandHandler {
             EnableDelegate = EnableLimiter,
