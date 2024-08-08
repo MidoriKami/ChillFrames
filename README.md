@@ -36,14 +36,30 @@ allowing you to maintain the correct framerate while using Multi-Monitor Support
 
 ## Configuration Window
 
+ChillFrames lets you set a specific upper limit, and a specific lower limit, you can set what limit ChillFrames uses in the configuration window.
+
 The various options allow you to turn off the frame limiter (that is, to have maximum fps) under specific conditions.
 
-For example, if you want maximum fps while crafting you would check `Disable during Crafting`
+For example, if you want maximum fps while crafting you would set the Crafting condition to "Use Upper Limit ( 120 fps )" in this example.
 
-| General Configuration                                                                                   | Blacklist Configuration                                                                                 |
-|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| ![image](https://github.com/MidoriKami/ChillFrames/assets/9083275/2435dd16-a1b8-4cea-810d-591a59b80480) | ![image](https://github.com/MidoriKami/ChillFrames/assets/9083275/020e46d7-f0a1-4fc5-8eae-75fecb885a48) |
-| ![image](https://github.com/MidoriKami/ChillFrames/assets/9083275/a48c2dc0-bc55-477a-a941-5013513824ea) |                                                                                                         |
+![image](https://github.com/user-attachments/assets/67817bd1-3b7b-4d55-9434-b43c97fd8d2f)
+
+## Server Info Bar Entry (DTR Entry)
+
+ChillFrames also offers a **precise framerate display** that shows the exact fps you are currently getting.
+
+This display does not average your fps at all intentionally, it is very useful to see frame stuttering issues or inconsistent frametimes.
+
+Clicking on the Server Info Bar Entry will toggle enable/disable the plugins framelimiter, 
+without needing to use a chat command, or open the configuration window to temporarly disable the limiter.
+
+![image](https://github.com/user-attachments/assets/6560f9df-201c-485e-8288-0ebb2b131630)
+
+## Zone Blacklist
+
+ChillFrames allows you to specify specific zones that you want to disable the limiter entirely while in those zones.
+
+![image](https://github.com/user-attachments/assets/afacce67-6e1f-4dfa-b9cc-12ccda6e5f60)
 
 
 ## Testimonials
