@@ -42,7 +42,7 @@ The various options allow you to turn off the frame limiter (that is, to have ma
 
 For example, if you want maximum fps while crafting you would set the Crafting condition to "Use Upper Limit ( 120 fps )" in this example.
 
-![image](https://github.com/user-attachments/assets/67817bd1-3b7b-4d55-9434-b43c97fd8d2f)
+![image](https://github.com/user-attachments/assets/ebc83c1b-fb2b-4973-81ee-12deadb75a38)
 
 ## Server Info Bar Entry (DTR Entry)
 
@@ -53,7 +53,7 @@ This display does not average your fps at all intentionally, it is very useful t
 Clicking on the Server Info Bar Entry will toggle enable/disable the plugins framelimiter, 
 without needing to use a chat command, or open the configuration window to temporarly disable the limiter.
 
-![image](https://github.com/user-attachments/assets/6560f9df-201c-485e-8288-0ebb2b131630)
+![image](https://github.com/user-attachments/assets/251a0b29-c0bb-4824-befe-c7986235ea6b)
 
 ## Zone Blacklist
 
