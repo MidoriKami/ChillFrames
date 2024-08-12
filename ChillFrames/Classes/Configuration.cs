@@ -42,7 +42,6 @@ public class Configuration {
     public LimiterSettings Limiter = new();
 
     public bool PluginEnable = true;
-    public int Version { get; set; } = 3;
 
     public static Configuration Load()
         => Service.PluginInterface.LoadConfigFile("System.config.json", () => new Configuration());

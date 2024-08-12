@@ -23,8 +23,8 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
 
         System.Config = Configuration.Load();
 
-        System.frameLimiterController = new FrameLimiterController();
-        System.ipcController = new IpcController();
+        System.FrameLimiterController = new FrameLimiterController();
+        System.IpcController = new IpcController();
         System.CommandManager = new CommandManager(Service.PluginInterface, "chillframes", "pcf");
         System.WindowManager = new WindowManager(Service.PluginInterface);
         System.DtrController = new DtrController(); 
@@ -50,8 +50,8 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
     }
 
     public void Dispose() {
-        System.frameLimiterController.Dispose();
-        System.ipcController.Dispose();
+        System.FrameLimiterController.Dispose();
+        System.IpcController.Dispose();
         System.WindowManager.Dispose();
         System.CommandManager.Dispose();
     }
