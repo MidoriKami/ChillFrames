@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using KamiLib.Configuration;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace ChillFrames.Classes;
 
@@ -24,8 +24,8 @@ public class GeneralSettings {
     public ushort EnabledColor = 1;
     public ushort DisabledColor = 66;
 
-    [JsonIgnore] public UIColor EnabledUiColor => Service.DataManager.GetExcelSheet<UIColor>()!.GetRow(EnabledColor)!;
-    [JsonIgnore] public UIColor DisabledUiColor => Service.DataManager.GetExcelSheet<UIColor>()!.GetRow(DisabledColor)!;
+    [JsonIgnore] public UIColor EnabledUiColor => Service.DataManager.GetExcelSheet<UIColor>().GetRow(EnabledColor);
+    [JsonIgnore] public UIColor DisabledUiColor => Service.DataManager.GetExcelSheet<UIColor>().GetRow(DisabledColor);
 }
 
 public class LimiterSettings {

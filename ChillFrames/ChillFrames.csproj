@@ -1,4 +1,4 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/10.0.0">
+﻿<Project Sdk="Dalamud.NET.Sdk/11.0.0">
     <PropertyGroup>
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
         <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>

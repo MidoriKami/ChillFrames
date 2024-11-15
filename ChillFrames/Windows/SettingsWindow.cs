@@ -14,7 +14,7 @@ using KamiLib.CommandManager;
 using KamiLib.Extensions;
 using KamiLib.Window;
 using KamiLib.Window.SelectionWindows;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using Window = KamiLib.Window.Window;
 
 namespace ChillFrames.Windows;
@@ -214,8 +214,6 @@ public class DtrSettingsTab : ITabItem {
             if (ImGuiTweaks.UiColorPicker("Enabled Color", System.Config.General.EnabledUiColor)) {
                 System.WindowManager.AddWindow(new UiColorSelectionWindow(Service.DataManager) {
                     SingleSelectionCallback = selection => {
-                        if (selection is null) return;
-                    
                         System.Config.General.EnabledColor = (ushort)selection.RowId;
                         System.Config.Save();
                     },
@@ -225,8 +223,6 @@ public class DtrSettingsTab : ITabItem {
             if (ImGuiTweaks.UiColorPicker("Disabled Color", System.Config.General.DisabledUiColor)) {
                 System.WindowManager.AddWindow(new UiColorSelectionWindow(Service.DataManager) {
                     SingleSelectionCallback = selection => {
-                        if (selection is null) return;
-                    
                         System.Config.General.DisabledColor = (ushort)selection.RowId;
                         System.Config.Save();
                     },
@@ -279,7 +275,7 @@ public class BlacklistTab : ITabItem {
         if (!child) return;
 
         ImGuiClip.ClippedDraw(System.Config.Blacklist.BlacklistedZones.ToList(), zoneId => {
-            if (Service.DataManager.GetExcelSheet<TerritoryType>()?.GetRow(zoneId) is { } territory) {
+            if (Service.DataManager.GetExcelSheet<TerritoryType>().GetRow(zoneId) is { } territory) {
                 DrawAddRemovableTerritory(territory);
             }
         }, 75.0f);
