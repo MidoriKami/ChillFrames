@@ -6,5 +6,6 @@
   "Tags": [    "fps",    "chill",    "limiter",    "dtr"  ],
   "InternalName": "ChillFrames",
   "RepoUrl": "https://github.com/MidoriKami/ChillFrames",
-  "AcceptsFeedback": false
+  "AcceptsFeedback": false,
+  "Api": 12
 }

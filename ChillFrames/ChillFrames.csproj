@@ -1,10 +1,15 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/11.0.0">
+﻿<Project Sdk="Dalamud.NET.Sdk/12.0.0">
     <PropertyGroup>
         <AssemblyVersion>3.1.0.1</AssemblyVersion>
         <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
+        <TargetFramework>net9.0-windows7.0</TargetFramework>
     </PropertyGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\KamiLib\KamiLib.csproj"/>
+        <ProjectReference Include="..\KamiLib\KamiLib.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="DalamudPackager" Version="12.0.0" />
     </ItemGroup>
 </Project>
