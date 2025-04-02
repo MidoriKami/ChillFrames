@@ -5,9 +5,7 @@ using KamiLib.Extensions;
 namespace ChillFrames.LimiterOptions;
 
 public unsafe class Estate : IFrameLimiterOption {
-    public string Label => "Estate";
-
-
+    public string Label => "Inside Estate";
 
     public bool Active => HousingManager.Instance()->IsInside();
 
