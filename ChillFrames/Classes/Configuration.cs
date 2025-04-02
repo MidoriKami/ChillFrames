@@ -19,6 +19,7 @@ public class GeneralSettings {
     public bool DisableDuringGpose = true;
     public bool DisableDuringQuestEventSetting = true;
     public bool DisableIslandSanctuarySetting = true;
+    public bool DisableInEstatesSetting = true;
     public bool EnableDtrBar = true;
     public bool EnableDtrColor = true;
     public ushort EnabledColor = 1;
