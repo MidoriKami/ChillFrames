@@ -299,5 +299,5 @@ public class BlacklistTab : ITabItem {
     }
 
     private static TerritoryType GetCurrentTerritory() 
-        => Service.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(Service.ClientState.TerritoryType)!;
+        => Service.DataManager.GetExcelSheet<TerritoryType>().GetRow(Service.ClientState.TerritoryType);
 }

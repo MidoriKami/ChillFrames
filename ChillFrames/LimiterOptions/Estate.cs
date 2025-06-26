@@ -1,6 +1,5 @@
 ﻿using ChillFrames.Classes;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using KamiLib.Extensions;
 
 namespace ChillFrames.LimiterOptions;
 

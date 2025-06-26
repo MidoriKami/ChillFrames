@@ -23,11 +23,11 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
 
         System.Config = Configuration.Load();
 
+        System.DtrController = new DtrController(); 
         System.FrameLimiterController = new FrameLimiterController();
         System.IpcController = new IpcController();
         System.CommandManager = new CommandManager(Service.PluginInterface, "chillframes", "pcf");
         System.WindowManager = new WindowManager(Service.PluginInterface);
-        System.DtrController = new DtrController(); 
 
         System.WindowManager.AddWindow(new SettingsWindow(), WindowFlags.IsConfigWindow);
 
