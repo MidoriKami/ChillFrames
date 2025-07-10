@@ -198,36 +198,43 @@ public class DtrSettingsTab : ITabItem {
     
     public void Draw() {
         ImGuiTweaks.Header("Feature Toggles");
-        using (ImRaii.PushIndent()) {
-            if (ImGui.Checkbox("Enable", ref System.Config.General.EnableDtrBar)) {
-                System.DtrController.UpdateEnabled();
-                System.Config.Save();
-            }
-
-            if (ImGui.Checkbox("Show Color", ref System.Config.General.EnableDtrColor)) {
-                System.Config.Save();
-            }
-        }
+        DrawFeatureToggles();
 
         ImGuiTweaks.Header("Color Options");
-        using (ImRaii.PushIndent()) {
-            if (ImGuiTweaks.UiColorPicker("Enabled Color", System.Config.General.EnabledUiColor)) {
-                System.WindowManager.AddWindow(new UiColorSelectionWindow(Service.DataManager) {
-                    SingleSelectionCallback = selection => {
-                        System.Config.General.EnabledColor = (ushort)selection.RowId;
-                        System.Config.Save();
-                    },
-                }, WindowFlags.OpenImmediately);
-            }
+        DrawColorOptions();
+    }
+
+    private static void DrawFeatureToggles() {
+        using var pushIndent = ImRaii.PushIndent();
+
+        if (ImGui.Checkbox("Enable", ref System.Config.General.EnableDtrBar)) {
+            System.DtrController.UpdateEnabled();
+            System.Config.Save();
+        }
+
+        if (ImGui.Checkbox("Show Color", ref System.Config.General.EnableDtrColor)) {
+            System.Config.Save();
+        }
+    }
+    
+    private static void DrawColorOptions() {
+        using var pushIndent = ImRaii.PushIndent();
+        if (ImGuiTweaks.UiColorPicker("Enabled Color", System.Config.General.EnabledUiColor)) {
+            System.WindowManager.AddWindow(new UiColorSelectionWindow(Service.DataManager) {
+                SingleSelectionCallback = selection => {
+                    System.Config.General.EnabledColor = (ushort)selection.RowId;
+                    System.Config.Save();
+                },
+            }, WindowFlags.OpenImmediately);
+        }
         
-            if (ImGuiTweaks.UiColorPicker("Disabled Color", System.Config.General.DisabledUiColor)) {
-                System.WindowManager.AddWindow(new UiColorSelectionWindow(Service.DataManager) {
-                    SingleSelectionCallback = selection => {
-                        System.Config.General.DisabledColor = (ushort)selection.RowId;
-                        System.Config.Save();
-                    },
-                }, WindowFlags.OpenImmediately);
-            }
+        if (ImGuiTweaks.UiColorPicker("Disabled Color", System.Config.General.DisabledUiColor)) {
+            System.WindowManager.AddWindow(new UiColorSelectionWindow(Service.DataManager) {
+                SingleSelectionCallback = selection => {
+                    System.Config.General.DisabledColor = (ushort)selection.RowId;
+                    System.Config.Save();
+                },
+            }, WindowFlags.OpenImmediately);
         }
     }
 }
