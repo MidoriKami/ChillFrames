@@ -252,13 +252,13 @@ public class BlacklistTab : ITabItem {
     private void DrawAddRemovableTerritory(TerritoryType territory) {
         using (var _ = ImRaii.PushFont(UiBuilder.IconFont)) {
             if (System.Config.Blacklist.BlacklistedZones.Contains(territory.RowId)) {
-                if (ImGui.Button($"{FontAwesomeIcon.Trash.ToIconString()}##removeZone{territory.RowId}", new Vector2(25.0f, 75.0f))) {
+                if (ImGui.Button($"{FontAwesomeIcon.Trash.ToIconString()}##removeZone{territory.RowId}", ImGuiHelpers.ScaledVector2(25.0f, 75.0f))) {
                     System.Config.Blacklist.BlacklistedZones.Remove(territory.RowId);
                     System.Config.Save();
                 }
             }
             else {
-                if (ImGui.Button($"{FontAwesomeIcon.Plus.ToIconString()}##addZone{territory.RowId}", new Vector2(25.0f, 75.0f))) {
+                if (ImGui.Button($"{FontAwesomeIcon.Plus.ToIconString()}##addZone{territory.RowId}", ImGuiHelpers.ScaledVector2(25.0f, 75.0f))) {
                     System.Config.Blacklist.BlacklistedZones.Add(territory.RowId);
                     System.Config.Save();
                 }
