@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
@@ -46,6 +47,7 @@ public class SettingsWindow : Window {
     }
 
     protected override void DrawContents() {
+        using var uiLockout = ImRaii.Disabled(Service.Condition.Any(ConditionFlag.InCombat));
         DrawLimiterStatus();
         tabBar.Draw();
     }

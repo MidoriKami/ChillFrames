@@ -2,6 +2,7 @@
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
 using ChillFrames.Windows;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Plugin;
 using KamiLib.Classes;
 using KamiLib.CommandManager;
@@ -67,6 +68,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
     }
     
     private void ToggleLimiter(params string[] args) {
+        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
         if (args.Length != 0) {
             if (bool.TryParse(args[0], out var value)) {
                 System.Config.PluginEnable = value;
@@ -80,6 +82,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
     }
     
     private void SetIdleLimit(params string[] args) {
+        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
         if (args.Length < 1) return;
         if (!int.TryParse(args[0], out var newTarget) || newTarget <= 0) return;
     
@@ -88,6 +91,7 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
     }
     
     private void SetActiveLimit(params string[] args) {
+        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
         if (args.Length < 1) return;
         if (!int.TryParse(args[0], out var newTarget) || newTarget <= 0) return;
     

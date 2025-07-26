@@ -1,4 +1,5 @@
 ﻿using System;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text.SeStringHandling;
     
@@ -20,6 +21,7 @@ public class DtrController : IDisposable {
         => dtrEntry.Remove();
 
     private void DtrOnClick() {
+        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
         System.Config.PluginEnable = !System.Config.PluginEnable;
         System.Config.Save();
         
