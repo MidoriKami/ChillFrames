@@ -4,12 +4,12 @@ using System.Linq;
 using System.Numerics;
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using KamiLib.Classes;
 using KamiLib.CommandManager;
 using KamiLib.Extensions;
@@ -72,7 +72,7 @@ public class SettingsWindow : Window {
             }
 
             ImGui.SameLine();
-            ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", System.BlockList)}");
+            ImGui.TextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", System.BlockList)}");
             ImGui.TableNextColumn();
         }
         else if (FrameLimiterCondition.IsBlacklisted) {
@@ -125,7 +125,7 @@ public class LimiterSettingsTab : ITabItem {
         ImGui.SameLine();
         ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X * 0.75f);
         var idleLimit = System.Config.Limiter.IdleFramerateTarget;
-        ImGui.InputInt("##LowerLimit", ref idleLimit, 0);
+        ImGui.InputInt("##LowerLimit", ref idleLimit);
         if (ImGui.IsItemDeactivatedAfterEdit()) {
             System.Config.Limiter.IdleFramerateTarget = Math.Clamp(idleLimit, 1, System.Config.Limiter.ActiveFramerateTarget);
             System.Config.Save();
@@ -137,7 +137,7 @@ public class LimiterSettingsTab : ITabItem {
         ImGui.SameLine();
         ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X * 0.75f);
         var activeLimit = System.Config.Limiter.ActiveFramerateTarget;
-        ImGui.InputInt("##UpperLimit", ref activeLimit, 0);
+        ImGui.InputInt("##UpperLimit", ref activeLimit);
         if (ImGui.IsItemDeactivatedAfterEdit()) {
             System.Config.Limiter.ActiveFramerateTarget = Math.Clamp(activeLimit, System.Config.Limiter.IdleFramerateTarget, 1000);
             System.Config.Save();

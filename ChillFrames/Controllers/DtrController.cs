@@ -1,4 +1,6 @@
 ﻿using System;
+using ChillFrames.Windows;
+using Dalamud.Game.Addon.Events.EventDataTypes;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text.SeStringHandling;
@@ -11,7 +13,7 @@ public class DtrController : IDisposable {
     public DtrController() {
         dtrEntry = Service.DtrBar.Get("Chill Frames");
 
-        dtrEntry.Tooltip = System.Config.PluginEnable ? "Click to Disable Limiter" : "Click to Enable Limiter";
+        dtrEntry.Tooltip = GetTooltip();
         dtrEntry.OnClick = DtrOnClick;
 
         dtrEntry.Shown = System.Config.General.EnableDtrBar;
@@ -20,12 +22,20 @@ public class DtrController : IDisposable {
     public void Dispose() 
         => dtrEntry.Remove();
 
-    private void DtrOnClick() {
-        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
-        System.Config.PluginEnable = !System.Config.PluginEnable;
-        System.Config.Save();
-        
-        dtrEntry.Tooltip = System.Config.PluginEnable ? "Click to Disable Limiter" : $"Click to Enable Limiter";
+    private void DtrOnClick(AddonMouseEventData eventData) {
+        switch (eventData) {
+            case { IsLeftClick: true }:
+                if (Service.Condition.Any(ConditionFlag.InCombat)) return;
+                System.Config.PluginEnable = !System.Config.PluginEnable;
+                System.Config.Save();
+                break;
+            
+            case { IsRightClick: true }:
+                System.WindowManager.GetWindow<SettingsWindow>()?.Toggle();
+                break;
+        }
+
+        dtrEntry.Tooltip = GetTooltip();
     }
 
     public void Update() {
@@ -40,6 +50,10 @@ public class DtrController : IDisposable {
             dtrEntry.Text = $"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS";
         }
     }
+
+    private SeString GetTooltip()
+        => $"{(System.Config.PluginEnable ? "Left Click to Disable Limiter" : "Left Click to Enable Limiter")}\n" +
+           $"Right click to open Config Window";
 
     public void UpdateEnabled() 
         => dtrEntry.Shown = System.Config.General.EnableDtrBar;
