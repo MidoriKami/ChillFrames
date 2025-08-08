@@ -1,6 +1,5 @@
 ﻿using System;
 using ChillFrames.Windows;
-using Dalamud.Game.Addon.Events.EventDataTypes;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text.SeStringHandling;
@@ -22,15 +21,15 @@ public class DtrController : IDisposable {
     public void Dispose() 
         => dtrEntry.Remove();
 
-    private void DtrOnClick(AddonMouseEventData eventData) {
-        switch (eventData) {
-            case { IsLeftClick: true }:
+    private void DtrOnClick(DtrInteractionEvent dtrInteractionEvent) {
+        switch (dtrInteractionEvent.ClickType) {
+            case MouseClickType.Left:
                 if (Service.Condition.Any(ConditionFlag.InCombat)) return;
                 System.Config.PluginEnable = !System.Config.PluginEnable;
                 System.Config.Save();
                 break;
             
-            case { IsRightClick: true }:
+            case MouseClickType.Right:
                 System.WindowManager.GetWindow<SettingsWindow>()?.Toggle();
                 break;
         }
