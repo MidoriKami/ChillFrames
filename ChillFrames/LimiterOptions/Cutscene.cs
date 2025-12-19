@@ -1,12 +1,12 @@
 ﻿using ChillFrames.Classes;
-using KamiLib.Extensions;
+using ChillFrames.Utilities;
 
 namespace ChillFrames.LimiterOptions;
 
 public class Cutscene : IFrameLimiterOption {
     public string Label => "Cutscenes";
     
-    public bool Active => Service.Condition.IsInCutscene();
+    public bool Active => Services.Condition.IsInCutscene;
     
     public ref bool Enabled => ref System.Config.General.DisableDuringCutsceneSetting;
 }

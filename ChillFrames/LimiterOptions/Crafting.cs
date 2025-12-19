@@ -1,12 +1,12 @@
 ﻿using ChillFrames.Classes;
-using KamiLib.Extensions;
+using ChillFrames.Utilities;
 
 namespace ChillFrames.LimiterOptions;
 
 public class Crafting : IFrameLimiterOption {
     public string Label => "Crafting";
     
-    public bool Active => Service.Condition.IsCrafting();
+    public bool Active => Services.Condition.IsCrafting;
     
     public ref bool Enabled => ref System.Config.General.DisableDuringCraftingSetting;
 }

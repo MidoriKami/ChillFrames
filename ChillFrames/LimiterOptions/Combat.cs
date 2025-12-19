@@ -1,12 +1,12 @@
 ﻿using ChillFrames.Classes;
-using KamiLib.Extensions;
+using ChillFrames.Utilities;
 
 namespace ChillFrames.LimiterOptions;
 
 public class Combat : IFrameLimiterOption {
     public string Label => "Combat";
     
-    public bool Active => Service.Condition.IsInCombat();
+    public bool Active => Services.Condition.IsInCombat;
     
     public ref bool Enabled => ref System.Config.General.DisableDuringCombatSetting;
 }

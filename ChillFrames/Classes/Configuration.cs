@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using KamiLib.Configuration;
-using Lumina.Excel.Sheets;
+﻿using System.Drawing;
+using System.Numerics;
+using ChillFrames.Utilities;
+using Dalamud.Interface;
 
 namespace ChillFrames.Classes;
-
-public class BlacklistSettings {
-    public HashSet<uint> BlacklistedZones { get; set; } = [];
-}
 
 public class GeneralSettings {
     public bool DisableDuringBardPerformance = true;
@@ -22,11 +18,8 @@ public class GeneralSettings {
     public bool DisableInEstatesSetting = true;
     public bool EnableDtrBar = true;
     public bool EnableDtrColor = true;
-    public ushort EnabledColor = 1;
-    public ushort DisabledColor = 66;
-
-    [JsonIgnore] public UIColor EnabledUiColor => Service.DataManager.GetExcelSheet<UIColor>().GetRow(EnabledColor);
-    [JsonIgnore] public UIColor DisabledUiColor => Service.DataManager.GetExcelSheet<UIColor>().GetRow(DisabledColor);
+    public Vector4 ActiveColor = KnownColor.LightGreen.Vector();
+    public Vector4 InactiveColor = KnownColor.OrangeRed.Vector();
 }
 
 public class LimiterSettings {
@@ -35,7 +28,6 @@ public class LimiterSettings {
 }
 
 public class Configuration {
-    public BlacklistSettings Blacklist = new();
     public float DisableIncrementSetting = 0.025f;
     public float EnableIncrementSetting = 0.01f;
 
@@ -45,8 +37,8 @@ public class Configuration {
     public bool PluginEnable = true;
 
     public static Configuration Load()
-        => Service.PluginInterface.LoadConfigFile("System.config.json", () => new Configuration());
+        => Config.LoadConfig<Configuration>("System.config.json");
 
     public void Save() 
-        => Service.PluginInterface.SaveConfigFile("System.config.json", this);
+        => Config.SaveConfig(this, "System.config.json");
 }

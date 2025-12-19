@@ -1,16 +1,17 @@
 ﻿using System;
-using ChillFrames.Windows;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text.SeStringHandling;
-    
+using Dalamud.Utility;
+using SeStringBuilder = Lumina.Text.SeStringBuilder;
+
 namespace ChillFrames.Controllers;
 
 public class DtrController : IDisposable {
     private readonly IDtrBarEntry dtrEntry;
     
     public DtrController() {
-        dtrEntry = Service.DtrBar.Get("Chill Frames");
+        dtrEntry = Services.DtrBar.Get("Chill Frames");
 
         dtrEntry.Tooltip = GetTooltip();
         dtrEntry.OnClick = DtrOnClick;
@@ -24,13 +25,13 @@ public class DtrController : IDisposable {
     private void DtrOnClick(DtrInteractionEvent dtrInteractionEvent) {
         switch (dtrInteractionEvent.ClickType) {
             case MouseClickType.Left:
-                if (Service.Condition.Any(ConditionFlag.InCombat)) return;
+                if (Services.Condition.Any(ConditionFlag.InCombat)) return;
                 System.Config.PluginEnable = !System.Config.PluginEnable;
                 System.Config.Save();
                 break;
             
             case MouseClickType.Right:
-                System.WindowManager.GetWindow<SettingsWindow>()?.Toggle();
+                System.ConfigWindow.Toggle();
                 break;
         }
 
@@ -40,10 +41,11 @@ public class DtrController : IDisposable {
     public void Update() {
         if (System.Config.General.EnableDtrColor) {
             dtrEntry.Text = new SeStringBuilder()
-                .AddUiForeground(System.Config.PluginEnable ? System.Config.General.EnabledColor : System.Config.General.DisabledColor)
-                .AddText($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
-                .AddUiForegroundOff()
-                .Build();
+                .PushColorRgba(System.Config.PluginEnable ? System.Config.General.ActiveColor : System.Config.General.InactiveColor)
+                .Append($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
+                .PopColor()
+                .ToReadOnlySeString()
+                .ToDalamudString();
         }
         else {
             dtrEntry.Text = $"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS";

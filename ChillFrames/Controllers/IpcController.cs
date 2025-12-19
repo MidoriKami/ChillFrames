@@ -17,8 +17,8 @@ public class IpcController : IDisposable {
     private static ICallGateProvider<string, bool>? enableLimiter;
 
     public IpcController() {
-        disableLimiter = Service.PluginInterface.GetIpcProvider<string, bool>("ChillFrames.DisableLimiter");
-        enableLimiter = Service.PluginInterface.GetIpcProvider<string, bool>("ChillFrames.EnableLimiter");
+        disableLimiter = Services.PluginInterface.GetIpcProvider<string, bool>("ChillFrames.DisableLimiter");
+        enableLimiter = Services.PluginInterface.GetIpcProvider<string, bool>("ChillFrames.EnableLimiter");
 
         disableLimiter.RegisterFunc(DisableLimiter);
         enableLimiter.RegisterFunc(EnableLimiter);

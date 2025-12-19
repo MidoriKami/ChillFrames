@@ -1,10 +1,16 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/13.0.0">
+﻿<Project Sdk="Dalamud.NET.Sdk/14.0.1">
     <PropertyGroup>
         <AssemblyVersion>3.1.1.5</AssemblyVersion>
-        <PackageProjectUrl>https://github.com/MidoriKami/ChillFrames.git</PackageProjectUrl>
     </PropertyGroup>
-    
-    <ItemGroup>
-        <ProjectReference Include="..\KamiLib\KamiLib.csproj" />
-    </ItemGroup>
+
+    <PropertyGroup>
+        <Author>MidoriKami</Author>
+        <Name>Chill Frames</Name>
+        <InternalName>ChillFrames</InternalName>
+        <Punchline>Dynamic Framerate Limiter, changes fps limit depend on what you are doing</Punchline>
+        <Description>Tired of your GPU melting your face off while just running around? Why render at 240 FPS when you're just staring at that gathering node? Fret no more! Chill Frames allows you dynamically limit your framerate when doing unimportant tasks!</Description>
+        <RepoUrl>https://github.com/MidoriKami/ChillFrames</RepoUrl>
+        <Tags>fps;chill;limiter;dtr</Tags>
+        <AcceptsFeedback>false</AcceptsFeedback>
+    </PropertyGroup>
 </Project>

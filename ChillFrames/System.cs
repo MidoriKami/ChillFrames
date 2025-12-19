@@ -1,26 +1,18 @@
 ﻿using System.Collections.Generic;
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
-using KamiLib.CommandManager;
-using KamiLib.Window;
+using ChillFrames.Windows;
+using Dalamud.Interface.Windowing;
 
 namespace ChillFrames;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 public static class System {
-	public static Configuration Config { get; set; }
-
-	public static WindowManager WindowManager { get; set; }
-
-	public static CommandManager CommandManager { get; set; }
-
-	public static DtrController DtrController { get; set; }
-	
+	public static Configuration Config { get; set; } = null!;
+	public static WindowSystem WindowSystem { get; set; } = null!;
+	public static SettingsWindow ConfigWindow { get; set; } = null!;
+	public static DtrController DtrController { get; set; } = null!;
 	public static HashSet<string> BlockList { get; set; } = [];
-
-	public static FrameLimiterController FrameLimiterController { get; set; }
-
-	public static IpcController IpcController { get; set; }
-
+	public static FrameLimiterController FrameLimiterController { get; set; } = null!;
+	public static IpcController IpcController { get; set; } = null!;
 	public static List<IFrameLimiterOption> LimiterOptions { get; set; } = [];
 }

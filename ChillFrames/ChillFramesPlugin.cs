@@ -1,18 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
+using ChillFrames.Utilities;
 using ChillFrames.Windows;
-using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.Command;
+using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
-using KamiLib.Classes;
-using KamiLib.CommandManager;
-using KamiLib.Window;
 
 namespace ChillFrames;
 
 public sealed class ChillFramesPlugin : IDalamudPlugin {
     public ChillFramesPlugin(IDalamudPluginInterface pluginInterface) {
-        pluginInterface.Create<Service>();
+        pluginInterface.Create<Services>();
 
         // We need to disable these, so users can monitor the config window and see what conditions are active at what times.
         pluginInterface.UiBuilder.DisableCutsceneUiHide = true;
@@ -20,82 +22,91 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         pluginInterface.UiBuilder.DisableGposeUiHide = true;
         pluginInterface.UiBuilder.DisableUserUiHide = true;
 
-        System.LimiterOptions = Reflection.ActivateOfInterface<IFrameLimiterOption>().ToList();
+        System.LimiterOptions = GetFrameLimiterOptions();
 
         System.Config = Configuration.Load();
 
-        System.DtrController = new DtrController(); 
+        System.DtrController = new DtrController();
         System.FrameLimiterController = new FrameLimiterController();
         System.IpcController = new IpcController();
-        System.CommandManager = new CommandManager(Service.PluginInterface, "chillframes", "pcf");
-        System.WindowManager = new WindowManager(Service.PluginInterface);
+        Services.CommandManager.AddHandler("/chillframes", new CommandInfo(OnCommand) {
+            ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
+        });
 
-        System.WindowManager.AddWindow(new SettingsWindow(), WindowFlags.IsConfigWindow);
+        Services.CommandManager.AddHandler("/pcf", new CommandInfo(OnCommand) {
+            ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
+        });
 
-        System.CommandManager.RegisterCommand(new ToggleCommandHandler {
-            EnableDelegate = EnableLimiter,
-            DisableDelegate = DisableLimiter,
-            ToggleDelegate = ToggleLimiter,
-            BaseActivationPath = string.Empty,
-        });
+        System.WindowSystem = new WindowSystem("ChillFrames");
+        System.ConfigWindow = new SettingsWindow();
+
+        System.WindowSystem.AddWindow(System.ConfigWindow);
+
+        Services.PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
+        Services.PluginInterface.UiBuilder.OpenConfigUi += System.ConfigWindow.Toggle;
+        Services.PluginInterface.UiBuilder.OpenMainUi += System.ConfigWindow.Toggle;
         
-        System.CommandManager.RegisterCommand(new CommandHandler {
-            Delegate = SetIdleLimit,
-            ActivationPath = "/fps/setlower",
-        });
+        System.ConfigWindow.IsOpen = true;
+    }
+
+    private void OnCommand(string command, string arguments) {
+        if (Services.Condition.IsInCombat) {
+            Services.ChatGui.PrintError("Unable to modify ChillFrames config while in combat.");
+            return;
+        }
         
-        System.CommandManager.RegisterCommand(new CommandHandler {
-            Delegate = SetActiveLimit,
-            ActivationPath = "/fps/setupper",
-        });
+        if (command is not ( "/chillframes" or "/pcf" )) return;
+        
+        switch (arguments.Split(' ')) {
+            case [ "" ] or []:
+                System.ConfigWindow.Toggle();
+                break;
+            
+            case [ "enable" ]:
+                System.Config.PluginEnable = true;
+                break;
+            
+            case [ "disable" ]:
+                System.Config.PluginEnable = false;
+                break;
+            
+            case [ "toggle" ]:
+                System.Config.PluginEnable = !System.Config.PluginEnable;
+                break;
+
+            case [ "fps", "setlower", { } newLowerLimit ]:
+                if (!int.TryParse(newLowerLimit, out var newLowTarget) || newLowTarget <= 0) return;
+                System.Config.Limiter.IdleFramerateTarget = newLowTarget;
+                break;
+
+            case [ "fps", "setupper", { } newUpperLimit ]:
+                if (!int.TryParse(newUpperLimit, out var newHighTarget) || newHighTarget <= 0) return;
+                System.Config.Limiter.ActiveFramerateTarget = newHighTarget;
+                break;
+        }
+        
+        System.Config.Save();
     }
 
     public void Dispose() {
+        Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
+        Services.PluginInterface.UiBuilder.OpenConfigUi -= System.ConfigWindow.Toggle;
+        Services.PluginInterface.UiBuilder.OpenMainUi -= System.ConfigWindow.Toggle;
+        
+        Services.CommandManager.RemoveHandler("/chillframes");
+        Services.CommandManager.RemoveHandler("/pcf");
+            
         System.FrameLimiterController.Dispose();
         System.IpcController.Dispose();
-        System.WindowManager.Dispose();
-        System.CommandManager.Dispose();
+        System.WindowSystem.RemoveAllWindows();
     }
     
-    private void EnableLimiter(params string[] args) {
-        System.Config.PluginEnable = true;
-        System.Config.Save();
-    }
-
-    private void DisableLimiter(params string[] args) {
-        System.Config.PluginEnable = false;
-        System.Config.Save();
-    }
-    
-    private void ToggleLimiter(params string[] args) {
-        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
-        if (args.Length != 0) {
-            if (bool.TryParse(args[0], out var value)) {
-                System.Config.PluginEnable = value;
-                System.Config.Save();
-            }
-        }
-        else {
-            System.Config.PluginEnable = !System.Config.PluginEnable;
-            System.Config.Save();
-        }
-    }
-    
-    private void SetIdleLimit(params string[] args) {
-        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
-        if (args.Length < 1) return;
-        if (!int.TryParse(args[0], out var newTarget) || newTarget <= 0) return;
-    
-        System.Config.Limiter.IdleFramerateTarget = newTarget;
-        System.Config.Save();
-    }
-    
-    private void SetActiveLimit(params string[] args) {
-        if (Service.Condition.Any(ConditionFlag.InCombat)) return;
-        if (args.Length < 1) return;
-        if (!int.TryParse(args[0], out var newTarget) || newTarget <= 0) return;
-    
-        System.Config.Limiter.ActiveFramerateTarget = newTarget;
-        System.Config.Save();
-    }
+    private static List<IFrameLimiterOption> GetFrameLimiterOptions() => Assembly
+        .GetCallingAssembly()
+        .GetTypes()
+        .Where(type => type.IsAssignableTo(typeof(IFrameLimiterOption)))
+        .Where(type => !type.IsAbstract)
+        .Select(type => (IFrameLimiterOption?) Activator.CreateInstance(type))
+        .OfType<IFrameLimiterOption>()
+        .ToList();
 }

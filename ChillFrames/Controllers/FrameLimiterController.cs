@@ -10,7 +10,7 @@ namespace ChillFrames.Controllers;
 public enum LimiterState {
     Enabled,
     Disabled,
-    SteadyState
+    SteadyState,
 }
 
 public class FrameLimiterController : IDisposable {
@@ -37,11 +37,11 @@ public class FrameLimiterController : IDisposable {
     public static TimeSpan LastFrametime;
     
     public FrameLimiterController() {
-        Service.Framework.Update += OnFrameworkUpdate;
+        Services.Framework.Update += OnFrameworkUpdate;
     }
 
     public void Dispose() {
-        Service.Framework.Update -= OnFrameworkUpdate;
+        Services.Framework.Update -= OnFrameworkUpdate;
     }
 
     private void OnFrameworkUpdate(IFramework framework) {
@@ -62,7 +62,6 @@ public class FrameLimiterController : IDisposable {
     [MethodImpl(MethodImplOptions.NoOptimization)]
     private void TryLimitFramerate() {
         if (!System.Config.PluginEnable) return;
-        if (FrameLimiterCondition.IsBlacklisted) return;
         if (System.BlockList.Count > 0) return;
 
         if (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState) {
