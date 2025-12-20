@@ -45,8 +45,6 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
         Services.PluginInterface.UiBuilder.OpenConfigUi += System.ConfigWindow.Toggle;
         Services.PluginInterface.UiBuilder.OpenMainUi += System.ConfigWindow.Toggle;
-        
-        System.ConfigWindow.IsOpen = true;
     }
 
     private void OnCommand(string command, string arguments) {
