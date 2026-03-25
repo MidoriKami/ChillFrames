@@ -40,7 +40,6 @@ public class Configuration {
 
     public bool PluginEnable = true;
     public int ConfigVersion = 0;
-    public string LastSeenVersion = string.Empty;
 
     public static Configuration Load() {
         var config = Config.LoadConfig<Configuration>("System.config.json");

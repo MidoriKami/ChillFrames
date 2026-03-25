@@ -39,17 +39,8 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
 
         System.WindowSystem = new WindowSystem("ChillFrames");
         System.ConfigWindow = new SettingsWindow();
-        System.WhatsNewWindow = new WhatsNewWindow();
 
         System.WindowSystem.AddWindow(System.ConfigWindow);
-        System.WindowSystem.AddWindow(System.WhatsNewWindow);
-
-        var currentVersion = Assembly.GetExecutingAssembly().GetName().Version!.ToString();
-        if (System.Config.LastSeenVersion != currentVersion) {
-            System.Config.LastSeenVersion = currentVersion;
-            System.Config.Save();
-            System.WhatsNewWindow.IsOpen = true;
-        }
 
         Services.PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
         Services.PluginInterface.UiBuilder.OpenConfigUi += System.ConfigWindow.Toggle;
