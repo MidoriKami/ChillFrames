@@ -67,17 +67,20 @@ public class SettingsWindow : Window {
 			ImGui.SameLine();
 			ImGui.TextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", System.BlockList)}");
 			ImGui.TableNextColumn();
-		} else if (Config.PluginEnable) {
+		}
+		else if (Config.PluginEnable) {
 			var targetFps = FrameLimiterCondition.GetTargetState() switch {
 				LimiterStateTarget.LowerLimit => Config.Limiter.LowerFramerateTarget,
-				LimiterStateTarget.BaseLimit  => Config.Limiter.BaseFramerateTarget,
+				LimiterStateTarget.BaseLimit => Config.Limiter.BaseFramerateTarget,
 				LimiterStateTarget.UpperLimit => Config.Limiter.UpperFramerateTarget,
-				_                             => Config.Limiter.BaseFramerateTarget,
+				_ => Config.Limiter.BaseFramerateTarget,
 			};
+
 			ImGui.Text($"Target Framerate");
 			ImGui.TableNextColumn();
 			ImGui.Text($"{targetFps} fps");
-		} else {
+		} 
+		else {
 			ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
 			ImGui.TableNextColumn();
 		}
@@ -169,7 +172,8 @@ public class SettingsWindow : Window {
 		ImGui.TableNextColumn();
 		if (option.Active) {
 			ImGui.TextColored(KnownColor.Green.Vector(), "Active");
-		} else {
+		} 
+		else {
 			ImGui.TextColored(KnownColor.OrangeRed.Vector(), "Inactive");
 		}
 
@@ -185,9 +189,9 @@ public class SettingsWindow : Window {
 
 	private string TargetString(LimiterStateTarget target) => target switch {
 		LimiterStateTarget.LowerLimit => LowerLimitString,
-		LimiterStateTarget.BaseLimit  => BaseLimitString,
+		LimiterStateTarget.BaseLimit => BaseLimitString,
 		LimiterStateTarget.UpperLimit => UpperLimitString,
-		_                             => BaseLimitString,
+		_ => BaseLimitString,
 	};
 
 	private void DrawOptionCombo(IFrameLimiterOption option) {

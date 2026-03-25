@@ -70,12 +70,19 @@ public class FrameLimiterController : IDisposable {
 
         var targetState = FrameLimiterCondition.GetTargetState();
 
-        if (targetState == LimiterStateTarget.UpperLimit && state == LimiterState.SteadyState) {
-            PerformLimiting(TargetUpperFrametime, PreciseUpperFrametime);
-        } else if (targetState == LimiterStateTarget.LowerLimit) {
-            PerformLimiting(TargetLowerFrametime, PreciseLowerFrametime);
-        } else {
-            PerformLimiting(TargetBaseFrametime, PreciseBaseFrametime);
+        switch (targetState) {
+            case LimiterStateTarget.UpperLimit when state is LimiterState.SteadyState:
+                PerformLimiting(TargetUpperFrametime, PreciseUpperFrametime);
+                break;
+
+            case LimiterStateTarget.LowerLimit:
+                PerformLimiting(TargetLowerFrametime, PreciseLowerFrametime);
+                break;
+
+            case LimiterStateTarget.BaseLimit:
+            default:
+                PerformLimiting(TargetBaseFrametime, PreciseBaseFrametime);
+                break;
         }
     }
 
@@ -92,7 +99,7 @@ public class FrameLimiterController : IDisposable {
     }
 
     private void UpdateState() {
-        var shouldLimit = FrameLimiterCondition.GetTargetState() != LimiterStateTarget.UpperLimit;
+        var shouldLimit = FrameLimiterCondition.GetTargetState() is not LimiterStateTarget.UpperLimit;
 
         if (enabledLastFrame != shouldLimit) {
             state = enabledLastFrame switch {

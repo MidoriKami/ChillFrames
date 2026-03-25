@@ -11,8 +11,12 @@ internal static class FrameLimiterCondition {
 
         foreach (var option in System.LimiterOptions) {
             if (!option.Active) continue;
+
             anyActive = true;
-            if (option.Target > result) result = option.Target;
+
+            if (option.Target > result) {
+                result = option.Target;
+            }
         }
 
         return anyActive ? result : LimiterStateTarget.BaseLimit;
