@@ -6,7 +6,7 @@ internal static class FrameLimiterCondition {
     public static LimiterStateTarget GetTargetState() {
         if (Services.Condition.IsBetweenAreas) return LimiterStateTarget.BaseLimit;
 
-        var result = LimiterStateTarget.LowerLimit;
+        var limiterMode = LimiterStateTarget.LowerLimit;
         var anyActive = false;
 
         foreach (var option in System.LimiterOptions) {
@@ -14,11 +14,11 @@ internal static class FrameLimiterCondition {
 
             anyActive = true;
 
-            if (option.Target > result) {
-                result = option.Target;
+            if (option.Target > limiterMode) {
+                limiterMode = option.Target;
             }
         }
 
-        return anyActive ? result : LimiterStateTarget.BaseLimit;
+        return anyActive ? limiterMode : LimiterStateTarget.BaseLimit;
     }
 }
