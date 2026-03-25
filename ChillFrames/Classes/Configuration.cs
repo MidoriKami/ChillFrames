@@ -91,6 +91,6 @@ public class Configuration {
 
     private static void MigrateConditionField(JsonElement parent, string oldFieldName, ref LimiterStateTarget target) {
         if (!parent.TryGetProperty(oldFieldName, out var value)) return;
-        target = value.ValueKind == JsonValueKind.True ? LimiterStateTarget.UpperLimit : LimiterStateTarget.BaseLimit;
+        target = value.ValueKind == JsonValueKind.True ? LimiterStateTarget.UpperLimit : LimiterStateTarget.LowerLimit;
     }
 }
