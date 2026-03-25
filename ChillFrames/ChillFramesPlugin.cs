@@ -74,12 +74,17 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
 
             case [ "fps", "setlower", { } newLowerLimit ]:
                 if (!int.TryParse(newLowerLimit, out var newLowTarget) || newLowTarget <= 0) return;
-                System.Config.Limiter.IdleFramerateTarget = newLowTarget;
+                System.Config.Limiter.LowerFramerateTarget = newLowTarget;
+                break;
+
+            case [ "fps", "setbase", { } newBaseLimit ]:
+                if (!int.TryParse(newBaseLimit, out var newBaseTarget) || newBaseTarget <= 0) return;
+                System.Config.Limiter.BaseFramerateTarget = newBaseTarget;
                 break;
 
             case [ "fps", "setupper", { } newUpperLimit ]:
                 if (!int.TryParse(newUpperLimit, out var newHighTarget) || newHighTarget <= 0) return;
-                System.Config.Limiter.ActiveFramerateTarget = newHighTarget;
+                System.Config.Limiter.UpperFramerateTarget = newHighTarget;
                 break;
         }
         

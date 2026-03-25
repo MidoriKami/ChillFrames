@@ -1,13 +1,24 @@
-﻿using System.Linq;
 using ChillFrames.Utilities;
 
 namespace ChillFrames.Classes;
 
 internal static class FrameLimiterCondition {
-    public static bool DisableFramerateLimit() {
-        if (System.LimiterOptions.Any(option => option is { Enabled: true, Active: true })) return true;
-        if (Services.Condition.IsBetweenAreas) return true;
+    public static LimiterStateTarget GetTargetState() {
+        if (Services.Condition.IsBetweenAreas) return LimiterStateTarget.BaseLimit;
 
-        return false;
+        var limiterMode = LimiterStateTarget.LowerLimit;
+        var anyActive = false;
+
+        foreach (var option in System.LimiterOptions) {
+            if (!option.Active) continue;
+
+            anyActive = true;
+
+            if (option.Target > limiterMode) {
+                limiterMode = option.Target;
+            }
+        }
+
+        return anyActive ? limiterMode : LimiterStateTarget.BaseLimit;
     }
 }
