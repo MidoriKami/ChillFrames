@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Numerics;
 using ChillFrames.Utilities;
 using Dalamud.Interface;
@@ -6,16 +6,16 @@ using Dalamud.Interface;
 namespace ChillFrames.Classes;
 
 public class GeneralSettings {
-    public bool DisableDuringBardPerformance = true;
-    public bool DisableDuringCombatSetting = true;
-    public bool DisableDuringCraftingSetting = true;
-    public bool DisableDuringCutsceneSetting = true;
-    public bool DisableDuringDutyRecorderPlaybackSetting = true;
-    public bool DisableDuringDutySetting = true;
-    public bool DisableDuringGpose = true;
-    public bool DisableDuringQuestEventSetting = true;
-    public bool DisableIslandSanctuarySetting = true;
-    public bool DisableInEstatesSetting = true;
+    public LimiterStateTarget BardPerformanceTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget CombatTarget = LimiterStateTarget.UpperLimit;
+    public LimiterStateTarget CraftingTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget CutsceneTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget DutyRecorderPlaybackTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget DutyTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget EstateTarget = LimiterStateTarget.LowerLimit;
+    public LimiterStateTarget GposeTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget IslandSanctuaryTarget = LimiterStateTarget.BaseLimit;
+    public LimiterStateTarget QuestEventTarget = LimiterStateTarget.BaseLimit;
     public bool EnableDtrBar = true;
     public bool EnableDtrColor = true;
     public Vector4 ActiveColor = KnownColor.LightGreen.Vector();
@@ -23,8 +23,9 @@ public class GeneralSettings {
 }
 
 public class LimiterSettings {
-    public int ActiveFramerateTarget = 60;
-    public int IdleFramerateTarget = 60;
+    public int LowerFramerateTarget = 15;
+    public int BaseFramerateTarget = 60;
+    public int UpperFramerateTarget = 144;
 }
 
 public class Configuration {
@@ -39,6 +40,6 @@ public class Configuration {
     public static Configuration Load()
         => Config.LoadConfig<Configuration>("System.config.json");
 
-    public void Save() 
+    public void Save()
         => Config.SaveConfig(this, "System.config.json");
 }

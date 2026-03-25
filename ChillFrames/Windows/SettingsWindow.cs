@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Numerics;
 using ChillFrames.Classes;
@@ -14,8 +14,6 @@ using Dalamud.Interface.Windowing;
 namespace ChillFrames.Windows;
 
 public class SettingsWindow : Window {
-	private int idleFramerateLimitTemp = int.MinValue;
-	private int activeFramerateLimitTemp = int.MinValue;
 	private static Configuration Config => System.Config;
 
 	public SettingsWindow() : base("ChillFrames Settings") {
@@ -25,16 +23,6 @@ public class SettingsWindow : Window {
 
 		Flags |= ImGuiWindowFlags.NoScrollbar;
 		Flags |= ImGuiWindowFlags.NoScrollWithMouse;
-	}
-
-	public override void PreDraw() {
-		if (idleFramerateLimitTemp is int.MinValue) {
-			idleFramerateLimitTemp = System.Config.Limiter.IdleFramerateTarget;
-		}
-
-		if (activeFramerateLimitTemp is int.MinValue) {
-			activeFramerateLimitTemp = System.Config.Limiter.ActiveFramerateTarget;
-		}
 	}
 
 	public override void Draw() {
@@ -60,7 +48,7 @@ public class SettingsWindow : Window {
 	private void DrawLimiterStatus() {
 		using var statusTable = ImRaii.Table("status_table", 2);
 		if (!statusTable) return;
-        
+
 		ImGui.TableNextColumn();
 		ImGui.Text($"Current Framerate");
 
@@ -79,18 +67,17 @@ public class SettingsWindow : Window {
 			ImGui.SameLine();
 			ImGui.TextColoredWrapped(KnownColor.Red.Vector(), $"Limiter is inactive - requested by plugin(s): {string.Join(", ", System.BlockList)}");
 			ImGui.TableNextColumn();
-		}
-		else if (!FrameLimiterCondition.DisableFramerateLimit() && Config.PluginEnable) {
+		} else if (Config.PluginEnable) {
+			var targetFps = FrameLimiterCondition.GetTargetState() switch {
+				LimiterStateTarget.LowerLimit => Config.Limiter.LowerFramerateTarget,
+				LimiterStateTarget.BaseLimit  => Config.Limiter.BaseFramerateTarget,
+				LimiterStateTarget.UpperLimit => Config.Limiter.UpperFramerateTarget,
+				_                             => Config.Limiter.BaseFramerateTarget,
+			};
 			ImGui.Text($"Target Framerate");
 			ImGui.TableNextColumn();
-			ImGui.Text($"{Config.Limiter.IdleFramerateTarget} fps");
-		}
-		else if (FrameLimiterCondition.DisableFramerateLimit() && Config.PluginEnable) {
-			ImGui.Text($"Target Framerate");
-			ImGui.TableNextColumn();
-			ImGui.Text($"{Config.Limiter.ActiveFramerateTarget} fps");
-		}
-		else {
+			ImGui.Text($"{targetFps} fps");
+		} else {
 			ImGui.TextColored(KnownColor.Red.Vector(), "Limiter Inactive");
 			ImGui.TableNextColumn();
 		}
@@ -103,35 +90,47 @@ public class SettingsWindow : Window {
 		ImGuiHelpers.ScaledDummy(5.0f);
 		DrawLimiterOptions();
 	}
-	
+
 	private void DrawDtrSettings() {
 		ImGuiHelpers.ScaledDummy(10.0f);
 		ImGui.Text("Feature Toggles");
 		ImGui.Separator();
-		ImGuiHelpers.ScaledDummy(5.0f);	
+		ImGuiHelpers.ScaledDummy(5.0f);
 		DrawFeatureToggles();
 
 		ImGuiHelpers.ScaledDummy(10.0f);
 		ImGui.Text("Color Options");
-		
+
 		ImGui.Separator();
 		ImGuiHelpers.ScaledDummy(5.0f);
 		DrawColorOptions();
 	}
-    
+
 	private static void DrawFpsLimitOptions() {
-		using var fpsInputTable = ImRaii.Table("fps_input_settings", 2);
+		using var fpsInputTable = ImRaii.Table("fps_input_settings", 3);
 		if (!fpsInputTable) return;
-        
+
 		ImGui.TableNextColumn();
 		ImGui.AlignTextToFramePadding();
 		ImGui.Text("Lower Limit");
 		ImGui.SameLine();
 		ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X * 0.75f);
-		var idleLimit = System.Config.Limiter.IdleFramerateTarget;
-		ImGui.InputInt("##LowerLimit", ref idleLimit);
+		var lowerLimit = System.Config.Limiter.LowerFramerateTarget;
+		ImGui.InputInt("##LowerLimit", ref lowerLimit);
 		if (ImGui.IsItemDeactivatedAfterEdit()) {
-			System.Config.Limiter.IdleFramerateTarget = Math.Clamp(idleLimit, 1, System.Config.Limiter.ActiveFramerateTarget);
+			System.Config.Limiter.LowerFramerateTarget = Math.Clamp(lowerLimit, 1, System.Config.Limiter.BaseFramerateTarget);
+			System.Config.Save();
+		}
+
+		ImGui.TableNextColumn();
+		ImGui.AlignTextToFramePadding();
+		ImGui.Text("Base Limit");
+		ImGui.SameLine();
+		ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X * 0.75f);
+		var baseLimit = System.Config.Limiter.BaseFramerateTarget;
+		ImGui.InputInt("##BaseLimit", ref baseLimit);
+		if (ImGui.IsItemDeactivatedAfterEdit()) {
+			System.Config.Limiter.BaseFramerateTarget = Math.Clamp(baseLimit, System.Config.Limiter.LowerFramerateTarget, System.Config.Limiter.UpperFramerateTarget);
 			System.Config.Save();
 		}
 
@@ -140,10 +139,10 @@ public class SettingsWindow : Window {
 		ImGui.Text("Upper Limit");
 		ImGui.SameLine();
 		ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X * 0.75f);
-		var activeLimit = System.Config.Limiter.ActiveFramerateTarget;
-		ImGui.InputInt("##UpperLimit", ref activeLimit);
+		var upperLimit = System.Config.Limiter.UpperFramerateTarget;
+		ImGui.InputInt("##UpperLimit", ref upperLimit);
 		if (ImGui.IsItemDeactivatedAfterEdit()) {
-			System.Config.Limiter.ActiveFramerateTarget = Math.Clamp(activeLimit, System.Config.Limiter.IdleFramerateTarget, 1000);
+			System.Config.Limiter.UpperFramerateTarget = Math.Clamp(upperLimit, System.Config.Limiter.BaseFramerateTarget, 1000);
 			System.Config.Save();
 		}
 	}
@@ -151,13 +150,13 @@ public class SettingsWindow : Window {
 	private void DrawLimiterOptions() {
 		using var table = ImRaii.Table("limiter_options_table", 3);
 		if (!table) return;
-        
+
 		ImGui.TableSetupColumn("Condition", ImGuiTableColumnFlags.WidthFixed, 150.0f * ImGuiHelpers.GlobalScale);
 		ImGui.TableSetupColumn("Status", ImGuiTableColumnFlags.WidthFixed, 75.0f * ImGuiHelpers.GlobalScale);
 		ImGui.TableSetupColumn("When Condition Active", ImGuiTableColumnFlags.WidthStretch);
-            
+
 		ImGui.TableHeadersRow();
-            
+
 		foreach (var option in System.LimiterOptions) {
 			DrawOption(option);
 		}
@@ -170,8 +169,7 @@ public class SettingsWindow : Window {
 		ImGui.TableNextColumn();
 		if (option.Active) {
 			ImGui.TextColored(KnownColor.Green.Vector(), "Active");
-		}
-		else {
+		} else {
 			ImGui.TextColored(KnownColor.OrangeRed.Vector(), "Inactive");
 		}
 
@@ -180,25 +178,38 @@ public class SettingsWindow : Window {
 
 		DrawOptionCombo(option);
 	}
-    
-	private string LowerLimitString => $"Use Lower Limit ( {System.Config.Limiter.IdleFramerateTarget} fps )";
-	private string UpperLimitString => $"Use Upper Limit ( {System.Config.Limiter.ActiveFramerateTarget} fps )";
-	
+
+	private string LowerLimitString => $"Use Lower Limit ( {System.Config.Limiter.LowerFramerateTarget} fps )";
+	private string BaseLimitString  => $"Use Base Limit ( {System.Config.Limiter.BaseFramerateTarget} fps )";
+	private string UpperLimitString => $"Use Upper Limit ( {System.Config.Limiter.UpperFramerateTarget} fps )";
+
+	private string TargetString(LimiterStateTarget target) => target switch {
+		LimiterStateTarget.LowerLimit => LowerLimitString,
+		LimiterStateTarget.BaseLimit  => BaseLimitString,
+		LimiterStateTarget.UpperLimit => UpperLimitString,
+		_                             => BaseLimitString,
+	};
+
 	private void DrawOptionCombo(IFrameLimiterOption option) {
-		using var combo = ImRaii.Combo($"##OptionCombo_{option.Label}", option.Enabled ? UpperLimitString : LowerLimitString);
+		using var combo = ImRaii.Combo($"##OptionCombo_{option.Label}", TargetString(option.Target));
 		if (!combo) return;
-        
-		if (ImGui.Selectable(UpperLimitString, option.Enabled)) {
-			option.Enabled = true;
+
+		if (ImGui.Selectable(UpperLimitString, option.Target == LimiterStateTarget.UpperLimit)) {
+			option.Target = LimiterStateTarget.UpperLimit;
 			System.Config.Save();
 		}
 
-		if (ImGui.Selectable(LowerLimitString, !option.Enabled)) {
-			option.Enabled = false;
+		if (ImGui.Selectable(BaseLimitString, option.Target == LimiterStateTarget.BaseLimit)) {
+			option.Target = LimiterStateTarget.BaseLimit;
+			System.Config.Save();
+		}
+
+		if (ImGui.Selectable(LowerLimitString, option.Target == LimiterStateTarget.LowerLimit)) {
+			option.Target = LimiterStateTarget.LowerLimit;
 			System.Config.Save();
 		}
 	}
-	
+
 	private static void DrawFeatureToggles() {
 		using var pushIndent = ImRaii.PushIndent();
 
@@ -211,7 +222,7 @@ public class SettingsWindow : Window {
 			System.Config.Save();
 		}
 	}
-    
+
 	private static void DrawColorOptions() {
 		using var pushIndent = ImRaii.PushIndent();
 		if (ImGui.ColorEdit4("Enabled Color", ref System.Config.General.ActiveColor)) {

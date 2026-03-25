@@ -1,4 +1,4 @@
-﻿using ChillFrames.Classes;
+using ChillFrames.Classes;
 using FFXIVClientStructs.FFXIV.Client.Game;
 
 namespace ChillFrames.LimiterOptions;
@@ -8,5 +8,5 @@ public unsafe class Estate : IFrameLimiterOption {
 
     public bool Active => HousingManager.Instance()->IsInside();
 
-    public ref bool Enabled => ref System.Config.General.DisableInEstatesSetting;
+    public ref LimiterStateTarget Target => ref System.Config.General.EstateTarget;
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -23,19 +23,23 @@ public class FrameLimiterController : IDisposable {
 
     private static LimiterSettings Settings => System.Config.Limiter;
 
-    private static int TargetIdleFramerate => Settings.IdleFramerateTarget;
-    private static int TargetIdleFrametime => 1000 / TargetIdleFramerate;
-    private static int PreciseIdleFrametime => (int) (1000.0f / TargetIdleFramerate * 10000);
+    private static int TargetLowerFramerate => Settings.LowerFramerateTarget;
+    private static int TargetLowerFrametime => 1000 / TargetLowerFramerate;
+    private static int PreciseLowerFrametime => (int) (1000.0f / TargetLowerFramerate * 10000);
 
-    private static int TargetActiveFramerate => Settings.ActiveFramerateTarget;
-    private static int TargetActiveFrametime => 1000 / TargetActiveFramerate;
-    private static int PreciseActiveFrametime => (int) (1000.0f / TargetActiveFramerate * 10000);
+    private static int TargetBaseFramerate => Settings.BaseFramerateTarget;
+    private static int TargetBaseFrametime => 1000 / TargetBaseFramerate;
+    private static int PreciseBaseFrametime => (int) (1000.0f / TargetBaseFramerate * 10000);
+
+    private static int TargetUpperFramerate => Settings.UpperFramerateTarget;
+    private static int TargetUpperFrametime => 1000 / TargetUpperFramerate;
+    private static int PreciseUpperFrametime => (int) (1000.0f / TargetUpperFramerate * 10000);
 
     private static float DisableIncrement => System.Config.DisableIncrementSetting;
     private static float EnableIncrement => System.Config.EnableIncrementSetting;
 
     public static TimeSpan LastFrametime;
-    
+
     public FrameLimiterController() {
         Services.Framework.Update += OnFrameworkUpdate;
     }
@@ -64,11 +68,14 @@ public class FrameLimiterController : IDisposable {
         if (!System.Config.PluginEnable) return;
         if (System.BlockList.Count > 0) return;
 
-        if (!FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState) {
-            PerformLimiting(TargetIdleFrametime, PreciseIdleFrametime);
-        }
-        else if (FrameLimiterCondition.DisableFramerateLimit() || state != LimiterState.SteadyState) {
-            PerformLimiting(TargetActiveFrametime, PreciseActiveFrametime);
+        var targetState = FrameLimiterCondition.GetTargetState();
+
+        if (targetState == LimiterStateTarget.UpperLimit && state == LimiterState.SteadyState) {
+            PerformLimiting(TargetUpperFrametime, PreciseUpperFrametime);
+        } else if (targetState == LimiterStateTarget.LowerLimit) {
+            PerformLimiting(TargetLowerFrametime, PreciseLowerFrametime);
+        } else {
+            PerformLimiting(TargetBaseFrametime, PreciseBaseFrametime);
         }
     }
 
@@ -85,7 +92,7 @@ public class FrameLimiterController : IDisposable {
     }
 
     private void UpdateState() {
-        var shouldLimit = !FrameLimiterCondition.DisableFramerateLimit();
+        var shouldLimit = FrameLimiterCondition.GetTargetState() != LimiterStateTarget.UpperLimit;
 
         if (enabledLastFrame != shouldLimit) {
             state = enabledLastFrame switch {
