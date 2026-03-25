@@ -10,6 +10,7 @@ public static class System {
 	public static Configuration Config { get; set; } = null!;
 	public static WindowSystem WindowSystem { get; set; } = null!;
 	public static SettingsWindow ConfigWindow { get; set; } = null!;
+	public static WhatsNewWindow WhatsNewWindow { get; set; } = null!;
 	public static DtrController DtrController { get; set; } = null!;
 	public static HashSet<string> BlockList { get; set; } = [];
 	public static FrameLimiterController FrameLimiterController { get; set; } = null!;

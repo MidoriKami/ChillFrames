@@ -36,6 +36,7 @@ public class Configuration {
     public LimiterSettings Limiter = new();
 
     public bool PluginEnable = true;
+    public string LastSeenVersion = string.Empty;
 
     public static Configuration Load()
         => Config.LoadConfig<Configuration>("System.config.json");
