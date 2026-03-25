@@ -5,7 +5,7 @@ using Dalamud.Interface.Windowing;
 namespace ChillFrames.Windows;
 
 public class WhatsNewWindow : Window {
-    public WhatsNewWindow() : base("ChillFrames — What's New") {
+    public WhatsNewWindow() : base("ChillFrames - What's New") {
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(420.0f, 130.0f),
         };
@@ -15,7 +15,7 @@ public class WhatsNewWindow : Window {
         ImGui.Text("v3.3.0.0");
         ImGui.Text("- Framerate limiting now supports three tiers: Lower, Base, and Upper");
         ImGui.Text("- Each game condition can be assigned to any tier");
-        ImGui.Text("- Defaults: 15 fps in estates, 60 fps overworld, 144 fps in combat");
+        ImGui.Text("- Your existing settings have been migrated automatically");
 
         ImGui.Spacing();
 
