@@ -12,4 +12,5 @@ public class Services {
     [PluginService] public static IPluginLog PluginLog { get; set; } = null!;
     [PluginService] public static ICommandManager CommandManager { get; set; } = null!;
     [PluginService] public static IChatGui ChatGui { get; set; } = null!;
+    [PluginService] public static IReliableFileStorage ReliableFileStorage { get; set; } = null!;
 }
