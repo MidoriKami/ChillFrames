@@ -7,12 +7,6 @@ using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Controllers;
 
-public enum LimiterState {
-    Enabled,
-    Disabled,
-    SteadyState,
-}
-
 public class FrameLimiterController : IDisposable {
     private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
     private readonly Stopwatch timer = Stopwatch.StartNew();
@@ -40,13 +34,11 @@ public class FrameLimiterController : IDisposable {
 
     public static TimeSpan LastFrametime;
 
-    public FrameLimiterController() {
-        Services.Framework.Update += OnFrameworkUpdate;
-    }
+    public FrameLimiterController()
+        => Services.Framework.Update += OnFrameworkUpdate;
 
-    public void Dispose() {
-        Services.Framework.Update -= OnFrameworkUpdate;
-    }
+    public void Dispose()
+        => Services.Framework.Update -= OnFrameworkUpdate;
 
     private void OnFrameworkUpdate(IFramework framework) {
         UpdateState();
