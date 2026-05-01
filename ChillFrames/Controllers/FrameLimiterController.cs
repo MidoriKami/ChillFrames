@@ -32,7 +32,7 @@ public class FrameLimiterController : IDisposable {
     private static float DisableIncrement => System.Config.DisableIncrementSetting;
     private static float EnableIncrement => System.Config.EnableIncrementSetting;
 
-    public static TimeSpan LastFrametime;
+    public static TimeSpan LastFrametime { get; private set; }
 
     public FrameLimiterController()
         => Services.Framework.Update += OnFrameworkUpdate;
@@ -96,7 +96,7 @@ public class FrameLimiterController : IDisposable {
         if (enabledLastFrame != shouldLimit) {
             state = enabledLastFrame switch {
                 true => LimiterState.Disabled,
-                false => LimiterState.Enabled
+                false => LimiterState.Enabled,
             };
         }
 
