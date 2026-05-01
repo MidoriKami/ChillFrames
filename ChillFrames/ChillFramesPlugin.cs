@@ -2,25 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using ChillFrames.Classes;
 using ChillFrames.Controllers;
 using ChillFrames.Utilities;
 using ChillFrames.Windows;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
+using Dalamud.IoC;
 using Dalamud.Plugin;
 
 namespace ChillFrames;
 
-public sealed class ChillFramesPlugin : IDalamudPlugin {
-    public ChillFramesPlugin(IDalamudPluginInterface pluginInterface) {
-        pluginInterface.Create<Services>();
+public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
+    [PluginService] private static IDalamudPluginInterface PluginInterface { get; set; } = null!;
+
+    public Task LoadAsync(CancellationToken cancellationToken) {
+        PluginInterface.Create<Services>();
 
         // We need to disable these, so users can monitor the config window and see what conditions are active at what times.
-        pluginInterface.UiBuilder.DisableCutsceneUiHide = true;
-        pluginInterface.UiBuilder.DisableAutomaticUiHide = true;
-        pluginInterface.UiBuilder.DisableGposeUiHide = true;
-        pluginInterface.UiBuilder.DisableUserUiHide = true;
+        PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
+        PluginInterface.UiBuilder.DisableAutomaticUiHide = true;
+        PluginInterface.UiBuilder.DisableGposeUiHide = true;
+        PluginInterface.UiBuilder.DisableUserUiHide = true;
 
         System.LimiterOptions = GetFrameLimiterOptions();
 
@@ -30,11 +35,13 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         System.FrameLimiterController = new FrameLimiterController();
         System.IpcController = new IpcController();
         Services.CommandManager.AddHandler("/chillframes", new CommandInfo(OnCommand) {
-            ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
+            ShowInHelp = true, 
+            HelpMessage = "Open ChillFrames Config",
         });
 
         Services.CommandManager.AddHandler("/pcf", new CommandInfo(OnCommand) {
-            ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
+            ShowInHelp = true, 
+            HelpMessage = "Open ChillFrames Config",
         });
 
         System.WindowSystem = new WindowSystem("ChillFrames");
@@ -45,6 +52,28 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         Services.PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
         Services.PluginInterface.UiBuilder.OpenConfigUi += System.ConfigWindow.Toggle;
         Services.PluginInterface.UiBuilder.OpenMainUi += System.ConfigWindow.Toggle;
+
+        return Task.CompletedTask;
+    }
+
+    public ValueTask DisposeAsync() {
+        try {
+            Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
+            Services.PluginInterface.UiBuilder.OpenConfigUi -= System.ConfigWindow.Toggle;
+            Services.PluginInterface.UiBuilder.OpenMainUi -= System.ConfigWindow.Toggle;
+        
+            Services.CommandManager.RemoveHandler("/chillframes");
+            Services.CommandManager.RemoveHandler("/pcf");
+            
+            System.FrameLimiterController.Dispose();
+            System.IpcController.Dispose();
+            System.WindowSystem.RemoveAllWindows();
+
+            return ValueTask.CompletedTask;
+        }
+        catch (Exception exception) {
+            return ValueTask.FromException(exception);
+        }
     }
 
     private void OnCommand(string command, string arguments) {
@@ -91,25 +120,13 @@ public sealed class ChillFramesPlugin : IDalamudPlugin {
         System.Config.Save();
     }
 
-    public void Dispose() {
-        Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
-        Services.PluginInterface.UiBuilder.OpenConfigUi -= System.ConfigWindow.Toggle;
-        Services.PluginInterface.UiBuilder.OpenMainUi -= System.ConfigWindow.Toggle;
-        
-        Services.CommandManager.RemoveHandler("/chillframes");
-        Services.CommandManager.RemoveHandler("/pcf");
-            
-        System.FrameLimiterController.Dispose();
-        System.IpcController.Dispose();
-        System.WindowSystem.RemoveAllWindows();
-    }
-    
-    private static List<IFrameLimiterOption> GetFrameLimiterOptions() => Assembly
-        .GetCallingAssembly()
-        .GetTypes()
-        .Where(type => type.IsAssignableTo(typeof(IFrameLimiterOption)))
-        .Where(type => !type.IsAbstract)
-        .Select(type => (IFrameLimiterOption?) Activator.CreateInstance(type))
-        .OfType<IFrameLimiterOption>()
-        .ToList();
+    private static List<IFrameLimiterOption> GetFrameLimiterOptions() 
+        => Assembly
+           .GetCallingAssembly()
+           .GetTypes()
+           .Where(type => type.IsAssignableTo(typeof(IFrameLimiterOption)))
+           .Where(type => !type.IsAbstract)
+           .Select(type => (IFrameLimiterOption?) Activator.CreateInstance(type))
+           .OfType<IFrameLimiterOption>()
+           .ToList();
 }
