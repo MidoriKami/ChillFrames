@@ -30,6 +30,7 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 
 		System.Config = Configuration.Load();
 
+		System.IdleFpsController = new IdleFpsController();
 		System.DtrController = new DtrController();
 		System.FrameLimiterController = new FrameLimiterController();
 		Services.CommandManager.AddHandler("/chillframes", new CommandInfo(OnCommand) {
@@ -52,23 +53,18 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 		return Task.CompletedTask;
 	}
 
-	public ValueTask DisposeAsync() {
-		try {
-			Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
-			Services.PluginInterface.UiBuilder.OpenConfigUi -= System.ConfigWindow.Toggle;
-			Services.PluginInterface.UiBuilder.OpenMainUi -= System.ConfigWindow.Toggle;
+	public async ValueTask DisposeAsync() {
+		Services.PluginInterface.UiBuilder.Draw -= System.WindowSystem.Draw;
+		Services.PluginInterface.UiBuilder.OpenConfigUi -= System.ConfigWindow.Toggle;
+		Services.PluginInterface.UiBuilder.OpenMainUi -= System.ConfigWindow.Toggle;
 
-			Services.CommandManager.RemoveHandler("/chillframes");
-			Services.CommandManager.RemoveHandler("/pcf");
+		Services.CommandManager.RemoveHandler("/chillframes");
+		Services.CommandManager.RemoveHandler("/pcf");
 
-			System.FrameLimiterController.Dispose();
-			System.WindowSystem.RemoveAllWindows();
+		System.FrameLimiterController.Dispose();
+		System.WindowSystem.RemoveAllWindows();
 
-			return ValueTask.CompletedTask;
-		}
-		catch (Exception exception) {
-			return ValueTask.FromException(exception);
-		}
+		await System.IdleFpsController.DisposeAsync();
 	}
 
 	private void OnCommand(string command, string arguments) {

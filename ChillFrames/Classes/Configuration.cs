@@ -8,6 +8,7 @@ public class Configuration {
 
 	public GeneralSettings General = new();
 	public LimiterSettings Limiter = new();
+	public int IdleFpsWaitTime = 50;
 
 	public bool PluginEnable = true;
 

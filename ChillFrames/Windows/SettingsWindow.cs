@@ -7,6 +7,7 @@ using ChillFrames.Controllers;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
@@ -43,6 +44,12 @@ public class SettingsWindow : Window {
 		using (var dtrSettings = ImRaii.TabItem("DTR Entry")) {
 			if (dtrSettings) {
 				DrawDtrSettings();
+			}
+		}
+
+		using (var idleFpsSettings = ImRaii.TabItem("Idle Framerate")) {
+			if (idleFpsSettings) {
+				DrawIdleFpsSettings();
 			}
 		}
 	}
@@ -240,6 +247,25 @@ public class SettingsWindow : Window {
 
 		if (ImGui.ColorEdit4("Disabled Color", ref System.Config.General.InactiveColor)) {
 			System.Config.Save();
+		}
+	}
+
+	private static void DrawIdleFpsSettings() {
+		ImGuiHelpers.ScaledDummy(10.0f);
+		ImGui.Text("Idle FPS Wait Time");
+		ImGuiComponents.HelpMarker("This controls the amount of time the game will wait when using the\n'Limit frame rate when client is inactive' or 'Limit fps when away from keyboard' options.");
+		ImGui.Separator();
+		ImGuiHelpers.ScaledDummy(5.0f);
+
+		ImGui.SetNextItemWidth(50.0f * ImGuiHelpers.GlobalScale);
+		ImGui.InputInt("Wait time (ms)", ref Config.IdleFpsWaitTime, flags: ImGuiInputTextFlags.AutoSelectAll);
+		if (ImGui.IsItemDeactivatedAfterEdit()) {
+
+			// Zero wait time is okay, but limit the game to 2 fps at maximum.
+			Config.IdleFpsWaitTime = Math.Clamp(Config.IdleFpsWaitTime, 0, 500);
+			System.IdleFpsController.UpdateWaitTime();
+
+			Config.Save();
 		}
 	}
 }

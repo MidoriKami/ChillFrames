@@ -14,4 +14,5 @@ public class Services {
 	[PluginService] public static IChatGui ChatGui { get; set; } = null!;
 	[PluginService] public static IReliableFileStorage ReliableFileStorage { get; set; } = null!;
 	[PluginService] public static IDataManager DataManager { get; set; } = null!;
+	[PluginService] public static IGameInteropProvider Hooker { get; set; } = null!;
 }
