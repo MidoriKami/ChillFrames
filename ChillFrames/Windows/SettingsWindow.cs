@@ -253,7 +253,9 @@ public class SettingsWindow : Window {
 	private static void DrawIdleFpsSettings() {
 		ImGuiHelpers.ScaledDummy(10.0f);
 		ImGui.Text("Idle FPS Wait Time");
-		ImGuiComponents.HelpMarker("This controls the amount of time the game will wait when using the\n'Limit frame rate when client is inactive' or 'Limit fps when away from keyboard' options.");
+		ImGuiComponents.HelpMarker("This controls the amount of time the game will wait when using the\n" +
+		                           "'Limit frame rate when client is inactive' or 'Limit fps when away from keyboard' options.\n\n" +
+		                           "The default value the game uses is 50ms.");
 		ImGui.Separator();
 		ImGuiHelpers.ScaledDummy(5.0f);
 
