@@ -13,6 +13,7 @@ public class FrameLimiterController : IDisposable {
 	private readonly Stopwatch timer = Stopwatch.StartNew();
 	private float delayRatio = 1.0f;
 	private bool enabledLastFrame;
+	private bool idleLimiterDisabled;
 
 	private LimiterState state;
 
@@ -59,7 +60,20 @@ public class FrameLimiterController : IDisposable {
 	[MethodImpl(MethodImplOptions.NoOptimization)]
 	private void TryLimitFramerate() {
 		if (!System.Config.PluginEnable) return;
-		if (Services.Condition.IsBetweenAreas) return;
+
+		if (Services.Condition.IsBetweenAreas) {
+			if (!idleLimiterDisabled) {
+				System.IdleFpsController.SetWaitTime(0);
+				idleLimiterDisabled = true;
+			}
+			return;
+		}
+		else {
+			if (idleLimiterDisabled) {
+				System.IdleFpsController.SetWaitTime(System.Config.IdleFpsWaitTime);
+				idleLimiterDisabled = false;
+			}
+		}
 
 		var targetState = FrameLimiterCondition.GetTargetState();
 

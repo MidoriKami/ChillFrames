@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChillFrames.Classes;
+using Dalamud.Utility;
 using Dalamud.Utility.Signatures;
 
 namespace ChillFrames.Controllers;
@@ -16,16 +17,23 @@ public class IdleFpsController : IAsyncDisposable {
 		ApplyPatch();
 	}
 
-	public void UpdateWaitTime() {
+	public void SetWaitTime(int waitTime) {
 		if (waitTimePatch is null) return;
+		ThreadSafety.AssertMainThread();
 
-		var bytes = BitConverter.GetBytes(System.Config.IdleFpsWaitTime);
+		var bytes = BitConverter.GetBytes(waitTime);
 		if (!BitConverter.IsLittleEndian)
 		{
 			Array.Reverse(bytes);
 		}
 
-		Services.Framework.RunSafely(() => waitTimePatch.UpdateReplacementBytes(bytes));
+		waitTimePatch.UpdateReplacementBytes(bytes);
+	}
+
+	public void UpdateWaitTime() {
+		if (waitTimePatch is null) return;
+
+		SetWaitTime(System.Config.IdleFpsWaitTime);
 	}
 
 	private void ApplyPatch() {
