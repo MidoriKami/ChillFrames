@@ -30,11 +30,8 @@ public class IdleFpsController : IAsyncDisposable {
 		waitTimePatch.UpdateReplacementBytes(bytes);
 	}
 
-	public void UpdateWaitTime() {
-		if (waitTimePatch is null) return;
-
-		SetWaitTime(System.Config.IdleFpsWaitTime);
-	}
+	public void UpdateWaitTime()
+		=> SetWaitTime(System.Config.IdleFpsWaitTime);
 
 	private void ApplyPatch() {
 		if (jumpInstructionAddress is null) return;
