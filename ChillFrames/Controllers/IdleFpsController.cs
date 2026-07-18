@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChillFrames.Classes;
+using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using Dalamud.Utility.Signatures;
 
@@ -13,7 +14,7 @@ public class IdleFpsController : IAsyncDisposable {
 	private MemoryReplacement? waitTimePatch;
 
 	public IdleFpsController() {
-		Services.Hooker.InitializeFromAttributes(this);
+		IGameInteropProvider.Get().InitializeFromAttributes(this);
 		ApplyPatch();
 	}
 
@@ -51,7 +52,7 @@ public class IdleFpsController : IAsyncDisposable {
 
 		waitTimePatch = new MemoryReplacement(jumpInstructionAddress.Value + 3, bytes);
 
-		Services.Framework.RunSafely(() => waitTimePatch.Enable());
+		IFramework.Get().RunSafely(() => waitTimePatch.Enable());
 	}
 
 	public async ValueTask DisposeAsync() {

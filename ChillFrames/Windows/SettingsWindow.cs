@@ -11,6 +11,7 @@ using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
+using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Windows;
 
@@ -29,7 +30,7 @@ public class SettingsWindow : Window {
 	}
 
 	public override void Draw() {
-		using var uiLockout = ImRaii.Disabled(Services.Condition.Any(ConditionFlag.InCombat));
+		using var uiLockout = ImRaii.Disabled(ICondition.Get().Any(ConditionFlag.InCombat));
 		DrawLimiterStatus();
 
 		using var tabBar = ImRaii.TabBar("ChillFramesSettingsTabBar");

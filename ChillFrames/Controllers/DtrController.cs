@@ -2,6 +2,7 @@ using System;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using SeStringBuilder = Lumina.Text.SeStringBuilder;
 
@@ -11,7 +12,7 @@ public class DtrController : IDisposable {
 	private readonly IDtrBarEntry dtrEntry;
 
 	public DtrController() {
-		dtrEntry = Services.DtrBar.Get("Chill Frames");
+		dtrEntry = IDtrBar.Get().Get("Chill Frames");
 
 		dtrEntry.Tooltip = GetTooltip();
 		dtrEntry.OnClick = DtrOnClick;
@@ -26,7 +27,7 @@ public class DtrController : IDisposable {
 	private void DtrOnClick(DtrInteractionEvent dtrInteractionEvent) {
 		switch (dtrInteractionEvent.ClickType) {
 			case MouseClickType.Left:
-				if (Services.Condition.Any(ConditionFlag.InCombat)) return;
+				if (ICondition.Get().Any(ConditionFlag.InCombat)) return;
 				System.Config.PluginEnable = !System.Config.PluginEnable;
 				System.Config.Save();
 				break;

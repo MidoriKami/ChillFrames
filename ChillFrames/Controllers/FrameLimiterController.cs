@@ -37,10 +37,10 @@ public class FrameLimiterController : IDisposable {
 	public static TimeSpan LastFrametime { get; private set; }
 
 	public FrameLimiterController()
-		=> Services.Framework.Update += OnFrameworkUpdate;
+		=> IFramework.Get().Update += OnFrameworkUpdate;
 
 	public void Dispose()
-		=> Services.Framework.Update -= OnFrameworkUpdate;
+		=> IFramework.Get().Update -= OnFrameworkUpdate;
 
 	private void OnFrameworkUpdate(IFramework framework) {
 		UpdateState();
@@ -61,7 +61,7 @@ public class FrameLimiterController : IDisposable {
 	private void TryLimitFramerate() {
 		if (!System.Config.PluginEnable) return;
 
-		if (Services.Condition.IsBetweenAreas) {
+		if (ICondition.Get().IsBetweenAreas) {
 			if (!idleLimiterDisabled) {
 				System.IdleFpsController.SetWaitTime(0);
 				idleLimiterDisabled = true;

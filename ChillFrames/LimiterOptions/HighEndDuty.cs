@@ -1,4 +1,5 @@
 ﻿using ChillFrames.Classes;
+using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
 
@@ -13,7 +14,7 @@ public unsafe class HighEndDuty : IFrameLimiterOption {
 			var currentContentFinderCondition = GameMain.Instance()->CurrentContentFinderConditionId;
 			if (currentContentFinderCondition is 0) return false;
 
-			return Services.DataManager
+			return IDataManager.Get()
 			               .GetExcelSheet<ContentFinderCondition>()
 			               .GetRow(currentContentFinderCondition)
 			               .HighEndDuty;
