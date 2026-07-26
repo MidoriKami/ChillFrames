@@ -61,7 +61,7 @@ public class FrameLimiterController : IDisposable {
 	private void TryLimitFramerate() {
 		if (!System.Config.PluginEnable) return;
 
-		if (ICondition.Get().IsBetweenAreas) {
+		if (ICondition.Get().IsBetweenAreas || IFramework.Get().IsFrameworkUnloading) {
 			if (!idleLimiterDisabled) {
 				System.IdleFpsController.SetWaitTime(0);
 				idleLimiterDisabled = true;
