@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -8,136 +7,110 @@ using Dalamud.Plugin.Services;
 namespace ChillFrames.Utilities;
 
 public static class FileHelpers {
-	private static readonly Dictionary<string, Task> FileSavingTasks = [];
+    private static readonly JsonSerializerOptions SerializerOptions = new() {
+        WriteIndented = true,
+        IncludeFields = true,
+    };
 
-	private static readonly JsonSerializerOptions SerializerOptions = new() {
-		WriteIndented = true, IncludeFields = true,
-	};
+    public static async Task<T> LoadFile<T>(string filePath) where T : new() {
+        var fileInfo = new FileInfo(filePath);
+        if (fileInfo is { Exists: true }) {
+            try {
+                var fileText = await IReliableFileStorage.Get().ReadAllTextAsync(fileInfo.FullName);
+                var dataObject = JsonSerializer.Deserialize<T>(fileText, SerializerOptions);
 
-	public static T LoadFile<T>(string filePath, T? defaultObject = null) where T : class, new() {
-		var fileInfo = new FileInfo(filePath);
-		if (fileInfo is { Exists: true }) {
-			try {
-				var fileText = IReliableFileStorage.Get().ReadAllTextAsync(fileInfo.FullName).Result;
-				var dataObject = JsonSerializer.Deserialize<T>(fileText, SerializerOptions);
+                // If deserialize result is null, create a new instance instead and save it.
+                if (dataObject is null) {
+                    dataObject = new T();
+                    await SaveFile(dataObject, filePath);
+                }
 
-				// If deserialize result is null, create a new instance instead and save it.
-				if (dataObject is null) {
-					dataObject = defaultObject ?? new T();
-					SaveFile(dataObject, filePath);
-				}
+                return dataObject;
+            }
+            catch (Exception e) {
+                // If there is any kind of error loading the file, generate a new one instead and save it.
+                IPluginLog.Get().Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
 
-				return dataObject;
-			}
-			catch (Exception e) {
-				// If there is any kind of error loading the file, generate a new one instead and save it.
-				IPluginLog.Get().Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
+                await SaveFile(new T(), filePath);
+            }
+        }
 
-				SaveFile(defaultObject ?? new T(), filePath);
-			}
-		}
+        var newFile = new T();
+        await SaveFile(newFile, filePath);
 
-		var newFile = defaultObject ?? new T();
-		SaveFile(newFile, filePath);
+        return newFile;
+    }
 
-		return newFile;
-	}
+    public static async Task SaveFile<T>(T? file, string filePath) {
+        try {
+            if (file is null) {
+                IPluginLog.Get().Error("Null file provided.");
+                return;
+            }
 
-	public static void SaveFile<T>(T? file, string filePath) {
-		try {
-			if (file is null) {
-				IPluginLog.Get().Error("Null file provided.");
-				return;
-			}
+            var fileText = JsonSerializer.Serialize(file, file.GetType(), SerializerOptions);
+            await IReliableFileStorage.Get().WriteAllTextAsync(filePath, fileText);
+        }
+        catch (Exception e) {
+            IPluginLog.Get().Error(e, $"Error trying to save file {filePath}");
+        }
+    }
 
-			var fileText = JsonSerializer.Serialize(file, file.GetType(), SerializerOptions);
+    public static async Task<byte[]> LoadBinaryFile(int length, string filePath) {
+        var fileInfo = new FileInfo(filePath);
+        if (fileInfo is { Exists: true }) {
+            try {
+                var dataObject = await IReliableFileStorage.Get().ReadAllBytesAsync(fileInfo.FullName);
 
-			if (FileSavingTasks.TryGetValue(filePath, out var task)) {
-				if (task.IsCompleted) {
-					FileSavingTasks[filePath] = IReliableFileStorage.Get().WriteAllTextAsync(filePath, fileText);
-				}
-				else if (task.IsFaulted) {
-					throw task.Exception;
-				}
-				else if (task.Status is TaskStatus.Running) {
-					IPluginLog.Get().Debug($"File save for {filePath} in progress, trying again.");
-					IFramework.Get().RunOnTick(() => {
-						SaveFile(file, filePath); // try again
-					});
-				}
-			}
-			else {
-				FileSavingTasks[filePath] = IReliableFileStorage.Get().WriteAllTextAsync(filePath, fileText);
-			}
-		}
-		catch (Exception e) {
-			IPluginLog.Get().Error(e, $"Error trying to save file {filePath}");
-		}
-	}
+                // If deserialize result is null, create a new instance instead and save it.
+                if (dataObject.Length != length) {
+                    dataObject = new byte[length];
+                    await SaveFile(dataObject, filePath);
+                }
 
-	public static byte[] LoadBinaryFile(int length, string filePath) {
-		var fileInfo = new FileInfo(filePath);
-		if (fileInfo is { Exists: true }) {
-			try {
-				var dataObject = IReliableFileStorage.Get().ReadAllBytesAsync(fileInfo.FullName).Result;
+                return dataObject;
+            }
+            catch (Exception e) {
+                // If there is any kind of error loading the file, generate a new one instead and save it.
+                IPluginLog.Get().Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
 
-				// If deserialize result is null, create a new instance instead and save it.
-				if (dataObject.Length != length) {
-					dataObject = new byte[length];
-					SaveFile(dataObject, filePath);
-				}
+                await SaveFile(new byte[length], filePath);
+            }
+        }
 
-				return dataObject;
-			}
-			catch (Exception e) {
-				// If there is any kind of error loading the file, generate a new one instead and save it.
-				IPluginLog.Get().Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
+        var newFile = new byte[length];
+        await SaveFile(newFile, filePath);
 
-				SaveFile(new byte[length], filePath);
-			}
-		}
+        return newFile;
+    }
 
-		var newFile = new byte[length];
-		SaveFile(newFile, filePath);
+    public static async Task SaveBinaryFile(byte[] data, string filePath) {
+        try {
+            await IReliableFileStorage.Get().WriteAllBytesAsync(filePath, data);
+        }
+        catch (Exception e) {
+            IPluginLog.Get().Error(e, $"Error trying to save binary data {filePath}");
+        }
+    }
 
-		return newFile;
-	}
+    public static FileInfo GetFileInfo(params string[] path) {
+        var directory = ChillFramesPlugin.PluginInterface.ConfigDirectory;
 
-	public static void SaveBinaryFile(byte[] data, string filePath) {
-		try {
-			if (FileSavingTasks.TryGetValue(filePath, out var task)) {
-				if (task.IsCompleted) {
-					FileSavingTasks[filePath] = IReliableFileStorage.Get().WriteAllBytesAsync(filePath, data);
-				}
-				else if (task.IsFaulted) {
-					throw task.Exception;
-				}
-				else if (task.Status is TaskStatus.Running) {
-					IPluginLog.Get().Debug($"File save for {filePath} in progress, trying again.");
-					IFramework.Get().RunOnTick(() => {
-						SaveBinaryFile(data, filePath); // try again
-					});
-				}
-			}
-			else {
-				FileSavingTasks[filePath] = IReliableFileStorage.Get().WriteAllBytesAsync(filePath, data);
-			}
-		}
-		catch (Exception e) {
-			IPluginLog.Get().Error(e, $"Error trying to save binary data {filePath}");
-		}
-	}
+        for (var index = 0; index < path.Length - 1; index++) {
+            directory = new DirectoryInfo(Path.Combine(directory.FullName, path[index]));
+            if (!directory.Exists) {
+                directory.Create();
+            }
+        }
 
-	public static FileInfo GetFileInfo(params string[] path) {
-		var directory = ChillFramesPlugin.PluginInterface.ConfigDirectory;
+        return new FileInfo(Path.Combine(directory.FullName, path[^1]));
+    }
 
-		for (var index = 0; index < path.Length - 1; index++) {
-			directory = new DirectoryInfo(Path.Combine(directory.FullName, path[index]));
-			if (!directory.Exists) {
-				directory.Create();
-			}
-		}
+    public static string GetCharacterPath() {
+        if (!IClientState.Get().IsLoggedIn) {
+            throw new Exception("Character is not logged in.");
+        }
 
-		return new FileInfo(Path.Combine(directory.FullName, path[^1]));
-	}
+        return IPlayerState.Get().ContentId.ToString();
+    }
 }

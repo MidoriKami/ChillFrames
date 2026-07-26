@@ -1,21 +1,38 @@
-﻿namespace ChillFrames.Utilities;
+﻿using System.Threading.Tasks;
+
+namespace ChillFrames.Utilities;
 
 /// <summary>
 /// Configuration File Utilities
 /// </summary>
 public static class Config {
-	public static string ConfigPath => FileHelpers.GetFileInfo().FullName;
+	public static string CharacterConfigPath => FileHelpers.GetFileInfo(FileHelpers.GetCharacterPath()).FullName;
 
 	/// <summary>
-	/// Loads a configuration file from PluginConfigs\VanillaPlus\Configs\{FileName}
-	/// Creates a `new T()` or uses passed in defaultValue object if the file can't be loaded
+	/// Loads a configuration file from PluginConfigs\DailyDuty\{FileName}
+	/// Creates a `new T()` if the file can't be loaded
 	/// </summary>
-	public static T LoadConfig<T>(string fileName, T? defaultValue = null) where T : class, new()
-		=> FileHelpers.LoadFile(FileHelpers.GetFileInfo(fileName).FullName, defaultValue);
+	public static async Task<T> LoadConfig<T>(string fileName) where T : new()
+		=> await FileHelpers.LoadFile<T>(FileHelpers.GetFileInfo(fileName).FullName);
 
 	/// <summary>
-	/// Saves a configuration file to PluginConfigs\ChillFrames\{FileName}
+	/// Loads a character specific config file from PluginConfigs\DailyDuty\{ContentId}\{FileName}
+	/// Creates a `new T` if the file can't be loaded
 	/// </summary>
-	public static void SaveConfig<T>(T configObject, string fileName)
-		=> FileHelpers.SaveFile(configObject, FileHelpers.GetFileInfo(fileName).FullName);
+	/// <remarks>Requires the character to be logged in</remarks>
+	public static async Task<T> LoadCharacterConfig<T>(string fileName) where T : new()
+		=> await FileHelpers.LoadFile<T>(FileHelpers.GetFileInfo(FileHelpers.GetCharacterPath(), fileName).FullName);
+
+	/// <summary>
+	/// Saves a configuration file to PluginConfigs\DailyDuty\{FileName}
+	/// </summary>
+	public static async Task SaveConfig<T>(T modificationConfig, string fileName)
+		=> await FileHelpers.SaveFile(modificationConfig, FileHelpers.GetFileInfo(fileName).FullName);
+
+	/// <summary>
+	/// Saves a character specific config file to PluginConfigs\DailyDuty\{ContentId}\{FileName}
+	/// </summary>
+	/// <remarks>Requires the character to be logged in</remarks>
+	public static async Task SaveCharacterConfig<T>(T modificationConfig, string fileName)
+		=> await FileHelpers.SaveFile(modificationConfig, FileHelpers.GetFileInfo(FileHelpers.GetCharacterPath(), fileName).FullName);
 }

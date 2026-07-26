@@ -19,7 +19,7 @@ namespace ChillFrames;
 public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 	[PluginService] internal static IDalamudPluginInterface PluginInterface { get; set; } = null!;
 
-	public Task LoadAsync(CancellationToken cancellationToken) {
+	public async Task LoadAsync(CancellationToken cancellationToken) {
 		// We need to disable these, so users can monitor the config window and see what conditions are active at what times.
 		PluginInterface.UiBuilder.DisableCutsceneUiHide = true;
 		PluginInterface.UiBuilder.DisableAutomaticUiHide = true;
@@ -28,11 +28,12 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 
 		System.LimiterOptions = GetFrameLimiterOptions();
 
-		System.Config = Configuration.Load();
+		System.Config = await Configuration.Load();
 
 		System.IdleFpsController = new IdleFpsController();
 		System.DtrController = new DtrController();
 		System.FrameLimiterController = new FrameLimiterController();
+
 		ICommandManager.Get().AddHandler("/chillframes", new CommandInfo(OnCommand) {
 			ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
 		});
@@ -49,8 +50,6 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 		PluginInterface.UiBuilder.Draw += System.WindowSystem.Draw;
 		PluginInterface.UiBuilder.OpenConfigUi += System.ConfigWindow.Toggle;
 		PluginInterface.UiBuilder.OpenMainUi += System.ConfigWindow.Toggle;
-
-		return Task.CompletedTask;
 	}
 
 	public async ValueTask DisposeAsync() {

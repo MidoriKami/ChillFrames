@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ChillFrames.Utilities;
 
 namespace ChillFrames.Classes;
@@ -12,9 +13,9 @@ public class Configuration {
 
 	public bool PluginEnable = true;
 
-	public static Configuration Load()
-		=> Config.LoadConfig<Configuration>("System.config.json");
+	public static async Task<Configuration> Load()
+		=> await Config.LoadConfig<Configuration>("System.config.json");
 
 	public void Save()
-		=> Config.SaveConfig(this, "System.config.json");
+		=> Task.Run(() => Config.SaveConfig(this, "System.config.json"));
 }
