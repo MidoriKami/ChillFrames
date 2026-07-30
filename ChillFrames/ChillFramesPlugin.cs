@@ -110,13 +110,13 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 		System.Config.Save();
 	}
 
-	private static List<IFrameLimiterOption> GetFrameLimiterOptions()
-		=> Assembly
+	private static List<IFrameLimiterOption> GetFrameLimiterOptions() => [
+		.. Assembly
 		   .GetCallingAssembly()
 		   .GetTypes()
 		   .Where(type => type.IsAssignableTo(typeof(IFrameLimiterOption)))
 		   .Where(type => !type.IsAbstract)
 		   .Select(type => (IFrameLimiterOption?) Activator.CreateInstance(type))
-		   .OfType<IFrameLimiterOption>()
-		   .ToList();
+		   .OfType<IFrameLimiterOption>(),
+	];
 }
