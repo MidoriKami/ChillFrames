@@ -9,14 +9,14 @@ public static class Config {
 	public static string CharacterConfigPath => FileHelpers.GetFileInfo(FileHelpers.GetCharacterPath()).FullName;
 
 	/// <summary>
-	/// Loads a configuration file from PluginConfigs\DailyDuty\{FileName}
+	/// Loads a configuration file from PluginConfigs\ChillFrames\{FileName}
 	/// Creates a `new T()` if the file can't be loaded
 	/// </summary>
 	public static async Task<T> LoadConfig<T>(string fileName) where T : new()
 		=> await FileHelpers.LoadFile<T>(FileHelpers.GetFileInfo(fileName).FullName);
 
 	/// <summary>
-	/// Loads a character specific config file from PluginConfigs\DailyDuty\{ContentId}\{FileName}
+	/// Loads a character specific config file from PluginConfigs\ChillFrames\{ContentId}\{FileName}
 	/// Creates a `new T` if the file can't be loaded
 	/// </summary>
 	/// <remarks>Requires the character to be logged in</remarks>
@@ -24,13 +24,13 @@ public static class Config {
 		=> await FileHelpers.LoadFile<T>(FileHelpers.GetFileInfo(FileHelpers.GetCharacterPath(), fileName).FullName);
 
 	/// <summary>
-	/// Saves a configuration file to PluginConfigs\DailyDuty\{FileName}
+	/// Saves a configuration file to PluginConfigs\ChillFrames\{FileName}
 	/// </summary>
 	public static async Task SaveConfig<T>(T modificationConfig, string fileName)
 		=> await FileHelpers.SaveFile(modificationConfig, FileHelpers.GetFileInfo(fileName).FullName);
 
 	/// <summary>
-	/// Saves a character specific config file to PluginConfigs\DailyDuty\{ContentId}\{FileName}
+	/// Saves a character specific config file to PluginConfigs\ChillFrames\{ContentId}\{FileName}
 	/// </summary>
 	/// <remarks>Requires the character to be logged in</remarks>
 	public static async Task SaveCharacterConfig<T>(T modificationConfig, string fileName)

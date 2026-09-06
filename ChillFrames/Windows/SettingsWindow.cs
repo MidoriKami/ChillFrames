@@ -270,5 +270,17 @@ public class SettingsWindow : Window {
 
 			Config.Save();
 		}
+
+		ImGui.SetNextItemWidth(50.0f * ImGuiHelpers.GlobalScale);
+		ImGui.InputInt("Activation Delay Time (seconds)", ref Config.IdleFpsDelayTime, flags: ImGuiInputTextFlags.AutoSelectAll);
+
+		if (ImGui.IsItemDeactivatedAfterEdit()) {
+			Config.IdleFpsDelayTime = Math.Clamp(Config.IdleFpsDelayTime, 0, 600);
+			Config.Save();
+		}
+
+		ImGuiComponents.HelpMarker("ChillFrames will wait this many seconds after the game is idle, before enabling the idle limiter.\n" +
+		                           "This can help prevent jarring changes from just alt-tabbing quickly.\n\n" +
+		                           "Set to 0 to cause idle limiter to activate immediately.");
 	}
 }

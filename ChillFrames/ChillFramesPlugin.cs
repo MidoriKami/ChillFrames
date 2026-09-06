@@ -35,11 +35,13 @@ public sealed class ChillFramesPlugin : IAsyncDalamudPlugin {
 		System.FrameLimiterController = new FrameLimiterController();
 
 		ICommandManager.Get().AddHandler("/chillframes", new CommandInfo(OnCommand) {
-			ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
+			ShowInHelp = true,
+			HelpMessage = "Open ChillFrames Config",
 		});
 
 		ICommandManager.Get().AddHandler("/pcf", new CommandInfo(OnCommand) {
-			ShowInHelp = true, HelpMessage = "Open ChillFrames Config",
+			ShowInHelp = true,
+			HelpMessage = "Open ChillFrames Config",
 		});
 
 		System.WindowSystem = new WindowSystem("ChillFrames");

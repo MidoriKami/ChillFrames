@@ -52,7 +52,7 @@ public class IdleFpsController : IAsyncDisposable {
 
 		waitTimePatch = new MemoryReplacement(jumpInstructionAddress.Value + 3, bytes);
 
-		IFramework.Get().RunSafely(() => waitTimePatch.Enable());
+		IFramework.Get().Run(waitTimePatch.Enable);
 	}
 
 	public async ValueTask DisposeAsync() {

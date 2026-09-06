@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using ChillFrames.Utilities;
+using Dalamud.Plugin.Services;
 
 namespace ChillFrames.Classes;
 
@@ -10,12 +11,17 @@ public class Configuration {
 	public GeneralSettings General = new();
 	public LimiterSettings Limiter = new();
 	public int IdleFpsWaitTime = 50;
+	public int IdleFpsDelayTime = 5;
 
 	public bool PluginEnable = true;
 
-	public static async Task<Configuration> Load()
-		=> await Config.LoadConfig<Configuration>("System.config.json");
+	public static async Task<Configuration> Load() {
+		IPluginLog.Get().Debug("Loading System.config.json");
+		return await Config.LoadConfig<Configuration>("System.config.json");
+	}
 
-	public void Save()
-		=> Task.Run(() => Config.SaveConfig(this, "System.config.json"));
+	public void Save() {
+		IPluginLog.Get().Debug("Saving System.config.json");
+		Task.Run(() => Config.SaveConfig(this, "System.config.json"));
+	}
 }
