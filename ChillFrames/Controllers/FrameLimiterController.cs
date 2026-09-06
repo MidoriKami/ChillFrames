@@ -16,6 +16,7 @@ public class FrameLimiterController : IDisposable {
 	private float delayRatio = 1.0f;
 	private bool enabledLastFrame;
 	private bool idleLimiterDisabled;
+	private bool idleLimiterPaused;
 
 	private LimiterState state;
 
@@ -66,8 +67,8 @@ public class FrameLimiterController : IDisposable {
 	private void TryLimitFramerate() {
 		if (!System.Config.PluginEnable) return;
 
-		TryDelayIdleFpsActivation();
 		if (TryDisableIdleFpsInLoadingAreas()) return;
+		TryDelayIdleFpsActivation();
 
 		var targetState = FrameLimiterCondition.GetTargetState();
 
@@ -148,6 +149,7 @@ public class FrameLimiterController : IDisposable {
 		// Disable IdleFPS Limiter while in loading areas.
 		if (ICondition.Get().IsBetweenAreas || IFramework.Get().IsFrameworkUnloading) {
 			if (!idleLimiterDisabled) {
+				IPluginLog.Get().Debug("In Loading Area, disabling idle limiter.");
 				System.IdleFpsController.SetWaitTime(0);
 				idleLimiterDisabled = true;
 			}
@@ -156,6 +158,7 @@ public class FrameLimiterController : IDisposable {
 
 		// Then re-enable it when we're out of the loading area.
 		if (idleLimiterDisabled) {
+			IPluginLog.Get().Debug("No Longer In Loading Area, restoring idle limiter.");
 			System.IdleFpsController.SetWaitTime(System.Config.IdleFpsWaitTime);
 			idleLimiterDisabled = false;
 		}
@@ -169,7 +172,12 @@ public class FrameLimiterController : IDisposable {
 		if (!IsWindowInactive) {
 
 			// And set the idle time to 0, so we don't enable the idle limiter immediately after going idle.
-			System.IdleFpsController.SetWaitTime(0);
+			if (!idleLimiterPaused) {
+				IPluginLog.Get().Debug("Window is active, disabling idle limiter.");
+				System.IdleFpsController.SetWaitTime(0);
+				idleLimiterPaused = true;
+			}
+
 			windowIdleTimer.Restart();
 		}
 
@@ -177,8 +185,10 @@ public class FrameLimiterController : IDisposable {
 		else {
 
 			// And we have waited long enough to enable the idle limiter.
-			if (windowIdleTimer.Elapsed > TimeSpan.FromSeconds(System.Config.IdleFpsDelayTime)) {
+			if (windowIdleTimer.Elapsed > TimeSpan.FromSeconds(System.Config.IdleFpsDelayTime) && idleLimiterPaused) {
+				IPluginLog.Get().Debug($"Window has been inactive for {System.Config.IdleFpsDelayTime}s, enabling idle limiter.");
 				System.IdleFpsController.SetWaitTime(System.Config.IdleFpsWaitTime);
+				idleLimiterPaused = false;
 			}
 		}
 	}
