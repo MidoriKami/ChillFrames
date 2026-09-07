@@ -18,13 +18,13 @@ public class IdleFpsController : IAsyncDisposable {
 		ApplyPatch();
 	}
 
-	public void SetWaitTime(int waitTime) {
+	public void SetWaitTime(int targetFps) {
 		if (waitTimePatch is null) return;
 		ThreadSafety.AssertMainThread();
 
+		var waitTime = GetWaitTimeForFps(targetFps);
 		var bytes = BitConverter.GetBytes(waitTime);
-		if (!BitConverter.IsLittleEndian)
-		{
+		if (!BitConverter.IsLittleEndian) {
 			Array.Reverse(bytes);
 		}
 
@@ -32,15 +32,14 @@ public class IdleFpsController : IAsyncDisposable {
 	}
 
 	public void UpdateWaitTime()
-		=> SetWaitTime(System.Config.IdleFpsWaitTime);
+		=> SetWaitTime(System.Config.IdleFpsTarget);
 
 	private void ApplyPatch() {
 		if (jumpInstructionAddress is null) return;
 		if (jumpInstructionAddress == nint.Zero) return;
 
-		var bytes = BitConverter.GetBytes(System.Config.IdleFpsWaitTime);
-		if (!BitConverter.IsLittleEndian)
-		{
+		var bytes = BitConverter.GetBytes(GetWaitTimeForFps(System.Config.IdleFpsTarget));
+		if (!BitConverter.IsLittleEndian) {
 			Array.Reverse(bytes);
 		}
 
@@ -59,5 +58,19 @@ public class IdleFpsController : IAsyncDisposable {
 		if (waitTimePatch is not null) {
 			await waitTimePatch.DisposeAsync();
 		}
+	}
+
+	// Also compensates the wait time a little to get closer to actual target,
+	// as the wait time doesn't normally compensate for how long a frame takes to compute.
+	private int GetWaitTimeForFps(int fps) {
+		if (fps is 0) return 0;
+
+		var computedWaitTime = (int) (1000.0f / fps);
+
+		IPluginLog.Get().Debug($"Computed Wait Time: {computedWaitTime}");
+
+		if (computedWaitTime < 0) return 0;
+
+		return computedWaitTime;
 	}
 }

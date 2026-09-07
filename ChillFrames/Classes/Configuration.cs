@@ -10,7 +10,8 @@ public class Configuration {
 
 	public GeneralSettings General = new();
 	public LimiterSettings Limiter = new();
-	public int IdleFpsWaitTime = 50;
+
+	public int IdleFpsTarget = 20;
 	public int IdleFpsDelayTime = 5;
 
 	public bool PluginEnable = true;

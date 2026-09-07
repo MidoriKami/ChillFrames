@@ -159,7 +159,7 @@ public class FrameLimiterController : IDisposable {
 		// Then re-enable it when we're out of the loading area.
 		if (idleLimiterDisabled) {
 			IPluginLog.Get().Debug("No Longer In Loading Area, restoring idle limiter.");
-			System.IdleFpsController.SetWaitTime(System.Config.IdleFpsWaitTime);
+			System.IdleFpsController.SetWaitTime(System.Config.IdleFpsTarget);
 			idleLimiterDisabled = false;
 		}
 
@@ -187,7 +187,7 @@ public class FrameLimiterController : IDisposable {
 			// And we have waited long enough to enable the idle limiter.
 			if (windowIdleTimer.Elapsed > TimeSpan.FromSeconds(System.Config.IdleFpsDelayTime) && idleLimiterPaused) {
 				IPluginLog.Get().Debug($"Window has been inactive for {System.Config.IdleFpsDelayTime}s, enabling idle limiter.");
-				System.IdleFpsController.SetWaitTime(System.Config.IdleFpsWaitTime);
+				System.IdleFpsController.SetWaitTime(System.Config.IdleFpsTarget);
 				idleLimiterPaused = false;
 			}
 		}
