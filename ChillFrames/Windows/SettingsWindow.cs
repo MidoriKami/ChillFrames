@@ -77,7 +77,7 @@ public class SettingsWindow : Window {
              LimiterStateTarget.UpperLimit => Config.Limiter.UpperFramerateTarget,
              _ => Config.Limiter.BaseFramerateTarget,
           };
-          ImGui.TextColored(KnownColor.White.Vector(), $"{targetFps} fps");
+          ImGui.Text($"{targetFps} fps");
        }
        else {
           ImGui.TextColored(KnownColor.OrangeRed.Vector(), "Limiter Inactive");
@@ -95,14 +95,14 @@ public class SettingsWindow : Window {
     private void DrawDtrSettings() {
        ImGuiHelpers.ScaledDummy(10.0f);
 
-       ImGui.TextColored(KnownColor.White.Vector(), "Feature Toggles");
+       ImGui.Text("Feature Toggles");
        ImGui.Separator();
        ImGuiHelpers.ScaledDummy(5.0f);
        DrawFeatureToggles();
 
        ImGuiHelpers.ScaledDummy(10.0f);
 
-       ImGui.TextColored(KnownColor.White.Vector(), "Color Options");
+       ImGui.Text("Color Options");
        ImGui.Separator();
        ImGuiHelpers.ScaledDummy(5.0f);
        DrawColorOptions();
@@ -247,7 +247,7 @@ public class SettingsWindow : Window {
     private void DrawIdleFpsSettings() {
        ImGuiHelpers.ScaledDummy(10.0f);
 
-       ImGui.TextColored(KnownColor.White.Vector(), "Idle FPS Settings");
+       ImGui.Text("Idle FPS Settings");
        ImGui.Separator();
        ImGuiHelpers.ScaledDummy(5.0f);
        ImGui.TextWrapped("Sets the target FPS for the game's native idle limiters.");
