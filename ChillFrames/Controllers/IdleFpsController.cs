@@ -66,9 +66,6 @@ public class IdleFpsController : IAsyncDisposable {
 		if (fps is 0) return 0;
 
 		var computedWaitTime = (int) (1000.0f / fps);
-
-		IPluginLog.Get().Debug($"Computed Wait Time: {computedWaitTime}");
-
 		if (computedWaitTime < 0) return 0;
 
 		return computedWaitTime;

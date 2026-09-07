@@ -267,10 +267,9 @@ public class SettingsWindow : Window {
 
              ImGui.TableNextColumn();
              ImGui.SetNextItemWidth(100.0f * ImGuiHelpers.GlobalScale);
-             ImGui.InputInt("##WaitTime", ref Config.IdleFpsTarget);
-             Config.IdleFpsTarget = Math.Max(Config.IdleFpsTarget, 2);
-
-             if (ImGui.IsItemDeactivatedAfterEdit()) {
+             var idleTarget = Config.IdleFpsTarget;
+             if (ImGui.InputInt("##WaitTime", ref idleTarget)) {
+                Config.IdleFpsTarget = Math.Max(idleTarget, 2);
                 System.IdleFpsController.UpdateWaitTime();
                 Config.Save();
              }
@@ -296,10 +295,9 @@ public class SettingsWindow : Window {
 
              ImGui.TableNextColumn();
              ImGui.SetNextItemWidth(100.0f * ImGuiHelpers.GlobalScale);
-             ImGui.InputInt("##DelayTime", ref Config.IdleFpsDelayTime);
-             Config.IdleFpsDelayTime = Math.Clamp(Config.IdleFpsDelayTime, 0, 600);
-
-             if (ImGui.IsItemDeactivatedAfterEdit()) {
+             var delayTime = Config.IdleFpsDelayTime;
+             if (ImGui.InputInt("##DelayTime", ref delayTime)) {
+                Config.IdleFpsDelayTime = Math.Clamp(delayTime, 0, 600);
                 Config.Save();
              }
           }
