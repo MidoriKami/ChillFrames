@@ -3,20 +3,15 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using ChillFrames.Classes;
-using ChillFrames.Utilities;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 namespace ChillFrames.Controllers;
 
 public class FrameLimiterController : IDisposable {
 	private readonly Stopwatch steppingStopwatch = Stopwatch.StartNew();
 	private readonly Stopwatch timer = Stopwatch.StartNew();
-	private readonly Stopwatch windowIdleTimer = new();
 	private float delayRatio = 1.0f;
 	private bool enabledLastFrame;
-	private bool idleLimiterDisabled;
-	private bool idleLimiterPaused;
 
 	private LimiterState state;
 
@@ -39,9 +34,6 @@ public class FrameLimiterController : IDisposable {
 
 	public static TimeSpan LastFrametime { get; private set; }
 
-	private static unsafe bool IsWindowInactive
-		=> Framework.Instance()->WindowInactive;
-
 	public FrameLimiterController()
 		=> IFramework.Get().Update += OnFrameworkUpdate;
 
@@ -52,6 +44,8 @@ public class FrameLimiterController : IDisposable {
 		UpdateState();
 
 		UpdateRate();
+
+		System.IdleFpsController.Update();
 
 		TryLimitFramerate();
 
@@ -66,9 +60,6 @@ public class FrameLimiterController : IDisposable {
 	[MethodImpl(MethodImplOptions.NoOptimization)]
 	private void TryLimitFramerate() {
 		if (!System.Config.PluginEnable) return;
-
-		if (TryDisableIdleFpsInLoadingAreas()) return;
-		TryDelayIdleFpsActivation();
 
 		var targetState = FrameLimiterCondition.GetTargetState();
 
@@ -141,55 +132,6 @@ public class FrameLimiterController : IDisposable {
 			}
 
 			steppingStopwatch.Restart();
-		}
-	}
-
-	private bool TryDisableIdleFpsInLoadingAreas() {
-
-		// Disable IdleFPS Limiter while in loading areas.
-		if (ICondition.Get().IsBetweenAreas || IFramework.Get().IsFrameworkUnloading) {
-			if (!idleLimiterDisabled) {
-				IPluginLog.Get().Debug("In Loading Area, disabling idle limiter.");
-				System.IdleFpsController.SetWaitTime(0);
-				idleLimiterDisabled = true;
-			}
-			return true;
-		}
-
-		// Then re-enable it when we're out of the loading area.
-		if (idleLimiterDisabled) {
-			IPluginLog.Get().Debug("No Longer In Loading Area, restoring idle limiter.");
-			System.IdleFpsController.SetWaitTime(System.Config.IdleFpsTarget);
-			idleLimiterDisabled = false;
-		}
-
-		return false;
-	}
-
-	private void TryDelayIdleFpsActivation() {
-
-		// If the window isn't idle, restart timer.
-		if (!IsWindowInactive) {
-
-			// And set the idle time to 0, so we don't enable the idle limiter immediately after going idle.
-			if (!idleLimiterPaused) {
-				IPluginLog.Get().Debug("Window is active, disabling idle limiter.");
-				System.IdleFpsController.SetWaitTime(0);
-				idleLimiterPaused = true;
-			}
-
-			windowIdleTimer.Restart();
-		}
-
-		// The window is idle
-		else {
-
-			// And we have waited long enough to enable the idle limiter.
-			if (windowIdleTimer.Elapsed > TimeSpan.FromSeconds(System.Config.IdleFpsDelayTime) && idleLimiterPaused) {
-				IPluginLog.Get().Debug($"Window has been inactive for {System.Config.IdleFpsDelayTime}s, enabling idle limiter.");
-				System.IdleFpsController.SetWaitTime(System.Config.IdleFpsTarget);
-				idleLimiterPaused = false;
-			}
 		}
 	}
 }
