@@ -16,7 +16,7 @@ public class IdleFpsController : IAsyncDisposable {
 	private readonly nint? jumpInstructionAddress = null;
 	private MemoryReplacement? waitTimePatch;
 
-	private IdleLimiterState state = IdleLimiterState.None;
+	private IdleLimiterState state = IdleLimiterState.PluginDisabled;
 	private readonly Stopwatch idleTimeStopwatch = new();
 
 	public IdleFpsController() {
