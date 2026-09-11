@@ -153,7 +153,7 @@ public class SettingsWindow : Window {
        ImGui.Separator();
        ImGuiHelpers.ScaledDummy(5.0f);
 
-       var cellPaddingAmount = ImGui.GetStyle().CellPadding + ImGuiHelpers.ScaledVector2(0.0f, 4.0f);
+       var cellPaddingAmount = ImGui.GetStyle().CellPadding + new Vector2(0.0f, 4.0f);
        using var padding = ImRaii.PushStyle(ImGuiStyleVar.CellPadding, cellPaddingAmount);
        using var table = ImRaii.Table("limiter_options_table", 3, ImGuiTableFlags.RowBg);
        if (!table) return;
