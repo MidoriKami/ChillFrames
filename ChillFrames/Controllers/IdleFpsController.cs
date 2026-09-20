@@ -32,7 +32,8 @@ public class IdleFpsController : IAsyncDisposable {
 
 	public unsafe void Update() {
 		var isInLoadingArea = ICondition.Get().IsBetweenAreas || IFramework.Get().IsFrameworkUnloading;
-		var isWindowActive = !Framework.Instance()->WindowInactive;
+		var isAfk = IObjectTable.Get().LocalPlayer?.OnlineStatus.RowId is 17;
+		var isWindowActive = !Framework.Instance()->WindowInactive && !isAfk;
 
 		// Override state to Disabled if plugin was disabled.
 		if (!System.Config.PluginEnable && state is not IdleLimiterState.PluginDisabled) {
