@@ -268,7 +268,7 @@ public class SettingsWindow : Window {
              ImGui.TableNextColumn();
              ImGui.SetNextItemWidth(100.0f * ImGuiHelpers.GlobalScale);
              var idleTarget = Config.IdleFpsTarget;
-             if (ImGui.InputInt("##WaitTime", ref idleTarget)) {
+             if (ImGui.InputInt("##WaitTime", ref idleTarget) && idleTarget >=2) {
                 Config.IdleFpsTarget = Math.Max(idleTarget, 2);
                 System.IdleFpsController.UpdateWaitTime();
                 Config.Save();
