@@ -1,10 +1,9 @@
 using System;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui.Dtr;
-using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
-using SeStringBuilder = Lumina.Text.SeStringBuilder;
+using Lumina.Text.ReadOnly;
 
 namespace ChillFrames.Controllers;
 
@@ -41,20 +40,21 @@ public class DtrController : IDisposable {
 	}
 
 	public void Update() {
+		using var stringBuilder = new RentedSeStringBuilder();
+
 		if (System.Config.General.EnableDtrColor) {
-			dtrEntry.Text = new SeStringBuilder()
-				.PushColorRgba(System.Config.PluginEnable ? System.Config.General.ActiveColor : System.Config.General.InactiveColor)
-				.Append($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
-				.PopColor()
-				.ToReadOnlySeString()
-				.ToDalamudString();
+			dtrEntry.Text = stringBuilder
+			                .PushColorRgba(System.Config.PluginEnable ? System.Config.General.ActiveColor : System.Config.General.InactiveColor)
+			                .Append($"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS")
+			                .PopColor()
+			                .ToReadOnlySeString();
 		}
 		else {
 			dtrEntry.Text = $"{1000 / FrameLimiterController.LastFrametime.TotalMilliseconds:N0} FPS";
 		}
 	}
 
-	private SeString GetTooltip()
+	private static ReadOnlySeString GetTooltip()
 		=> $"{(System.Config.PluginEnable ? "Left Click to Disable Limiter" : "Left Click to Enable Limiter")}\n" +
 		   $"Right click to open Config Window";
 

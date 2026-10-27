@@ -1,7 +1,7 @@
 ﻿using ChillFrames.Classes;
+using Dalamud.Excel.Sheets;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using Lumina.Excel.Sheets;
 
 namespace ChillFrames.LimiterOptions;
 
